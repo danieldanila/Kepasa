@@ -1,0 +1,19 @@
+.searchBar {
+  margin-right: 0.5rem;
+}
+
+.inputText {
+  width: 20rem;
+  font-size: small;
+}
+
+.searchBarIconUnfocused {
+  cursor: pointer;
+  position: static !important;
+  color: #fff !important;
+}
+
+.searchBarIconFocused {
+  cursor: text;
+  top: 45% !important;
+}

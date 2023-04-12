@@ -1,0 +1,26 @@
+.virtualScroller {
+  background-color: #eee;
+  height: 7rem;
+  width: 20rem;
+}
+
+.notificationCard {
+  background-color: #fff;
+  width: 80%;
+  text-align: center;
+  border: #acacac 1px solid;
+  padding: 0.5rem 0;
+}
+
+.notificationBell {
+  cursor: pointer;
+  color: #fff;
+}
+
+.notificationBell:hover {
+  background-color: #ccc;
+}
+
+.container {
+  width: fit-content;
+}
