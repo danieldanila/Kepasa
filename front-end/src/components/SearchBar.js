@@ -15,10 +15,7 @@ export default function SearchBar() {
   }
 
   return (
-    <span
-      className={`p-input-icon-left ${styles.searchBar}`}
-      onBlur={handleFocus}
-    >
+    <span className="p-input-icon-left" onBlur={handleFocus}>
       <i
         className={`pi pi-search ${
           isFocused
@@ -28,7 +25,7 @@ export default function SearchBar() {
         onClick={handleFocus}
       />
 
-      {isFocused ? (
+      {isFocused && (
         <>
           <InputText
             autoFocus
@@ -39,8 +36,6 @@ export default function SearchBar() {
             onChange={(e) => handleValue(e.target.value)}
           />
         </>
-      ) : (
-        <></>
       )}
     </span>
   );

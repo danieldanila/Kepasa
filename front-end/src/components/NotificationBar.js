@@ -14,12 +14,24 @@ export default function NotificationBar() {
     "Ionut joined the company",
   ]);
   const [isFocused, setIsFocused] = useState(false);
-  const virtualScrollerRef = useRef(null);
+  const notificationsContainerRef = useRef(null);
+  const notificationsBellRef = useRef(null);
 
   useEffect(() => {
-    if (isFocused) {
-      virtualScrollerRef.current.focus();
-    }
+    const handleNotificationClick = (event) => {
+      if (
+        notificationsContainerRef.current &&
+        notificationsBellRef.current &&
+        !notificationsContainerRef.current.contains(event.target) &&
+        !notificationsBellRef.current.contains(event.target)
+      ) {
+        handleFocus();
+      }
+    };
+    document.addEventListener("mousedown", handleNotificationClick);
+    return () => {
+      document.removeEventListener("mousedown", handleNotificationClick);
+    };
   }, [isFocused]);
 
   function handleFocus() {
@@ -35,26 +47,25 @@ export default function NotificationBar() {
       <i
         className={`pi pi-bell ${styles.notificationBell}`}
         onClick={handleFocus}
+        ref={notificationsBellRef}
       />
-
-      {isFocused ? (
-        <div
-          className={styles.container}
-          ref={virtualScrollerRef}
-          tabIndex="0"
-          onBlur={handleFocus}
-        >
-          <h3>Notifications</h3>
-          <VirtualScroller
-            className={styles.virtualScroller}
-            items={notifications}
-            itemTemplate={notificationTemplate}
-            itemSize={50}
-          />
-        </div>
-      ) : (
-        <></>
-      )}
+      <div className={styles.notificationBarContainer}>
+        {isFocused && (
+          <div
+            className={styles.notificationListContainer}
+            ref={notificationsContainerRef}
+            tabIndex="0"
+          >
+            <h3>Notifications</h3>
+            <VirtualScroller
+              className={styles.virtualScroller}
+              items={notifications}
+              itemTemplate={notificationTemplate}
+              itemSize={50}
+            />
+          </div>
+        )}
+      </div>
     </div>
   );
 }
