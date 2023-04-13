@@ -39,13 +39,13 @@ export default function NotificationBar() {
   }
 
   const notificationTemplate = (notification) => {
-    return <div className={styles.notificationCard}>{notification}</div>;
+    return <div className={styles.notificationCardItem}>{notification}</div>;
   };
 
   return (
     <div>
       <i
-        className={`pi pi-bell ${styles.notificationBell}`}
+        className="pi pi-bell"
         onClick={handleFocus}
         ref={notificationsBellRef}
       />

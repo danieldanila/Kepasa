@@ -10,5 +10,13 @@ body {
 
 .pi {
   font-size: 1.5rem !important;
-  margin-right: 0.5rem;
+  margin-right: 1rem;
+
+  color: #fff !important;
+  cursor: pointer;
+}
+
+.pi:hover {
+  background-color: #161310;
+  border-radius: 0rem;
 }

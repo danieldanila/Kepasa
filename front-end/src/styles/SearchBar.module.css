@@ -4,12 +4,38 @@
 }
 
 .searchBarIconUnfocused {
-  cursor: pointer;
   position: static !important;
-  color: #fff !important;
 }
 
 .searchBarIconFocused {
   cursor: text;
   top: 45% !important;
+  color: #e9ecef !important;
+}
+
+.searchBarIconFocused:hover {
+  background-color: #fff;
+}
+
+.filteredDataContainer {
+  position: absolute;
+  width: 100%;
+}
+
+.filteredData {
+  list-style-type: none;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+
+  position: relative;
+  width: 100%;
+}
+
+.filteredData li {
+  padding: 0.5rem 0.1rem 0.5rem 1rem;
+  cursor: pointer;
+}
+
+.filteredData li:hover {
+  background-color: #e9ecef;
 }

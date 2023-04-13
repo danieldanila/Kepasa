@@ -1,25 +1,22 @@
 .virtualScroller {
-  background-color: #eee;
   height: 7rem;
   width: 20rem;
 }
 
-.notificationCard {
-  background-color: #fff;
-  width: 80%;
-  text-align: center;
-  border: #acacac 1px solid;
+.notificationCardItem {
+  border-top: #eee 1px solid;
   padding: 0.5rem 0;
   margin: 0 auto;
-}
-
-.notificationBell {
   cursor: pointer;
-  color: #fff;
 }
 
-.notificationBell:hover {
-  background-color: #ccc;
+.notificationCardItem,
+.notificationListContainer h3 {
+  padding-left: 1rem;
+}
+
+.notificationCardItem:hover {
+  background-color: #e9ecef;
 }
 
 .notificationBarContainer {
@@ -28,8 +25,7 @@
 
 .notificationListContainer {
   width: fit-content;
-  border: #acacac 1px solid;
-  box-shadow: 0px 0px 20px 1px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
   position: relative;
   top: 1.5rem;
   right: 19rem;
