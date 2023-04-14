@@ -5,21 +5,21 @@
 
 .searchBarIconUnfocused {
   position: static !important;
-  color: #fff !important;
+  color: var(--white) !important;
 }
 
 .searchBarIconUnfocused:hover {
-  color: #161310 !important;
+  color: var(--black) !important;
 }
 
 .searchBarIconFocused {
   cursor: text;
   top: 45% !important;
-  color: #e9ecef !important;
+  color: var(--gray) !important;
 }
 
 .searchBarIconFocused:hover {
-  color: #e9ecef !important;
+  color: var(--gray) !important;
 }
 
 .filteredDataContainer {
@@ -29,11 +29,8 @@
 
 .filteredData {
   list-style-type: none;
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
-  background-color: #fff;
-
-  position: relative;
-  width: 100%;
+  box-shadow: var(--boxShadow);
+  background-color: var(--white);
 }
 
 .filteredData li {
@@ -42,5 +39,5 @@
 }
 
 .filteredData li:hover {
-  background-color: #e9ecef;
+  background-color: var(--gray);
 }

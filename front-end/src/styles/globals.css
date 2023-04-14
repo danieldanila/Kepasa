@@ -4,8 +4,23 @@
   padding: 0;
 }
 
+:root {
+  --sidebarWidth: 6rem;
+  --navbarHeigth: 4rem;
+  --white: #fff;
+  --black: #161310;
+  --gray: #e9ecef;
+  --darkGray: #a4a7aa;
+  --lightBlue: #2e6cb5;
+  --darkBlue: #1d174b;
+  --darkBlueSelected: #4e487c;
+  --orange: #f98125;
+  --boxShadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+}
+
 body {
   font-family: var(--font-family);
+  margin-left: var(--sidebarWidth);
 }
 
 .pi {
@@ -13,11 +28,11 @@ body {
 }
 
 .navBarIcon {
-  color: #fff;
+  color: var(--white);
   margin-right: 1rem;
   cursor: pointer;
 }
 
 .navBarIcon:hover {
-  color: #161310;
+  color: var(--black);
 }

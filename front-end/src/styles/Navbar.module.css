@@ -1,8 +1,8 @@
 .container {
-  width: 100vw;
+  width: calc(100vw - var(--sidebarWidth));
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  height: 4rem;
-  background-color: #2e6cb5;
+  height: var(--navbarHeigth);
+  background-color: var(--lightBlue);
 }

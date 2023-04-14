@@ -1,7 +1,7 @@
 .container {
-  background-color: #1d174b;
+  background-color: var(--darkBlue);
   height: 100%;
-  width: 6rem;
+  width: var(--sidebarWidth);
   position: fixed;
   top: 0;
   left: 0;
@@ -12,10 +12,10 @@
 }
 
 .logo {
-  height: 4rem;
+  height: var(--navbarHeigth);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: #fff;
+  color: var(--white);
 }
