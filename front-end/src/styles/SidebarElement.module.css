@@ -4,10 +4,30 @@
   align-items: center;
   color: #a4a7aa;
   padding: 0.5rem 0;
+  position: relative;
 }
 
 .container:hover {
   color: #fff;
   background-color: #4e487c;
   cursor: pointer;
+}
+
+.currentPage {
+  color: #fff;
+  background-color: #4e487c;
+}
+
+.currentPage::after {
+  content: "";
+  display: block;
+  pointer-events: none;
+  width: 2rem;
+  height: 2rem;
+  position: absolute;
+  background-color: #fff;
+  top: 50%;
+  right: -1rem;
+  margin-top: -1rem;
+  transform: rotate(45deg);
 }

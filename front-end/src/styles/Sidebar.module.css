@@ -7,6 +7,10 @@
   left: 0;
 }
 
+.container a {
+  text-decoration: none;
+}
+
 .logo {
   height: 4rem;
   display: flex;
