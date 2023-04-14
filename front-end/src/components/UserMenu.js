@@ -21,7 +21,7 @@ export default function UserMenu() {
   return (
     <>
       <span onClick={(e) => menuRef.current.toggle(e)}>
-        <i className="pi pi-user" />
+        <i className="navBarIcon pi pi-user" />
       </span>
       <Menu model={userMenuList} popup ref={menuRef} />
     </>

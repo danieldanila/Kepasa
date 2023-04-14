@@ -37,7 +37,7 @@ export default function SearchBar() {
   return (
     <span className="p-input-icon-left" onBlur={handleFocus}>
       <i
-        className={`pi pi-search ${
+        className={`navBarIcon pi pi-search ${
           isFocused
             ? styles.searchBarIconFocused
             : styles.searchBarIconUnfocused

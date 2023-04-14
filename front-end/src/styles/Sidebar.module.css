@@ -1,0 +1,17 @@
+.container {
+  background-color: #1d174b;
+  height: 100%;
+  width: 6rem;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.logo {
+  height: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #fff;
+}

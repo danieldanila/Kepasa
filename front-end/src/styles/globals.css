@@ -10,13 +10,14 @@ body {
 
 .pi {
   font-size: 1.5rem !important;
-  margin-right: 1rem;
+}
 
-  color: #fff !important;
+.navBarIcon {
+  color: #fff;
+  margin-right: 1rem;
   cursor: pointer;
 }
 
-.pi:hover {
-  background-color: #161310;
-  border-radius: 0rem;
+.navBarIcon:hover {
+  color: #161310;
 }

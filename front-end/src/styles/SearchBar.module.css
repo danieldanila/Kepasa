@@ -5,6 +5,11 @@
 
 .searchBarIconUnfocused {
   position: static !important;
+  color: #fff !important;
+}
+
+.searchBarIconUnfocused:hover {
+  color: #161310 !important;
 }
 
 .searchBarIconFocused {
@@ -14,7 +19,7 @@
 }
 
 .searchBarIconFocused:hover {
-  background-color: #fff;
+  color: #e9ecef !important;
 }
 
 .filteredDataContainer {

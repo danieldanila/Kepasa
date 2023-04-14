@@ -45,7 +45,7 @@ export default function NotificationBar() {
   return (
     <div>
       <i
-        className="pi pi-bell"
+        className="navBarIcon pi pi-bell"
         onClick={handleFocus}
         ref={notificationsBellRef}
       />
