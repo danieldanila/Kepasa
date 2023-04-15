@@ -5,10 +5,10 @@ import UserMenu from "./UserMenu";
 
 export default function Navbar() {
   return (
-    <div className={styles.container}>
+    <navbar className={styles.container}>
       <SearchBar />
       <NotificationBar />
       <UserMenu />
-    </div>
+    </navbar>
   );
 }

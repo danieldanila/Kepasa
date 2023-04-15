@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function Sidebar() {
   return (
-    <div className={styles.container}>
+    <navbar className={styles.container}>
       <Link href="/">
         <div className={styles.logo}>
           <h2>Kepasa</h2>
@@ -25,6 +25,6 @@ export default function Sidebar() {
       <Link href="projects">
         <SidebarElement name="Projects" icon="pi pi-book" />
       </Link>
-    </div>
+    </navbar>
   );
 }

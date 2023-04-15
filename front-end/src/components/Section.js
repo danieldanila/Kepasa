@@ -1,16 +1,11 @@
-export default function Section({ title, cardSectionInformations }) {
-  return (
-    <>
-      <h2>{title}</h2>
+import SectionCard from "./SectionCard";
+import SectionHeader from "./SectionHeader";
 
-      {cardSectionInformations.map((cardSectionInformation) => {
-        return (
-          <div key={cardSectionInformation.id}>
-            <h3>{cardSectionInformation.title}</h3>
-            <p>{cardSectionInformation.description}</p>
-          </div>
-        );
-      })}
-    </>
+export default function Section({ title, page, sectionCardInformations }) {
+  return (
+    <section>
+      <SectionHeader title={title} page={page} />
+      <SectionCard sectionCardInformations={sectionCardInformations} />
+    </section>
   );
 }
