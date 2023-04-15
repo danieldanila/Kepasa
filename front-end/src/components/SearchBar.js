@@ -2,33 +2,27 @@ import React, { useState } from "react";
 import { InputText } from "primereact/inputtext";
 import styles from "../styles/SearchBar.module.css";
 
-export default function SearchBar() {
-  const [items, setItems] = useState([
-    {
-      id: 1,
-      name: "Daniel Danila",
-    },
-    { id: 2, name: "Dan Negru" },
-    {
-      id: 3,
-      name: "Costel Ridiche",
-    },
-    {
-      id: 4,
-      name: "James Kilengarth",
-    },
-  ]);
-
+export default function SearchBar({
+  items,
+  losesFocus,
+  customOnChange,
+  placeHolder,
+}) {
   const [searchQuery, setSearchQuery] = useState("");
-  const [isFocused, setIsFocused] = useState(false);
+  const [isFocused, setIsFocused] = useState(!losesFocus);
 
   function handleFocus() {
-    setIsFocused(!isFocused);
+    if (losesFocus) {
+      setIsFocused(!isFocused);
+    }
   }
 
-  function handleSearchQuery(newSearchQuery) {
-    setSearchQuery(newSearchQuery);
-  }
+  const handleSearchQuery = (e) => {
+    if (customOnChange !== null && customOnChange !== undefined) {
+      customOnChange(e);
+    }
+    setSearchQuery(e.target.value);
+  };
 
   const filteredData = items.filter((item) =>
     item.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -51,9 +45,9 @@ export default function SearchBar() {
             autoFocus
             className={styles.inputText}
             type="text"
-            placeholder="Search people, projects and more..."
+            placeholder={placeHolder}
             value={searchQuery}
-            onChange={(e) => handleSearchQuery(e.target.value)}
+            onChange={handleSearchQuery}
           />
           <div className={styles.filteredDataContainer}>
             <ul className={styles.filteredData}>
