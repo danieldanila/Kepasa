@@ -6,6 +6,7 @@ import { FilterMatchMode } from "primereact/api";
 import SearchBar from "./SearchBar";
 import styles from "../styles/DataTableList.module.css";
 import { InputText } from "primereact/inputtext";
+import { Toolbar } from "primereact/toolbar";
 
 export default function DataTableList({ data, columns, customInitialFilters }) {
   const [filters, setFilters] = useState(null);
@@ -47,6 +48,38 @@ export default function DataTableList({ data, columns, customInitialFilters }) {
     setData(dataCopy);
   };
 
+  const leftToolbarTemplate = () => {
+    return (
+      <>
+        <Button
+          label="New"
+          icon="pi pi-plus"
+          severity="success"
+          // onClick={newData}
+        />
+        <Button
+          type="button"
+          label="Delete"
+          icon="pi pi-trash"
+          severity="danger"
+        />
+      </>
+    );
+  };
+
+  const rightToolbarTemplate = () => {
+    return (
+      <Button
+        type="button"
+        label="Export to CSV"
+        icon="pi pi-upload"
+        rounded
+        onClick={() => exportCSV(false)}
+        data-pr-tooltip="CSV"
+      />
+    );
+  };
+
   const textEditor = (options) => {
     return (
       <InputText
@@ -66,21 +99,15 @@ export default function DataTableList({ data, columns, customInitialFilters }) {
       <Button
         type="button"
         icon="pi pi-filter-slash"
-        label="Clear"
+        label="Clear filters"
         outlined
         onClick={clearFilters}
       />
-      <Button
-        type="button"
-        icon="pi pi-file"
-        rounded
-        onClick={() => exportCSV(false)}
-        data-pr-tooltip="CSV"
-      />
+
       <SearchBar
         items={[]}
         losesFocus={false}
-        placeHolder={`Search by ${global.currentPage}`}
+        placeHolder={`Search ${global.currentPage}`}
         customOnChange={onGlobalFilterChange}
       />
     </div>
@@ -88,6 +115,7 @@ export default function DataTableList({ data, columns, customInitialFilters }) {
 
   return (
     <>
+      <Toolbar start={leftToolbarTemplate} end={rightToolbarTemplate}></Toolbar>
       <DataTable
         ref={dataTableRef}
         showGridlines
