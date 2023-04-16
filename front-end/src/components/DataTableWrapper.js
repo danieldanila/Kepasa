@@ -1,14 +1,17 @@
 import { useState, useEffect, useRef } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import { Button } from "primereact/button";
 import { FilterMatchMode } from "primereact/api";
-import SearchBar from "./SearchBar";
-import styles from "../styles/DataTableList.module.css";
 import { InputText } from "primereact/inputtext";
-import { Toolbar } from "primereact/toolbar";
+import DataTableToolbar from "./DataTableToolbar";
+import DataTableHeader from "./DataTableHeader";
 
-export default function DataTableList({ data, columns, customInitialFilters }) {
+export default function DataTableList({
+  databaseData,
+  columns,
+  customInitialFilters,
+}) {
+  const [data, setData] = useState(databaseData);
   const [filters, setFilters] = useState(null);
   const [selectedData, setSelectedData] = useState(null);
   const dataTableRef = useRef(null);
@@ -48,38 +51,6 @@ export default function DataTableList({ data, columns, customInitialFilters }) {
     setData(dataCopy);
   };
 
-  const leftToolbarTemplate = () => {
-    return (
-      <>
-        <Button
-          label="New"
-          icon="pi pi-plus"
-          severity="success"
-          // onClick={newData}
-        />
-        <Button
-          type="button"
-          label="Delete"
-          icon="pi pi-trash"
-          severity="danger"
-        />
-      </>
-    );
-  };
-
-  const rightToolbarTemplate = () => {
-    return (
-      <Button
-        type="button"
-        label="Export to CSV"
-        icon="pi pi-upload"
-        rounded
-        onClick={() => exportCSV(false)}
-        data-pr-tooltip="CSV"
-      />
-    );
-  };
-
   const textEditor = (options) => {
     return (
       <InputText
@@ -90,32 +61,9 @@ export default function DataTableList({ data, columns, customInitialFilters }) {
     );
   };
 
-  const exportCSV = (selectionOnly) => {
-    dataTableRef.current.exportCSV({ selectionOnly });
-  };
-
-  const dataTableHeader = (
-    <div className={styles.headerContainer}>
-      <Button
-        type="button"
-        icon="pi pi-filter-slash"
-        label="Clear filters"
-        outlined
-        onClick={clearFilters}
-      />
-
-      <SearchBar
-        items={[]}
-        losesFocus={false}
-        placeHolder={`Search ${global.currentPage}`}
-        customOnChange={onGlobalFilterChange}
-      />
-    </div>
-  );
-
   return (
     <>
-      <Toolbar start={leftToolbarTemplate} end={rightToolbarTemplate}></Toolbar>
+      <DataTableToolbar dataTableRef={dataTableRef} />
       <DataTable
         ref={dataTableRef}
         showGridlines
@@ -127,7 +75,12 @@ export default function DataTableList({ data, columns, customInitialFilters }) {
         paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
         currentPageReportTemplate="{first} to {last} of {totalRecords}"
         dataKey="id"
-        header={dataTableHeader}
+        header={
+          <DataTableHeader
+            clearFilters={clearFilters}
+            customOnChange={onGlobalFilterChange}
+          />
+        }
         filters={filters}
         filterDisplay="menu"
         emptyMessage={`No ${global.currentPage} found`}

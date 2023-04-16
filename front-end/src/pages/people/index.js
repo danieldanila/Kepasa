@@ -1,9 +1,8 @@
-import { useState } from "react";
 import { FilterMatchMode, FilterOperator } from "primereact/api";
-import DataTableList from "@/components/DataTableList";
+import DataTableWrapper from "@/components/DataTableWrapper";
 
 export default function People() {
-  const [peopleData, setPeopleData] = useState([
+  const peopleData = [
     {
       id: 1,
       fullName: "Thain Daine",
@@ -931,7 +930,7 @@ export default function People() {
       phone: "2085480101",
       socialMediaLink: "http://nature.com/quis/turpis/sed/ante.json",
     },
-  ]);
+  ];
 
   const peopleColumns = [
     {
@@ -990,8 +989,8 @@ export default function People() {
   return (
     <main>
       <h2 className="pageTitle">People</h2>
-      <DataTableList
-        data={peopleData}
+      <DataTableWrapper
+        databaseData={peopleData}
         columns={peopleColumns}
         customInitialFilters={peopleInitialFilters}
       />
