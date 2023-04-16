@@ -1,0 +1,8 @@
+.container {
+  margin-bottom: 1rem;
+}
+
+.leftContainer {
+  display: flex;
+  gap: 1rem;
+}
