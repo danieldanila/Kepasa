@@ -1,9 +1,19 @@
 import { AutoComplete } from "primereact/autocomplete";
 import { useState } from "react";
 
-export default function DropdownForm({ id, label, suggestions }) {
+export default function DropdownForm({
+  id,
+  label,
+  suggestions,
+  customOnChange,
+}) {
   const [selectedOption, setSelectedOption] = useState(null);
   const [filteredOptions, setFilteredOptions] = useState(null);
+
+  const handleInputDropdownChange = (e, id) => {
+    setSelectedOption(e.target.value);
+    customOnChange(e, id);
+  };
 
   const searchOption = (event) => {
     let filteredOptionsCopy;
@@ -27,7 +37,7 @@ export default function DropdownForm({ id, label, suggestions }) {
         forceSelection
         completeMethod={searchOption}
         value={selectedOption}
-        onChange={(e) => setSelectedOption(e.target.value)}
+        onChange={(e) => handleInputDropdownChange(e, id)}
       />
       <label htmlFor={id}>{label}</label>
     </span>

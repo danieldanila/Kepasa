@@ -1,8 +1,19 @@
 import { ToggleButton } from "primereact/togglebutton";
 import { useState } from "react";
 
-export default function ToggleButtonForm({ id, onLabel, offLabel }) {
+export default function ToggleButtonForm({
+  id,
+  onLabel,
+  offLabel,
+  customOnChange,
+}) {
   const [isSelected, setIsSelected] = useState(false);
+
+  const handleInputBooleanChange = (e, id) => {
+    setIsSelected(e.target.value);
+    customOnChange(e, id);
+  };
+
   return (
     <span className="p-float-label">
       <ToggleButton
@@ -11,7 +22,7 @@ export default function ToggleButtonForm({ id, onLabel, offLabel }) {
         value={isSelected}
         onLabel={onLabel}
         offLabel={offLabel}
-        onChange={(e) => setIsSelected(e.target.value)}
+        onChange={(e) => handleInputBooleanChange(e, id)}
       />
     </span>
   );
