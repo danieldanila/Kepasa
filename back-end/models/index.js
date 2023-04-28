@@ -1,7 +1,7 @@
 const { Sequelize } = require("sequelize");
 
-const Database = require("../config/database");
-const UserModel = require("./user");
+const Database = require("../configs/database.config");
+const UserModel = require("./user.model");
 
 const User = UserModel(Database, Sequelize);
 

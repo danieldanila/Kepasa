@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define("Users", {
-    id: DataTypes.BIGINT,
+  return sequelize.define("User", {
+    id: { type: DataTypes.BIGINT, primaryKey: true },
     email: DataTypes.STRING,
     phone: DataTypes.STRING,
     social_media_link: DataTypes.STRING,
