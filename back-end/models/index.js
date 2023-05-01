@@ -38,10 +38,20 @@ Department.hasMany(User, {
     },
   },
 });
-// User.belongsTo(Department);
+User.belongsTo(Department, {
+  foreignKey: "id_department",
+});
 
-User.belongsToMany(Role, { through: UsersRoles });
-Role.belongsToMany(User, { through: UsersRoles });
+User.belongsToMany(Role, {
+  through: UsersRoles,
+  foreignKey: "id_user",
+  otherKey: "id_role",
+});
+Role.belongsToMany(User, {
+  through: UsersRoles,
+  foreignKey: "id_role",
+  otherKey: "id_user",
+});
 
 Department.hasMany(Role, {
   foreignKey: {
@@ -53,10 +63,20 @@ Department.hasMany(Role, {
     },
   },
 });
-// Role.belongsTo(Department);
+Role.belongsTo(Department, {
+  foreignKey: "id_department",
+});
 
-Role.belongsToMany(Project, { through: RolesProjects });
-Project.belongsToMany(Role, { through: RolesProjects });
+Role.belongsToMany(Project, {
+  through: RolesProjects,
+  foreignKey: "id_role",
+  otherKey: "id_project",
+});
+Project.belongsToMany(Role, {
+  through: RolesProjects,
+  foreignKey: "id_project",
+  otherKey: "id_role",
+});
 
 module.exports = {
   User,

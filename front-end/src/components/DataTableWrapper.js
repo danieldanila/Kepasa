@@ -77,10 +77,10 @@ export default function DataTableWrapper({
   };
 
   const saveFormDialog = () => {
-    const uniqueId = uuid();
-    let dataEntityCopy = { ...dataEntity };
-    dataEntityCopy["id"] = uniqueId;
-    setDataEntity(dataEntityCopy);
+    // const uniqueId = uuid();
+    // let dataEntityCopy = { ...dataEntity };
+    // dataEntityCopy["id"] = uniqueId;
+    // setDataEntity(dataEntityCopy);
 
     let dataCopy = [...data];
 
