@@ -21,7 +21,7 @@ User.belongsTo(User, {
   foreignKey: {
     name: "id_mentor",
     type: DataTypes.UUID,
-    allowNull: false,
+    // allowNull: false,
     validate: {
       isUUID: 4,
     },

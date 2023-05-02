@@ -2,7 +2,7 @@ module.exports = (sequelize, DataTypes) => {
   return sequelize.define("Project", {
     id: {
       type: DataTypes.UUID,
-      defaultVaue: DataTypes.UUIDV4,
+      defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
       validate: {
         isUUID: 4,

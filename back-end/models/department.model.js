@@ -2,7 +2,7 @@ module.exports = (sequelize, DataTypes) => {
   return sequelize.define("Department", {
     id: {
       type: DataTypes.UUID,
-      defaultVaue: DataTypes.UUIDV4,
+      defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
       validate: {
         isUUID: 4,
@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       unique: true,
       allowNull: false,
       validate: {
-        isAlpha: true,
+        notEmpty: true,
       },
     },
   });

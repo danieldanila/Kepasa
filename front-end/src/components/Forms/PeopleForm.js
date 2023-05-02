@@ -71,8 +71,8 @@ export default function PeopleForm({ visible, onHide, dialogFooter }) {
           customOnChange={onInputTextChange}
         />
         <CalendarForm
-          id="birthDay"
-          label="Birth Day"
+          id="birthday"
+          label="Birthday"
           customOnChange={onInputTextChange}
         />
         <InputTextForm

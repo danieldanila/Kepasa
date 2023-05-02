@@ -22,7 +22,7 @@ export default function App({ Component, pageProps }) {
     password: "",
     firstName: "",
     lastName: "",
-    birthDay: "",
+    birthday: "",
     isActive: false,
     isAdministrator: false,
     idDepartment: null,

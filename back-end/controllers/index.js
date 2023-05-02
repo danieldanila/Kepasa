@@ -1,7 +1,5 @@
 const databaseController = require("./database.controller");
 
-const controllers = {
+module.exports = {
   databaseController,
 };
-
-module.export = controllers;

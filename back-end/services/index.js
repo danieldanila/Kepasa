@@ -1,7 +1,9 @@
 const databaseService = require("./database.service");
+const userService = require("./user.service");
+const departmentService = require("./department.service");
 
-const services = {
+module.export = {
   databaseService,
+  userService,
+  departmentService,
 };
-
-module.export = controller;
