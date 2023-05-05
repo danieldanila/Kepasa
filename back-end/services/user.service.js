@@ -16,6 +16,7 @@ const createUser = async (req, res, next) => {
   const errors = [];
 
   const emptyFieldError = "field is mandatoy!";
+
   if (!email) {
     errors.push(`Email ${emptyFieldError}`);
   }
@@ -48,9 +49,9 @@ const createUser = async (req, res, next) => {
     errors.push(`Department ${emptyFieldError}`);
   }
 
-  // if (!idMentor) {
-  //   errors.push(`Mentor ${emptyFieldError}`);
-  // }
+  if (!idMentor) {
+    errors.push(`Mentor ${emptyFieldError}`);
+  }
 
   if (errors.length === 0) {
     await User.create({
@@ -72,6 +73,34 @@ const createUser = async (req, res, next) => {
   }
 };
 
+const getAllUsers = async (req, res, next) => {
+  const users = await User.findAll();
+  return users;
+};
+
+const getUserById = async (req, res, next) => {
+  const userId = req.params.id;
+  const user = await User.findByPk(userId);
+  return user;
+};
+
+const updateUser = async (req, res, next) => {
+  const userId = req.params.id;
+  const user = await User.findByPk(userId);
+  const updatedUser = await user.update(req.body);
+  return updatedUser;
+};
+
+const deleteUser = async (req, res, next) => {
+  const userId = req.params.id;
+  const user = await User.findByPk(userId);
+  user.destroy();
+};
+
 module.exports = {
   createUser,
+  getAllUsers,
+  getUserById,
+  updateUser,
+  deleteUser,
 };
