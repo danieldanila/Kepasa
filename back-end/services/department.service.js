@@ -1,33 +1,42 @@
+const { ValidationError } = require("../errors").ValidationError;
+const { nameValidation } = require("./validations.service");
+
 const Department = require("../models/index").Department;
 
 const createDepartment = async (req, res, next) => {
-  const name = req.body.name;
-
-  const errors = [];
-
-  const emptyFieldError = "field is mandatoy!";
-  if (!name) {
-    errors.push(`Name ${emptyFieldError}`);
-  }
-
-  if (!(name.length > 3)) {
-    errors.push(`Name field must have a length greater than 3 characters!`);
-  }
-
-  if (!name.match(/^[A-Za-z\s]*$/)) {
-    errors.push(`Name field must contain only letters and spaces!`);
-  }
+  const errors = await departmentValidations(req.body);
 
   if (errors.length === 0) {
-    await Department.create({
-      name: name,
-    });
+    await Department.create(req.body);
   } else {
-    const errorMessage = `${errors.join(", ")}`;
-    throw new Error(errorMessage);
+    const errorMessage = `${errors.join("### ")}`;
+    throw new ValidationError(errorMessage);
   }
+};
+
+const getAllDepartments = async (req, res, mext) => {
+  const departments = await Department.findAll();
+  return departments;
+};
+
+const departmentValidations = async (department) => {
+  const errors = [];
+  nameValidation(department.name, "Name", errors);
+
+  const allDepartments = await getAllDepartments();
+
+  if (allDepartments.length > 0) {
+    allDepartments.forEach((existingDepartment) => {
+      if (existingDepartment.name === department.name) {
+        errors.push("The department name already exists.");
+      }
+    });
+  }
+
+  return errors;
 };
 
 module.exports = {
   createDepartment,
+  getAllDepartments,
 };

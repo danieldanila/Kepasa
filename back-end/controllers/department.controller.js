@@ -1,4 +1,6 @@
+const { ValidationError } = require("../errors").ValidationError;
 const departmentService = require("../services/department.service");
+const { validationError, serverError } = require("./errors.controller");
 
 const createDepartment = async (req, res, next) => {
   try {
@@ -7,12 +9,31 @@ const createDepartment = async (req, res, next) => {
       message: `Department ${req.body.name} created.`,
     });
   } catch (err) {
-    const errorMessageArray = err.message.split(", ");
-    res.status(400).json({ message: errorMessageArray });
+    if (err instanceof ValidationError) {
+      validationError(res, err);
+    } else {
+      serverError(res, err);
+    }
+
+    next(err);
+  }
+};
+
+const getAllDepartments = async (req, res, next) => {
+  try {
+    const departments = await departmentService.getAllDepartments(
+      req,
+      res,
+      next
+    );
+    res.status(200).json(departments);
+  } catch (err) {
+    serverError(res, err);
     next(err);
   }
 };
 
 module.exports = {
   createDepartment,
+  getAllDepartments,
 };

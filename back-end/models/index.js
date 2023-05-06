@@ -19,7 +19,7 @@ const RolesProjects = RolesProjectsModel(Database, Sequelize);
 User.belongsTo(User, {
   as: "Mentor",
   foreignKey: {
-    name: "id_mentor",
+    name: "idMentor",
     type: DataTypes.UUID,
     validate: {
       isUUID: 4,
@@ -29,7 +29,7 @@ User.belongsTo(User, {
 
 Department.hasMany(User, {
   foreignKey: {
-    name: "id_department",
+    name: "idDepartment",
     type: DataTypes.UUID,
     allowNull: false,
     validate: {
@@ -38,23 +38,23 @@ Department.hasMany(User, {
   },
 });
 User.belongsTo(Department, {
-  foreignKey: "id_department",
+  foreignKey: "idDepartment",
 });
 
 User.belongsToMany(Role, {
   through: UsersRoles,
-  foreignKey: "id_user",
-  otherKey: "id_role",
+  foreignKey: "idUser",
+  otherKey: "idRole",
 });
 Role.belongsToMany(User, {
   through: UsersRoles,
-  foreignKey: "id_role",
-  otherKey: "id_user",
+  foreignKey: "idRole",
+  otherKey: "idUser",
 });
 
 Department.hasMany(Role, {
   foreignKey: {
-    name: "id_department",
+    name: "idDepartment",
     type: DataTypes.UUID,
     allowNull: false,
     validate: {
@@ -63,18 +63,18 @@ Department.hasMany(Role, {
   },
 });
 Role.belongsTo(Department, {
-  foreignKey: "id_department",
+  foreignKey: "idDepartment",
 });
 
 Role.belongsToMany(Project, {
   through: RolesProjects,
-  foreignKey: "id_role",
-  otherKey: "id_project",
+  foreignKey: "idRole",
+  otherKey: "idProject",
 });
 Project.belongsToMany(Role, {
   through: RolesProjects,
-  foreignKey: "id_project",
-  otherKey: "id_role",
+  foreignKey: "idProject",
+  otherKey: "idRole",
 });
 
 module.exports = {

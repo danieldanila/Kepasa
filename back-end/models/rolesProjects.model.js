@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
   return sequelize.define(
     "RolesProjects",
     {
-      id_role: {
+      idRole: {
         type: DataTypes.UUID,
         primaryKey: true,
         validate: {
@@ -23,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
           key: "id",
         },
       },
-      id_project: {
+      idProject: {
         type: DataTypes.UUID,
         primaryKey: true,
         validate: {
@@ -34,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
           key: "id",
         },
       },
-      hourly_pay: {
+      hourlyPay: {
         type: DataTypes.DECIMAL(6, 2).UNSIGNED,
         allowNull: false,
         validate: {
@@ -43,6 +43,7 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     {
+      underscored: true,
       tableName: "Roles_Projects",
     }
   );

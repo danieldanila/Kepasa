@@ -1,4 +1,7 @@
+const { NotFoundError } = require("../errors").NotFoundError;
+const { ValidationError } = require("../errors").ValidationError;
 const userService = require("../services/user.service");
+const { serverError, validationError } = require("./errors.controller");
 
 const createUser = async (req, res, next) => {
   try {
@@ -7,8 +10,12 @@ const createUser = async (req, res, next) => {
       message: `User ${req.body.firstName} ${req.body.lastName} created.`,
     });
   } catch (err) {
-    const errorMessageArray = err.message.split(", ");
-    res.status(400).json({ message: errorMessageArray });
+    if (err instanceof ValidationError) {
+      validationError(res, err);
+    } else {
+      serverError(res, err);
+    }
+
     next(err);
   }
 };
@@ -18,8 +25,7 @@ const getAllUsers = async (req, res, next) => {
     const users = await userService.getAllUsers(req, res, next);
     res.status(200).json(users);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Server error." });
+    serverError(res, err);
     next(err);
   }
 };
@@ -27,14 +33,13 @@ const getAllUsers = async (req, res, next) => {
 const getUserById = async (req, res, next) => {
   try {
     const user = await userService.getUserById(req, res, next);
-    if (user) {
-      res.status(200).json(user);
-    } else {
-      res.status(404).json({ message: "User not found." });
-    }
+    res.status(200).json(user);
   } catch (err) {
-    console.log(err);
-    res.status(500).json({ message: "Server error." });
+    if (err instanceof NotFoundError) {
+      res.status(404).json({ message: err.message });
+    } else {
+      serverError(res, err);
+    }
     next(err);
   }
 };
@@ -42,14 +47,16 @@ const getUserById = async (req, res, next) => {
 const updateUser = async (req, res, next) => {
   try {
     const updatedUser = await userService.updateUser(req, res, next);
-    if (updatedUser) {
-      res.status(202).json(updatedUser);
-    } else {
-      res.status(404).json({ message: "User not found." });
-    }
+    res.status(202).json(updatedUser);
   } catch (err) {
-    console.log(err);
-    res.status(500).json({ message: "Server error." });
+    if (err instanceof NotFoundError) {
+      res.status(404).json({ message: err.message });
+    } else if (err instanceof ValidationError) {
+      validationError(res, err);
+    } else {
+      serverError(res, err);
+    }
+
     next(err);
   }
 };
@@ -59,8 +66,11 @@ const deleteUser = async (req, res, next) => {
     await userService.deleteUser(req, res, next);
     res.status(200).json({ message: "User deleted." });
   } catch (err) {
-    console.log(err);
-    res.status(404).json({ message: "User not found." });
+    if (err instanceof NotFoundError) {
+      res.status(404).json({ message: err.message });
+    } else {
+      serverError(res, err);
+    }
     next(err);
   }
 };

@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
   return sequelize.define(
     "UsersRoles",
     {
-      id_user: {
+      idUser: {
         type: DataTypes.UUID,
         primaryKey: true,
         validate: {
@@ -23,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
           key: "id",
         },
       },
-      id_role: {
+      idRole: {
         type: DataTypes.UUID,
         primaryKey: true,
         validate: {
@@ -36,6 +36,7 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     {
+      underscored: true,
       tableName: "Users_Roles",
     }
   );

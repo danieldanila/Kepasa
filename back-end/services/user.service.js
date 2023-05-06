@@ -1,75 +1,28 @@
+const {
+  validateCompletedField,
+  nameValidation,
+  emailValidation,
+  phoneValidation,
+  urlValidation,
+  passwordValidation,
+  birthdayValidation,
+  uuidValidation,
+  userDuplicatedFieldsValidation,
+} = require("./validations.service");
+
+const { ValidationError } = require("../errors").ValidationError;
+const { NotFoundError } = require("../errors").NotFoundError;
+
 const User = require("../models/index").User;
 
 const createUser = async (req, res, next) => {
-  const email = req.body.email;
-  const phone = req.body.phone;
-  const socialMediaLink = req.body.socialMediaLink;
-  const password = req.body.password;
-  const firstName = req.body.firstName;
-  const lastName = req.body.lastName;
-  const birthday = req.body.birthday;
-  const isActive = req.body.isActive;
-  const isAdministrator = req.body.isAdministrator;
-  const idDepartment = req.body.idDepartment;
-  const idMentor = req.body.idMentor;
-
-  const errors = [];
-
-  const emptyFieldError = "field is mandatoy!";
-
-  if (!email) {
-    errors.push(`Email ${emptyFieldError}`);
-  }
-
-  if (!phone) {
-    errors.push(`Phone ${emptyFieldError}`);
-  }
-
-  if (!socialMediaLink) {
-    errors.push(`Social media link ${emptyFieldError}`);
-  }
-
-  if (!password) {
-    errors.push(`Password ${emptyFieldError}`);
-  }
-
-  if (!firstName) {
-    errors.push(`First name ${emptyFieldError}`);
-  }
-
-  if (!lastName) {
-    errors.push(`Last name ${emptyFieldError}`);
-  }
-
-  if (!birthday) {
-    errors.push(`Birthday ${emptyFieldError}`);
-  }
-
-  if (!idDepartment) {
-    errors.push(`Department ${emptyFieldError}`);
-  }
-
-  if (!idMentor) {
-    errors.push(`Mentor ${emptyFieldError}`);
-  }
+  const errors = await userValidations(req.body);
 
   if (errors.length === 0) {
-    await User.create({
-      email: email,
-      phone: phone,
-      social_media_link: socialMediaLink,
-      password: password,
-      first_name: firstName,
-      last_name: lastName,
-      birthday: birthday,
-      is_active: isActive,
-      is_administrator: isAdministrator,
-      id_department: idDepartment,
-      id_mentor: idMentor,
-    });
+    await User.create(req.body);
   } else {
-    const errorMessage = `${errors.join(", ")}`;
-    throw new Error(errorMessage);
+    const errorMessage = `${errors.join("### ")}`;
+    throw new ValidationError(errorMessage);
   }
 };
 
@@ -81,20 +34,79 @@ const getAllUsers = async (req, res, next) => {
 const getUserById = async (req, res, next) => {
   const userId = req.params.id;
   const user = await User.findByPk(userId);
-  return user;
+
+  if (user) {
+    return user;
+  } else {
+    throw new NotFoundError("User not found");
+  }
 };
 
 const updateUser = async (req, res, next) => {
-  const userId = req.params.id;
-  const user = await User.findByPk(userId);
-  const updatedUser = await user.update(req.body);
-  return updatedUser;
+  const errors = await userValidations(req.body);
+
+  if (errors.length === 0) {
+    const userId = req.params.id;
+    const userFound = await User.findByPk(userId);
+
+    if (userFound) {
+      const updatedUser = await userFound.update(req.body);
+      return updatedUser;
+    } else {
+      throw new NotFoundError("User not found.");
+    }
+  } else {
+    const errorMessage = `${errors.join("### ")}`;
+    throw new ValidationError(errorMessage);
+  }
 };
 
 const deleteUser = async (req, res, next) => {
   const userId = req.params.id;
   const user = await User.findByPk(userId);
-  user.destroy();
+
+  if (user) {
+    user.destroy();
+  } else {
+    throw new NotFoundError("User not found.");
+  }
+};
+
+const userValidations = async (user) => {
+  const errors = [];
+
+  validateCompletedField(emailValidation, user.email, "Email", errors);
+  validateCompletedField(phoneValidation, user.phone, "Phone", errors);
+  validateCompletedField(
+    urlValidation,
+    user.socialMediaLink,
+    "Social media link",
+    errors
+  );
+  validateCompletedField(passwordValidation, user.password, "Password", errors);
+  validateCompletedField(nameValidation, user.firstName, "First name", errors);
+  validateCompletedField(nameValidation, user.lastName, "Last name", errors);
+  validateCompletedField(birthdayValidation, user.birthday, "Birthday", errors);
+  validateCompletedField(
+    uuidValidation,
+    user.idDepartment,
+    "Department id",
+    errors
+  );
+
+  const existingUsers = await getAllUsers();
+
+  if (existingUsers.length > 0) {
+    if (
+      validateCompletedField(uuidValidation, user.idMentor, "Mentor id", errors)
+    ) {
+      userDuplicatedFieldsValidation(existingUsers, user, errors);
+    }
+  } else {
+    user.idMentor = null;
+  }
+
+  return errors;
 };
 
 module.exports = {
