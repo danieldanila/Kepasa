@@ -10,10 +10,14 @@ const validateCompletedField = (
   validationMethod,
   field,
   fieldName,
-  errorsArray
+  errorsArray,
+  isUpdateRequest,
+  entityObjects
 ) => {
-  if (mandatoryFieldValidation(field, fieldName, errorsArray)) {
-    return validationMethod(field, fieldName, errorsArray);
+  if (isUpdateRequest && !field) {
+    return true;
+  } else if (mandatoryFieldValidation(field, fieldName, errorsArray)) {
+    return validationMethod(field, fieldName, errorsArray, entityObjects);
   }
   return false;
 };
@@ -79,7 +83,7 @@ const passwordValidation = (field, fieldName, errorsArray) => {
     )
   ) {
     errorsArray.push(
-      `${fieldName} field must have minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character:`
+      `${fieldName} field must have minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character.`
     );
     return false;
   }
@@ -105,33 +109,43 @@ const uuidValidation = (field, fieldName, errorsArray) => {
   return true;
 };
 
-const userDuplicatedFieldsValidation = (
-  existingUsers,
-  newUser,
-  errorsArray
+const foreignUuidValidation = (
+  field,
+  fieldName,
+  errorsArray,
+  entityObjects
 ) => {
-  let doesMentorExists = false;
+  uuidValidation(field, fieldName, errorsArray);
 
-  existingUsers.forEach((existingUser) => {
-    if (existingUser.email === newUser.email) {
-      errorsArray.push("The email already exists.");
-    }
-
-    if (existingUser.phone === newUser.phone) {
-      errorsArray.push("The phone already exists.");
-    }
-
-    if (existingUser.socialMediaLink === newUser.socialMediaLink) {
-      errorsArray.push("The social media link already exists.");
-    }
-
-    if (existingUser.id === newUser.idMentor) {
-      doesMentorExists = true;
+  let doesUuidExists = false;
+  entityObjects.forEach((entityObject) => {
+    if (entityObject.id === field) {
+      doesUuidExists = true;
     }
   });
 
-  if (!doesMentorExists) {
-    errorsArray.push("The mentor id doesn't exists.");
+  if (!doesUuidExists) {
+    errorsArray.push(`${fieldName} doesn't exist.`);
+  }
+};
+
+const duplicateFieldValidation = (
+  field,
+  fieldName,
+  errorsArray,
+  entityObjects,
+  propertyName
+) => {
+  entityObjects.forEach((entityObject) => {
+    if (entityObject[propertyName] === field) {
+      errorsArray.push(`${fieldName} already exists.`);
+    }
+  });
+};
+
+const booleanFieldValidation = (field, fieldName, errorsArray) => {
+  if (field && !(field === "true" || field === "false")) {
+    errorsArray.push(`${fieldName} must be a boolean value.`);
   }
 };
 
@@ -145,5 +159,7 @@ module.exports = {
   passwordValidation,
   birthdayValidation,
   uuidValidation,
-  userDuplicatedFieldsValidation,
+  foreignUuidValidation,
+  duplicateFieldValidation,
+  booleanFieldValidation,
 };

@@ -6,17 +6,19 @@ const {
   urlValidation,
   passwordValidation,
   birthdayValidation,
-  uuidValidation,
-  userDuplicatedFieldsValidation,
+  foreignUuidValidation,
+  duplicateFieldValidation,
+  booleanFieldValidation,
 } = require("./validations.service");
 
 const { ValidationError } = require("../errors").ValidationError;
 const { NotFoundError } = require("../errors").NotFoundError;
 
 const User = require("../models/index").User;
+const departmentService = require("./index").departmentService;
 
 const createUser = async (req, res, next) => {
-  const errors = await userValidations(req.body);
+  const errors = await userValidations(req.body, false);
 
   if (errors.length === 0) {
     await User.create(req.body);
@@ -43,7 +45,7 @@ const getUserById = async (req, res, next) => {
 };
 
 const updateUser = async (req, res, next) => {
-  const errors = await userValidations(req.body);
+  const errors = await userValidations(req.body, true);
 
   if (errors.length === 0) {
     const userId = req.params.id;
@@ -72,39 +74,111 @@ const deleteUser = async (req, res, next) => {
   }
 };
 
-const userValidations = async (user) => {
+const userValidations = async (user, isUpdateRequest) => {
   const errors = [];
 
-  validateCompletedField(emailValidation, user.email, "Email", errors);
-  validateCompletedField(phoneValidation, user.phone, "Phone", errors);
+  validateCompletedField(
+    emailValidation,
+    user.email,
+    "Email",
+    errors,
+    isUpdateRequest
+  );
+  validateCompletedField(
+    phoneValidation,
+    user.phone,
+    "Phone",
+    errors,
+    isUpdateRequest
+  );
   validateCompletedField(
     urlValidation,
     user.socialMediaLink,
     "Social media link",
-    errors
+    errors,
+    isUpdateRequest
   );
-  validateCompletedField(passwordValidation, user.password, "Password", errors);
-  validateCompletedField(nameValidation, user.firstName, "First name", errors);
-  validateCompletedField(nameValidation, user.lastName, "Last name", errors);
-  validateCompletedField(birthdayValidation, user.birthday, "Birthday", errors);
   validateCompletedField(
-    uuidValidation,
+    passwordValidation,
+    user.password,
+    "Password",
+    errors,
+    isUpdateRequest
+  );
+  validateCompletedField(
+    nameValidation,
+    user.firstName,
+    "First name",
+    errors,
+    isUpdateRequest
+  );
+  validateCompletedField(
+    nameValidation,
+    user.lastName,
+    "Last name",
+    errors,
+    isUpdateRequest
+  );
+  validateCompletedField(
+    birthdayValidation,
+    user.birthday,
+    "Birthday",
+    errors,
+    isUpdateRequest
+  );
+
+  const existingDepartments = await departmentService.getAllDepartments();
+
+  validateCompletedField(
+    foreignUuidValidation,
     user.idDepartment,
     "Department id",
-    errors
+    errors,
+    isUpdateRequest,
+    existingDepartments
   );
 
   const existingUsers = await getAllUsers();
 
   if (existingUsers.length > 0) {
-    if (
-      validateCompletedField(uuidValidation, user.idMentor, "Mentor id", errors)
-    ) {
-      userDuplicatedFieldsValidation(existingUsers, user, errors);
-    }
+    validateCompletedField(
+      foreignUuidValidation,
+      user.idMentor,
+      "Mentor id",
+      errors,
+      isUpdateRequest,
+      existingUsers
+    );
+
+    duplicateFieldValidation(
+      user.email,
+      "Email",
+      errors,
+      existingUsers,
+      "email"
+    );
+
+    duplicateFieldValidation(
+      user.phone,
+      "Phone",
+      errors,
+      existingUsers,
+      "phone"
+    );
+
+    duplicateFieldValidation(
+      user.socialMediaLink,
+      "Social media link",
+      errors,
+      existingUsers,
+      "socialMediaLink"
+    );
   } else {
     user.idMentor = null;
   }
+
+  booleanFieldValidation(user.isActive, "Is Active", errors);
+  booleanFieldValidation(user.isAdministrator, "Is Administrator", errors);
 
   return errors;
 };

@@ -72,6 +72,12 @@ module.exports = (sequelize, DataTypes) => {
           return `${this.firstName} ${this.lastName}`;
         },
       },
+      departmentName: {
+        type: DataTypes.VIRTUAL,
+        get() {
+          return this.Department?.get().name;
+        },
+      },
     },
     {
       underscored: true,
