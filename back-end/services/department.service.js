@@ -13,33 +13,25 @@ const { NotFoundError } = require("../errors").NotFoundError;
 
 const Department = require("../models/index").Department;
 
-const createDepartment = async (req, res) => {
-  const errors = await departmentValidations(req.body, false);
+const createDepartment = async (departmentBody) => {
+  const errors = await departmentValidations(departmentBody, false);
 
   if (errors.length === 0) {
-    await Department.create(req.body);
+    await Department.create(departmentBody);
   } else {
     throwValidationErrorWithMessage(errors);
   }
 };
 
-const getAllDepartments = async (req, res, mext) => {
+const getAllDepartments = async () => {
   const departments = await Department.findAll();
   return departments;
 };
 
-const getDepartmentById = async (req, res) => {
+const getDepartmentById = async (departmentId) => {
   const errors = [];
 
-  const departmentId = idParamaterValidation(
-    req.params.id,
-    "Department id",
-    errors
-  );
-
-  if (!uuidValidation(departmentId, "Department id", errors)) {
-    throwValidationErrorWithMessage(errors);
-  }
+  idParamaterValidation(departmentId, "Department id", errors);
 
   const department = await Department.findByPk(departmentId);
 
@@ -50,19 +42,15 @@ const getDepartmentById = async (req, res) => {
   }
 };
 
-const updateDepartment = async (req, res) => {
-  const errors = await departmentValidations(req.body, true);
+const updateDepartment = async (departmentId, departmentBody) => {
+  const errors = await departmentValidations(departmentBody, true);
 
   if (errors.length === 0) {
-    const departmentId = idParamaterValidation(
-      req.params.id,
-      "Department id",
-      errors
-    );
+    idParamaterValidation(departmentId, "Department id", errors);
     const departmentFound = await Department.findByPk(departmentId);
 
     if (departmentFound) {
-      const updatedDepartment = await departmentFound.update(req.body);
+      const updatedDepartment = await departmentFound.update(departmentBody);
       return updatedDepartment;
     } else {
       throw new NotFoundError("Department not found.");
@@ -72,14 +60,10 @@ const updateDepartment = async (req, res) => {
   }
 };
 
-const deleteDepartment = async (req, res) => {
+const deleteDepartment = async (departmentId) => {
   const errors = [];
 
-  const departmentId = idParamaterValidation(
-    req.params.id,
-    "Department id",
-    errors
-  );
+  idParamaterValidation(departmentId, "Department id", errors);
   const department = await Department.findByPk(departmentId);
 
   if (department) {

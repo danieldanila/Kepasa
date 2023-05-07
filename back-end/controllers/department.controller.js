@@ -8,7 +8,7 @@ const {
 
 const createDepartment = async (req, res) => {
   try {
-    await departmentService.createDepartment(req, res);
+    await departmentService.createDepartment(req.body);
     res.status(201).json({
       message: `Department ${req.body.name} created.`,
     });
@@ -23,7 +23,7 @@ const createDepartment = async (req, res) => {
 
 const getAllDepartments = async (req, res) => {
   try {
-    const departments = await departmentService.getAllDepartments(req, res);
+    const departments = await departmentService.getAllDepartments();
     res.status(200).json(departments);
   } catch (err) {
     serverErrorHandler(res, err);
@@ -32,7 +32,7 @@ const getAllDepartments = async (req, res) => {
 
 const getDepartmentById = async (req, res) => {
   try {
-    const department = await departmentService.getDepartmentById(req, res);
+    const department = await departmentService.getDepartmentById(req.params.id);
     res.status(200).json(department);
   } catch (err) {
     notFoundValidationServerErrorsWrapper(res, err);
@@ -42,8 +42,8 @@ const getDepartmentById = async (req, res) => {
 const updateDepartment = async (req, res) => {
   try {
     const updatedDepartment = await departmentService.updateDepartment(
-      req,
-      res
+      req.params.id,
+      req.body
     );
     res.status(202).json(updatedDepartment);
   } catch (err) {
@@ -53,7 +53,7 @@ const updateDepartment = async (req, res) => {
 
 const deleteDepartment = async (req, res) => {
   try {
-    await departmentService.deleteDepartment(req, res);
+    await departmentService.deleteDepartment(req.params.id);
     res.status(200).json({ message: "Department deleted." });
   } catch (err) {
     notFoundValidationServerErrorsWrapper(res, err);

@@ -106,7 +106,7 @@ const uuidValidation = (field, fieldName, errorsArray) => {
   const uuidRegex =
     /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
-  if (!field.match(uuidRegex)) {
+  if (!field || !field.match(uuidRegex)) {
     errorsArray.push(`${fieldName} must be a valid uuid.`);
     return false;
   }

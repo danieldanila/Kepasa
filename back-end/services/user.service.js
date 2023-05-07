@@ -21,25 +21,25 @@ const { NotFoundError } = require("../errors").NotFoundError;
 const User = require("../models/index").User;
 const departmentService = require("./index").departmentService;
 
-const createUser = async (req, res) => {
-  const errors = await userValidations(req.body, false);
+const createUser = async (userBody) => {
+  const errors = await userValidations(userBody, false);
 
   if (errors.length === 0) {
-    await User.create(req.body);
+    await User.create(userBody);
   } else {
     throwValidationErrorWithMessage(errors);
   }
 };
 
-const getAllUsers = async (req, res) => {
+const getAllUsers = async () => {
   const users = await User.findAll();
   return users;
 };
 
-const getUserById = async (req, res) => {
+const getUserById = async (userId) => {
   const errors = [];
 
-  const userId = idParamaterValidation(req.params.id, "User id", errors);
+  idParamaterValidation(userId, "User id", errors);
 
   const user = await User.findByPk(userId);
 
@@ -50,15 +50,15 @@ const getUserById = async (req, res) => {
   }
 };
 
-const updateUser = async (req, res) => {
-  const errors = await userValidations(req.body, true);
+const updateUser = async (userId, userBody) => {
+  const errors = await userValidations(userBody, true);
 
   if (errors.length === 0) {
-    const userId = idParamaterValidation(req.params.id, "User id", errors);
+    idParamaterValidation(userId, "User id", errors);
     const userFound = await User.findByPk(userId);
 
     if (userFound) {
-      const updatedUser = await userFound.update(req.body);
+      const updatedUser = await userFound.update(userBody);
       return updatedUser;
     } else {
       throw new NotFoundError("User not found.");
@@ -68,10 +68,10 @@ const updateUser = async (req, res) => {
   }
 };
 
-const deleteUser = async (req, res) => {
+const deleteUser = async (userId) => {
   const errors = [];
 
-  const userId = idParamaterValidation(req.params.id, "User id", errors);
+  idParamaterValidation(userId, "User id", errors);
   const user = await User.findByPk(userId);
 
   if (user) {
@@ -79,6 +79,27 @@ const deleteUser = async (req, res) => {
   } else {
     throw new NotFoundError("User not found.");
   }
+};
+
+const getUserMentor = async (userId) => {
+  // the code commented from bellow works as intended
+  // const user = await getUserById(userId);
+  // const userMentor = await getUserById(user.idMentor);
+
+  // the uncommented code from bellow works as well as intended but needs some changes
+  const userMentor = await User.findOne({
+    where: {
+      id: userId,
+    },
+    include: [
+      {
+        model: User,
+        as: "Mentor",
+      },
+    ],
+  });
+
+  return userMentor;
 };
 
 const userValidations = async (user, isUpdateRequest) => {
@@ -204,4 +225,5 @@ module.exports = {
   getUserById,
   updateUser,
   deleteUser,
+  getUserMentor,
 };
