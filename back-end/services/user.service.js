@@ -9,46 +9,52 @@ const {
   foreignUuidValidation,
   duplicateFieldValidation,
   booleanFieldValidation,
-} = require("./validations.service");
+  uuidValidation,
+  idParamaterValidation,
+} = require("../utils/validations.util");
+const {
+  throwValidationErrorWithMessage,
+} = require("../utils/errorsWrappers.util");
 
-const { ValidationError } = require("../errors").ValidationError;
 const { NotFoundError } = require("../errors").NotFoundError;
 
 const User = require("../models/index").User;
 const departmentService = require("./index").departmentService;
 
-const createUser = async (req, res, next) => {
+const createUser = async (req, res) => {
   const errors = await userValidations(req.body, false);
 
   if (errors.length === 0) {
     await User.create(req.body);
   } else {
-    const errorMessage = `${errors.join("### ")}`;
-    throw new ValidationError(errorMessage);
+    throwValidationErrorWithMessage(errors);
   }
 };
 
-const getAllUsers = async (req, res, next) => {
+const getAllUsers = async (req, res) => {
   const users = await User.findAll();
   return users;
 };
 
-const getUserById = async (req, res, next) => {
-  const userId = req.params.id;
+const getUserById = async (req, res) => {
+  const errors = [];
+
+  const userId = idParamaterValidation(req.params.id, "User id", errors);
+
   const user = await User.findByPk(userId);
 
   if (user) {
     return user;
   } else {
-    throw new NotFoundError("User not found");
+    throw new NotFoundError("User not found.");
   }
 };
 
-const updateUser = async (req, res, next) => {
+const updateUser = async (req, res) => {
   const errors = await userValidations(req.body, true);
 
   if (errors.length === 0) {
-    const userId = req.params.id;
+    const userId = idParamaterValidation(req.params.id, "User id", errors);
     const userFound = await User.findByPk(userId);
 
     if (userFound) {
@@ -58,13 +64,14 @@ const updateUser = async (req, res, next) => {
       throw new NotFoundError("User not found.");
     }
   } else {
-    const errorMessage = `${errors.join("### ")}`;
-    throw new ValidationError(errorMessage);
+    throwValidationErrorWithMessage(errors);
   }
 };
 
-const deleteUser = async (req, res, next) => {
-  const userId = req.params.id;
+const deleteUser = async (req, res) => {
+  const errors = [];
+
+  const userId = idParamaterValidation(req.params.id, "User id", errors);
   const user = await User.findByPk(userId);
 
   if (user) {
@@ -173,12 +180,20 @@ const userValidations = async (user, isUpdateRequest) => {
       existingUsers,
       "socialMediaLink"
     );
+
+    if (user.id) {
+      duplicateFieldValidation(user.id, "User id", errors, existingUsers, "id");
+    }
   } else {
     user.idMentor = null;
   }
 
   booleanFieldValidation(user.isActive, "Is Active", errors);
   booleanFieldValidation(user.isAdministrator, "Is Administrator", errors);
+
+  if (user.id) {
+    uuidValidation(user.id, "User id", errors);
+  }
 
   return errors;
 };

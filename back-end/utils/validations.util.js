@@ -1,3 +1,7 @@
+const {
+  throwValidationErrorWithMessage,
+} = require("../utils/errorsWrappers.util");
+
 const mandatoryFieldValidation = (field, fieldName, errorsArray) => {
   if (!field) {
     errorsArray.push(`${fieldName} field is mandatory.`);
@@ -137,7 +141,11 @@ const duplicateFieldValidation = (
   propertyName
 ) => {
   entityObjects.forEach((entityObject) => {
-    if (entityObject[propertyName] === field) {
+    if (
+      field &&
+      entityObject[propertyName].toString().toLowerCase() ===
+        field.toString().toLowerCase()
+    ) {
       errorsArray.push(`${fieldName} already exists.`);
     }
   });
@@ -147,6 +155,13 @@ const booleanFieldValidation = (field, fieldName, errorsArray) => {
   if (field && !(field === "true" || field === "false")) {
     errorsArray.push(`${fieldName} must be a boolean value.`);
   }
+};
+
+const idParamaterValidation = (entityId, fieldName, errorsArray) => {
+  if (!uuidValidation(entityId, fieldName, errorsArray)) {
+    throwValidationErrorWithMessage(errorsArray);
+  }
+  return entityId;
 };
 
 module.exports = {
@@ -162,4 +177,5 @@ module.exports = {
   foreignUuidValidation,
   duplicateFieldValidation,
   booleanFieldValidation,
+  idParamaterValidation,
 };

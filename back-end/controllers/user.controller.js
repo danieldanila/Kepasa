@@ -1,77 +1,59 @@
-const { NotFoundError } = require("../errors").NotFoundError;
 const { ValidationError } = require("../errors").ValidationError;
 const userService = require("../services/user.service");
-const { serverError, validationError } = require("./errors.controller");
+const {
+  validationErrorHandler,
+  serverErrorHandler,
+  notFoundValidationServerErrorsWrapper,
+} = require("../utils/errorsHandlers.util");
 
-const createUser = async (req, res, next) => {
+const createUser = async (req, res) => {
   try {
-    await userService.createUser(req, res, next);
+    await userService.createUser(req, res);
     res.status(201).json({
       message: `User ${req.body.firstName} ${req.body.lastName} created.`,
     });
   } catch (err) {
     if (err instanceof ValidationError) {
-      validationError(res, err);
+      validationErrorHandler(res, err);
     } else {
-      serverError(res, err);
+      serverErrorHandler(res, err);
     }
-
-    next(err);
   }
 };
 
-const getAllUsers = async (req, res, next) => {
+const getAllUsers = async (req, res) => {
   try {
-    const users = await userService.getAllUsers(req, res, next);
+    const users = await userService.getAllUsers(req, res);
     res.status(200).json(users);
   } catch (err) {
-    serverError(res, err);
-    next(err);
+    serverErrorHandler(res, err);
   }
 };
 
-const getUserById = async (req, res, next) => {
+const getUserById = async (req, res) => {
   try {
-    const user = await userService.getUserById(req, res, next);
+    const user = await userService.getUserById(req, res);
     res.status(200).json(user);
   } catch (err) {
-    if (err instanceof NotFoundError) {
-      res.status(404).json({ message: err.message });
-    } else {
-      serverError(res, err);
-    }
-    next(err);
+    notFoundValidationServerErrorsWrapper(res, err);
   }
 };
 
-const updateUser = async (req, res, next) => {
+const updateUser = async (req, res) => {
   try {
-    const updatedUser = await userService.updateUser(req, res, next);
+    const updatedUser = await userService.updateUser(req, res);
     res.status(202).json(updatedUser);
   } catch (err) {
-    if (err instanceof NotFoundError) {
-      res.status(404).json({ message: err.message });
-    } else if (err instanceof ValidationError) {
-      validationError(res, err);
-    } else {
-      serverError(res, err);
-    }
-
-    next(err);
+    notFoundValidationServerErrorsWrapper(res, err);
   }
 };
 
-const deleteUser = async (req, res, next) => {
+const deleteUser = async (req, res) => {
   try {
-    await userService.deleteUser(req, res, next);
+    await userService.deleteUser(req, res);
     res.status(200).json({ message: "User deleted." });
   } catch (err) {
-    if (err instanceof NotFoundError) {
-      res.status(404).json({ message: err.message });
-    } else {
-      serverError(res, err);
-    }
-    next(err);
+    notFoundValidationServerErrorsWrapper(res, err);
   }
 };
 

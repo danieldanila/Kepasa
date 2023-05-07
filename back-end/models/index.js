@@ -27,6 +27,17 @@ User.belongsTo(User, {
   },
 });
 
+User.hasMany(User, {
+  as: "Mentees",
+  foreignKey: {
+    name: "idMentor",
+    type: DataTypes.UUID,
+    validate: {
+      isUUID: 4,
+    },
+  },
+});
+
 Department.hasMany(User, {
   foreignKey: {
     name: "idDepartment",
