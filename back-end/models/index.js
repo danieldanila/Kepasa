@@ -17,7 +17,7 @@ const UsersRoles = UsersRolesModel(Database, Sequelize);
 const RolesProjects = RolesProjectsModel(Database, Sequelize);
 
 User.belongsTo(User, {
-  as: "Mentor",
+  as: "mentor",
   foreignKey: {
     name: "idMentor",
     type: DataTypes.UUID,
@@ -28,7 +28,7 @@ User.belongsTo(User, {
 });
 
 User.hasMany(User, {
-  as: "Mentees",
+  as: "mentees",
   foreignKey: {
     name: "idMentor",
     type: DataTypes.UUID,

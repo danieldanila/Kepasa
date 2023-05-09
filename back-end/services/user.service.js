@@ -82,11 +82,10 @@ const deleteUser = async (userId) => {
 };
 
 const getUserMentor = async (userId) => {
-  // the code commented from bellow works as intended
-  // const user = await getUserById(userId);
-  // const userMentor = await getUserById(user.idMentor);
+  const errors = [];
 
-  // the uncommented code from bellow works as well as intended but needs some changes
+  idParamaterValidation(userId, "User id", errors);
+
   const userMentor = await User.findOne({
     where: {
       id: userId,
@@ -94,12 +93,40 @@ const getUserMentor = async (userId) => {
     include: [
       {
         model: User,
-        as: "Mentor",
+        as: "mentor",
       },
     ],
   });
 
-  return userMentor;
+  if (userMentor) {
+    return userMentor.mentor;
+  } else {
+    throw new NotFoundError("User not found.");
+  }
+};
+
+const getUserMentees = async (userId) => {
+  const errors = [];
+
+  idParamaterValidation(userId, "User id", errors);
+
+  const userMentees = await User.findOne({
+    where: {
+      id: userId,
+    },
+    include: [
+      {
+        model: User,
+        as: "mentees",
+      },
+    ],
+  });
+
+  if (userMentees) {
+    return userMentees.mentees;
+  } else {
+    throw new NotFoundError("User not found.");
+  }
 };
 
 const userValidations = async (user, isUpdateRequest) => {
@@ -226,4 +253,5 @@ module.exports = {
   updateUser,
   deleteUser,
   getUserMentor,
+  getUserMentees,
 };

@@ -66,6 +66,15 @@ const getUserMentor = async (req, res) => {
   }
 };
 
+const getUserMentees = async (req, res) => {
+  try {
+    const userMentees = await userService.getUserMentees(req.params.id);
+    res.status(200).json(userMentees);
+  } catch (err) {
+    notFoundValidationServerErrorsWrapper(res, err);
+  }
+};
+
 module.exports = {
   createUser,
   getAllUsers,
@@ -73,4 +82,5 @@ module.exports = {
   updateUser,
   deleteUser,
   getUserMentor,
+  getUserMentees,
 };

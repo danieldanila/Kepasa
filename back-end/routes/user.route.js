@@ -7,5 +7,6 @@ router.get("/:id", userController.getUserById);
 router.put("/:id", userController.updateUser);
 router.delete("/:id", userController.deleteUser);
 router.get("/:id/mentor", userController.getUserMentor);
+router.get("/:id/mentees", userController.getUserMentees);
 
 module.exports = router;
