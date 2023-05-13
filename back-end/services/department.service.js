@@ -2,7 +2,6 @@ const {
   nameValidation,
   validateCompletedField,
   duplicateFieldValidation,
-  uuidValidation,
   idParamaterValidation,
 } = require("../utils/validations.util");
 const {
@@ -12,6 +11,7 @@ const {
 const { NotFoundError } = require("../errors").NotFoundError;
 
 const Department = require("../models/index").Department;
+const User = require("../models/index").User;
 
 const createDepartment = async (departmentBody) => {
   const errors = await departmentValidations(departmentBody, false);
@@ -73,6 +73,28 @@ const deleteDepartment = async (departmentId) => {
   }
 };
 
+const getDepartmentUsers = async (departmentId) => {
+  const errors = [];
+  idParamaterValidation(departmentId, "Department id", errors);
+
+  const departmentUsers = await Department.findOne({
+    where: {
+      id: departmentId,
+    },
+    include: [
+      {
+        model: User,
+      },
+    ],
+  });
+
+  if (departmentUsers) {
+    return departmentUsers.Users;
+  } else {
+    throw new NotFoundError("Department not found.");
+  }
+};
+
 const departmentValidations = async (department, isUpdateRequest) => {
   const errors = [];
   validateCompletedField(
@@ -104,4 +126,5 @@ module.exports = {
   getDepartmentById,
   updateDepartment,
   deleteDepartment,
+  getDepartmentUsers,
 };

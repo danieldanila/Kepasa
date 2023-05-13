@@ -15,6 +15,7 @@ const {
 const {
   throwValidationErrorWithMessage,
 } = require("../utils/errorsWrappers.util");
+const { Department } = require("../models/index");
 
 const { NotFoundError } = require("../errors").NotFoundError;
 
@@ -124,6 +125,29 @@ const getUserMentees = async (userId) => {
 
   if (userMentees) {
     return userMentees.mentees;
+  } else {
+    throw new NotFoundError("User not found.");
+  }
+};
+
+const getUserDepartment = async (userId) => {
+  const errors = [];
+
+  idParamaterValidation(userId, "User id", errors);
+
+  const userDepartment = await User.findOne({
+    where: {
+      id: userId,
+    },
+    include: [
+      {
+        model: Department,
+      },
+    ],
+  });
+
+  if (userDepartment) {
+    return userDepartment.Department;
   } else {
     throw new NotFoundError("User not found.");
   }
@@ -254,4 +278,5 @@ module.exports = {
   deleteUser,
   getUserMentor,
   getUserMentees,
+  getUserDepartment,
 };

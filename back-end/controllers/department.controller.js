@@ -60,10 +60,22 @@ const deleteDepartment = async (req, res) => {
   }
 };
 
+const getDepartmentUsers = async (req, res) => {
+  try {
+    const departmentUsers = await departmentService.getDepartmentUsers(
+      req.params.id
+    );
+    res.status(200).json(departmentUsers);
+  } catch (err) {
+    notFoundValidationServerErrorsWrapper(res, err);
+  }
+};
+
 module.exports = {
   createDepartment,
   getAllDepartments,
   getDepartmentById,
   updateDepartment,
   deleteDepartment,
+  getDepartmentUsers,
 };
