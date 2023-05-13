@@ -3,7 +3,7 @@ const departmentService = require("../services/department.service");
 const {
   validationErrorHandler,
   serverErrorHandler,
-  notFoundValidationServerErrorsWrapper,
+  errorsHandlerWrapper,
 } = require("../utils/errorsHandlers.util");
 
 const createDepartment = async (req, res) => {
@@ -21,6 +21,17 @@ const createDepartment = async (req, res) => {
   }
 };
 
+const createMultipleDepartments = async (req, res) => {
+  try {
+    await departmentService.createMultipleDepartments(req.body);
+    res
+      .status(201)
+      .json({ message: `${req.body.length} departments created.` });
+  } catch (err) {
+    errorsHandlerWrapper(res, err);
+  }
+};
+
 const getAllDepartments = async (req, res) => {
   try {
     const departments = await departmentService.getAllDepartments();
@@ -35,7 +46,7 @@ const getDepartmentById = async (req, res) => {
     const department = await departmentService.getDepartmentById(req.params.id);
     res.status(200).json(department);
   } catch (err) {
-    notFoundValidationServerErrorsWrapper(res, err);
+    errorsHandlerWrapper(res, err);
   }
 };
 
@@ -47,7 +58,7 @@ const updateDepartment = async (req, res) => {
     );
     res.status(202).json(updatedDepartment);
   } catch (err) {
-    notFoundValidationServerErrorsWrapper(res, err);
+    errorsHandlerWrapper(res, err);
   }
 };
 
@@ -56,7 +67,7 @@ const deleteDepartment = async (req, res) => {
     await departmentService.deleteDepartment(req.params.id);
     res.status(200).json({ message: "Department deleted." });
   } catch (err) {
-    notFoundValidationServerErrorsWrapper(res, err);
+    errorsHandlerWrapper(res, err);
   }
 };
 
@@ -67,12 +78,13 @@ const getDepartmentUsers = async (req, res) => {
     );
     res.status(200).json(departmentUsers);
   } catch (err) {
-    notFoundValidationServerErrorsWrapper(res, err);
+    errorsHandlerWrapper(res, err);
   }
 };
 
 module.exports = {
   createDepartment,
+  createMultipleDepartments,
   getAllDepartments,
   getDepartmentById,
   updateDepartment,

@@ -2,6 +2,7 @@ const {
   nameValidation,
   validateCompletedField,
   duplicateFieldValidation,
+  uuidValidation,
   idParamaterValidation,
 } = require("../utils/validations.util");
 const {
@@ -20,6 +21,12 @@ const createDepartment = async (departmentBody) => {
     await Department.create(departmentBody);
   } else {
     throwValidationErrorWithMessage(errors);
+  }
+};
+
+const createMultipleDepartments = async (arrayOfDepartmentsBodies) => {
+  for (const departmentBody of arrayOfDepartmentsBodies) {
+    await createDepartment(departmentBody);
   }
 };
 
@@ -117,11 +124,16 @@ const departmentValidations = async (department, isUpdateRequest) => {
     );
   }
 
+  if (department.id) {
+    uuidValidation(department.id, "Department id", errors);
+  }
+
   return errors;
 };
 
 module.exports = {
   createDepartment,
+  createMultipleDepartments,
   getAllDepartments,
   getDepartmentById,
   updateDepartment,

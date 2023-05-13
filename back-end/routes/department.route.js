@@ -2,6 +2,7 @@ const router = require("express").Router();
 const departmentController = require("../controllers/department.controller");
 
 router.post("/create", departmentController.createDepartment);
+router.post("/creates", departmentController.createMultipleDepartments);
 router.get("/", departmentController.getAllDepartments);
 router.get("/:id", departmentController.getDepartmentById);
 router.put("/:id", departmentController.updateDepartment);

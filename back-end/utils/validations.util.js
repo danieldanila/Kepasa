@@ -83,7 +83,7 @@ const urlValidation = (field, fieldName, errorsArray) => {
 const passwordValidation = (field, fieldName, errorsArray) => {
   if (
     !field.match(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$#!%*?&])[A-Za-z\d@$#!%*?&]{8,}$/
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$#!%^*?&])[A-Za-z\d@$#!%^*?&]{8,}$/
     )
   ) {
     errorsArray.push(

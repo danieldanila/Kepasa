@@ -1,6 +1,6 @@
 const Database = require("../models").connection;
 
-const sync = async (req, res) => {
+const sync = async () => {
   await Database.sync({ alter: true });
 };
 

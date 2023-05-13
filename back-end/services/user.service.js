@@ -16,6 +16,13 @@ const {
   throwValidationErrorWithMessage,
 } = require("../utils/errorsWrappers.util");
 const { Department } = require("../models/index");
+const {
+  passwordEncrypt,
+  comparePasswords,
+} = require("../utils/passwordEncrypt.utils");
+const {
+  CredentialsDoNotMatchError,
+} = require("../errors/credentialsDoNotMatchError");
 
 const { NotFoundError } = require("../errors").NotFoundError;
 
@@ -26,9 +33,17 @@ const createUser = async (userBody) => {
   const errors = await userValidations(userBody, false);
 
   if (errors.length === 0) {
+    const hashPassword = await passwordEncrypt(userBody.password);
+    userBody.password = hashPassword;
     await User.create(userBody);
   } else {
     throwValidationErrorWithMessage(errors);
+  }
+};
+
+const createMultipleUsers = async (arrayOfUserBodies) => {
+  for (const userBody of arrayOfUserBodies) {
+    await createUser(userBody);
   }
 };
 
@@ -153,6 +168,34 @@ const getUserDepartment = async (userId) => {
   }
 };
 
+const userLogin = async (userBody) => {
+  const payload = {
+    email: userBody.email,
+    password: userBody.password,
+  };
+
+  const user = await User.findOne({
+    where: {
+      email: payload.email,
+    },
+  });
+
+  if (!user) {
+    throw new CredentialsDoNotMatchError("Email and password do not match.");
+  }
+
+  const doPasswordsMatch = await comparePasswords(
+    payload.password,
+    user.password
+  );
+
+  if (!doPasswordsMatch) {
+    throw new CredentialsDoNotMatchError("Email and password do not match.");
+  }
+
+  return user;
+};
+
 const userValidations = async (user, isUpdateRequest) => {
   const errors = [];
 
@@ -272,6 +315,7 @@ const userValidations = async (user, isUpdateRequest) => {
 
 module.exports = {
   createUser,
+  createMultipleUsers,
   getAllUsers,
   getUserById,
   updateUser,
@@ -279,4 +323,5 @@ module.exports = {
   getUserMentor,
   getUserMentees,
   getUserDepartment,
+  userLogin,
 };
