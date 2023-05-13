@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const databaseController = require("../controllers/database.controller");
+const databaseController = require("../controllers").DatabaseController;
 
 router.get("/sync", databaseController.sync);
 

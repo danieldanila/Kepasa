@@ -1,9 +1,11 @@
-const databaseService = require("./database.service");
-const userService = require("./user.service");
-const departmentService = require("./department.service");
+const DatabaseService = require("./database.service");
+const UserService = require("./user.service");
+const DepartmentService = require("./department.service");
+const AuthenticationService = require("./authentication.service");
 
 module.exports = {
-  databaseService,
-  userService,
-  departmentService,
+  DatabaseService,
+  UserService,
+  DepartmentService,
+  AuthenticationService,
 };

@@ -1,11 +1,13 @@
 const router = require("express").Router();
 
-const databaseRouter = require("./database.route");
-const userRouter = require("./user.route");
-const departmentRouter = require("./department.route");
+const DatabaseRouter = require("./database.route");
+const UserRouter = require("./user.route");
+const DepartmentRouter = require("./department.route");
+const AuthenticationRouter = require("./authentication.route");
 
-router.use("/database", databaseRouter);
-router.use("/user", userRouter);
-router.use("/department", departmentRouter);
+router.use("/database", DatabaseRouter);
+router.use("/user", UserRouter);
+router.use("/department", DepartmentRouter);
+router.use("/authentication", AuthenticationRouter);
 
 module.exports = router;

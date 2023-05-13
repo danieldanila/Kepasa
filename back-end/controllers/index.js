@@ -1,5 +1,11 @@
-const databaseController = require("./database.controller");
+const DatabaseController = require("./database.controller");
+const UserController = require("./user.controller");
+const DepartmentController = require("./department.controller");
+const AuthenticationController = require("./authentication.controller");
 
 module.exports = {
-  databaseController,
+  DatabaseController,
+  UserController,
+  DepartmentController,
+  AuthenticationController,
 };
