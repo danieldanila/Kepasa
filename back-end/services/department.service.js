@@ -8,6 +8,7 @@ const { NotFoundError } = require("../errors").NotFoundError;
 
 const Department = require("../models").Department;
 const User = require("../models").User;
+const Role = require("../models").Role;
 
 const service = {
   createDepartment: async (departmentBody) => {
@@ -103,6 +104,28 @@ const service = {
 
     if (departmentUsers) {
       return departmentUsers.Users;
+    } else {
+      throw new NotFoundError("Department not found.");
+    }
+  },
+
+  getDepartmentRoles: async (departmentId) => {
+    const errors = [];
+    idParamaterValidation(departmentId, "Department id", errors);
+
+    const departmentRoles = await Department.findOne({
+      where: {
+        id: departmentId,
+      },
+      include: [
+        {
+          model: Role,
+        },
+      ],
+    });
+
+    if (departmentRoles) {
+      return departmentRoles.Roles;
     } else {
       throw new NotFoundError("Department not found.");
     }

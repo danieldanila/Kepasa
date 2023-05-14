@@ -75,6 +75,17 @@ const controller = {
       errorsHandlerWrapper(res, err);
     }
   },
+
+  getDeparmentRoles: async (req, res) => {
+    try {
+      const departmentRoles = await departmentService.getDepartmentRoles(
+        req.params.id
+      );
+      res.status(200).json(departmentRoles);
+    } catch (err) {
+      errorsHandlerWrapper(res, err);
+    }
+  },
 };
 
 module.exports = controller;

@@ -57,6 +57,15 @@ const controller = {
       errorsHandlerWrapper(res, err);
     }
   },
+
+  getRoleDepartment: async (req, res) => {
+    try {
+      const roleDepartment = await roleService.getRoleDepartment(req.params.id);
+      res.status(200).json(roleDepartment);
+    } catch (err) {
+      errorsHandlerWrapper(res, err);
+    }
+  },
 };
 
 module.exports = controller;

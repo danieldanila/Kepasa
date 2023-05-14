@@ -7,6 +7,7 @@ const {
 const { idParamaterValidation } = require("../validations/general.validation");
 
 const Role = require("../models").Role;
+const Department = require("../models").Department;
 
 const getAllDepartments = require("./department.service").getAllDepartments;
 
@@ -86,6 +87,29 @@ const service = {
 
     if (role) {
       role.destroy();
+    } else {
+      throw new NotFoundError("Role not found.");
+    }
+  },
+
+  getRoleDepartment: async (roleId) => {
+    const errors = [];
+
+    idParamaterValidation(roleId, "Role id", errors);
+
+    const roleDepartment = await Role.findOne({
+      where: {
+        id: roleId,
+      },
+      include: [
+        {
+          model: Department,
+        },
+      ],
+    });
+
+    if (roleDepartment) {
+      return roleDepartment.Department;
     } else {
       throw new NotFoundError("Role not found.");
     }
