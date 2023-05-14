@@ -1,4 +1,3 @@
-const { ValidationError } = require("../errors").ValidationError;
 const departmentService = require("../services").DepartmentService;
 const { errorsHandlerWrapper } = require("../utils/errorsHandlers.util");
 

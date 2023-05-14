@@ -6,8 +6,8 @@ const {
 } = require("../utils/errorsWrappers.util");
 const { NotFoundError } = require("../errors").NotFoundError;
 
-const Department = require("../models/index").Department;
-const User = require("../models/index").User;
+const Department = require("../models").Department;
+const User = require("../models").User;
 
 const service = {
   createDepartment: async (departmentBody) => {

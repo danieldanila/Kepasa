@@ -8,11 +8,10 @@ const { NotFoundError } = require("../errors").NotFoundError;
 
 const { passwordEncrypt } = require("../utils/passwordEncrypt.utils");
 
-const User = require("../models/index").User;
-const Department = require("../models/index").Department;
+const User = require("../models").User;
+const Department = require("../models").Department;
 
-const getAllDepartments =
-  require("../services/department.service").getAllDepartments;
+const getAllDepartments = require("./department.service").getAllDepartments;
 
 const service = {
   createUser: async (userBody) => {

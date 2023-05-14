@@ -4,7 +4,7 @@ const { CredentialsDoNotMatchError } =
   require("../errors").CredentialsDoNotMatchError;
 const { NotFoundError } = require("../errors").NotFoundError;
 
-const User = require("../models/index").User;
+const User = require("../models").User;
 
 const service = {
   userAuthentication: async (userBody) => {
