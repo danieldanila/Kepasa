@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
         unique: true,
         allowNull: false,
         validate: {
-          isAlpha: true,
+          notEmpty: true,
         },
       },
     },

@@ -1,10 +1,6 @@
 const { ValidationError } = require("../errors").ValidationError;
 const departmentService = require("../services").DepartmentService;
-const {
-  validationErrorHandler,
-  serverErrorHandler,
-  errorsHandlerWrapper,
-} = require("../utils/errorsHandlers.util");
+const { errorsHandlerWrapper } = require("../utils/errorsHandlers.util");
 
 const controller = {
   createDepartment: async (req, res) => {
@@ -14,11 +10,7 @@ const controller = {
         message: `Department ${req.body.name} created.`,
       });
     } catch (err) {
-      if (err instanceof ValidationError) {
-        validationErrorHandler(res, err);
-      } else {
-        serverErrorHandler(res, err);
-      }
+      errorsHandlerWrapper(res, err);
     }
   },
 
@@ -38,7 +30,7 @@ const controller = {
       const departments = await departmentService.getAllDepartments();
       res.status(200).json(departments);
     } catch (err) {
-      serverErrorHandler(res, err);
+      errorsHandlerWrapper(res, err);
     }
   },
 

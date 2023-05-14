@@ -1,10 +1,5 @@
-const { ValidationError } = require("../errors").ValidationError;
 const userService = require("../services").UserService;
-const {
-  validationErrorHandler,
-  serverErrorHandler,
-  errorsHandlerWrapper,
-} = require("../utils/errorsHandlers.util");
+const { errorsHandlerWrapper } = require("../utils/errorsHandlers.util");
 
 const controller = {
   createUser: async (req, res) => {
@@ -14,11 +9,7 @@ const controller = {
         message: `User ${req.body.firstName} ${req.body.lastName} created.`,
       });
     } catch (err) {
-      if (err instanceof ValidationError) {
-        validationErrorHandler(res, err);
-      } else {
-        serverErrorHandler(res, err);
-      }
+      errorsHandlerWrapper(res, err);
     }
   },
 
@@ -38,7 +29,7 @@ const controller = {
       const users = await userService.getAllUsers();
       res.status(200).json(users);
     } catch (err) {
-      serverErrorHandler(res, err);
+      errorsHandlerWrapper(res, err);
     }
   },
 
