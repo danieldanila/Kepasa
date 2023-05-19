@@ -70,35 +70,24 @@ const service = {
 
     if (errors.length === 0) {
       idParamaterValidation(userId, "User id", errors);
-      const userFound = await User.findByPk(userId);
+      const userFound = await service.getUserById(userId);
 
-      if (userFound) {
-        if (userBody.hasOwnProperty("password")) {
-          const hashPassword = await passwordEncrypt(userBody.password);
-          userBody.password = hashPassword;
-        }
-
-        const updatedUser = await userFound.update(userBody);
-        return updatedUser;
-      } else {
-        throw new NotFoundError("User not found.");
+      if (userBody.hasOwnProperty("password")) {
+        const hashPassword = await passwordEncrypt(userBody.password);
+        userBody.password = hashPassword;
       }
+
+      const updatedUser = await userFound.update(userBody);
+      return updatedUser;
     } else {
       throwValidationErrorWithMessage(errors);
     }
   },
 
   deleteUser: async (userId) => {
-    const errors = [];
+    const user = await service.getUserById(userId);
 
-    idParamaterValidation(userId, "User id", errors);
-    const user = await User.findByPk(userId);
-
-    if (user) {
-      user.destroy();
-    } else {
-      throw new NotFoundError("User not found.");
-    }
+    user.destroy();
   },
 
   getUserMentor: async (userId) => {

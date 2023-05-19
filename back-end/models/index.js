@@ -6,14 +6,14 @@ const UserModel = require("./user.model");
 const DepartmentModel = require("./department.model");
 const RoleModel = require("./role.model");
 const ProjectModel = require("./project.model");
-const UsersRolesModel = require("./usersRoles.model");
+const UsersProjectsRolesModel = require("./usersProjectsRoles.model");
 const RolesProjectsModel = require("./rolesProjects.model");
 
 const User = UserModel(Database, Sequelize);
 const Department = DepartmentModel(Database, Sequelize);
 const Role = RoleModel(Database, Sequelize);
 const Project = ProjectModel(Database, Sequelize);
-const UsersRoles = UsersRolesModel(Database, Sequelize);
+const UsersProjectsRoles = UsersProjectsRolesModel(Database, Sequelize);
 const RolesProjects = RolesProjectsModel(Database, Sequelize);
 
 User.belongsTo(User, {
@@ -49,18 +49,69 @@ Department.hasMany(User, {
   },
 });
 User.belongsTo(Department, {
-  foreignKey: "idDepartment",
+  foreignKey: {
+    name: "idDepartment",
+    type: DataTypes.UUID,
+    allowNull: false,
+    validate: {
+      isUUID: 4,
+    },
+  },
 });
 
-User.belongsToMany(Role, {
-  through: UsersRoles,
-  foreignKey: "idUser",
-  otherKey: "idRole",
+User.belongsToMany(Project, {
+  through: UsersProjectsRoles,
+  foreignKey: {
+    name: "idUser",
+    type: DataTypes.UUID,
+    allowNull: false,
+    validate: {
+      isUUID: 4,
+    },
+  },
+  otherKey: {
+    name: "idProject",
+    type: DataTypes.UUID,
+    allowNull: false,
+    validate: {
+      isUUID: 4,
+    },
+  },
 });
-Role.belongsToMany(User, {
-  through: UsersRoles,
-  foreignKey: "idRole",
-  otherKey: "idUser",
+Project.belongsToMany(User, {
+  through: UsersProjectsRoles,
+  foreignKey: {
+    name: "idProject",
+    type: DataTypes.UUID,
+    validate: {
+      isUUID: 4,
+    },
+  },
+  otherKey: {
+    name: "idUser",
+    type: DataTypes.UUID,
+    validate: {
+      isUUID: 4,
+    },
+  },
+});
+UsersProjectsRoles.belongsTo(Role, {
+  foreignKey: {
+    name: "idRole",
+    type: DataTypes.UUID,
+    validate: {
+      isUUID: 4,
+    },
+  },
+});
+Role.hasMany(UsersProjectsRoles, {
+  foreignKey: {
+    name: "idRole",
+    type: DataTypes.UUID,
+    validate: {
+      isUUID: 4,
+    },
+  },
 });
 
 Department.hasMany(Role, {
@@ -74,18 +125,48 @@ Department.hasMany(Role, {
   },
 });
 Role.belongsTo(Department, {
-  foreignKey: "idDepartment",
+  foreignKey: {
+    name: "idDepartment",
+    type: DataTypes.UUID,
+    validate: {
+      isUUID: 4,
+    },
+  },
 });
 
 Role.belongsToMany(Project, {
   through: RolesProjects,
-  foreignKey: "idRole",
-  otherKey: "idProject",
+  foreignKey: {
+    name: "idRole",
+    type: DataTypes.UUID,
+    validate: {
+      isUUID: 4,
+    },
+  },
+  otherKey: {
+    name: "idProject",
+    type: DataTypes.UUID,
+    validate: {
+      isUUID: 4,
+    },
+  },
 });
 Project.belongsToMany(Role, {
   through: RolesProjects,
-  foreignKey: "idProject",
-  otherKey: "idRole",
+  foreignKey: {
+    name: "idProject",
+    type: DataTypes.UUID,
+    validate: {
+      isUUID: 4,
+    },
+  },
+  otherKey: {
+    name: "idRole",
+    type: DataTypes.UUID,
+    validate: {
+      isUUID: 4,
+    },
+  },
 });
 
 module.exports = {
@@ -93,7 +174,7 @@ module.exports = {
   Department,
   Role,
   Project,
-  UsersRoles,
+  UsersProjectsRoles,
   RolesProjects,
   connection: Database,
 };

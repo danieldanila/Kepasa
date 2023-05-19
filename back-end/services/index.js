@@ -4,6 +4,7 @@ const DepartmentService = require("./department.service");
 const AuthenticationService = require("./authentication.service");
 const ProjectService = require("./project.service");
 const RoleService = require("./role.service");
+const UsersProjectsRolesService = require("./usersProjectsRoles.service");
 
 module.exports = {
   DatabaseService,
@@ -12,4 +13,5 @@ module.exports = {
   AuthenticationService,
   ProjectService,
   RoleService,
+  UsersProjectsRolesService,
 };

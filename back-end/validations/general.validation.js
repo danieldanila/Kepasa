@@ -149,6 +149,30 @@ const validation = {
     });
   },
 
+  duplicateCompositeIdValidation: (
+    firstId,
+    firstIdName,
+    secondId,
+    secondIdName,
+    errorsArray,
+    entityObjects
+  ) => {
+    entityObjects.forEach((entityObject) => {
+      if (
+        firstId &&
+        secondId &&
+        entityObject[firstIdName].toString().toLowerCase() ===
+          firstId.toString().toLowerCase() &&
+        entityObject[secondIdName].toString().toLowerCase() ===
+          secondId.toString().toLowerCase()
+      ) {
+        errorsArray.push(
+          `The combination of ${firstIdName} with ${secondIdName} already exists.`
+        );
+      }
+    });
+  },
+
   booleanFieldValidation: (field, fieldName, errorsArray) => {
     if (field && !(field === "true" || field === "false")) {
       errorsArray.push(`${fieldName} must be a boolean value.`);
