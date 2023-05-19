@@ -76,6 +76,85 @@ const controller = {
       errorsHandlerWrapper(res, err);
     }
   },
+
+  getUserProjects: async (req, res) => {
+    try {
+      const userProjects = await usersProjectsRolesService.getUserProjects(
+        req.params.idUser
+      );
+      res.status(200).json(userProjects);
+    } catch (err) {
+      errorsHandlerWrapper(res, err);
+    }
+  },
+
+  getProjectUsers: async (req, res) => {
+    try {
+      const projectUsers = await usersProjectsRolesService.getProjectUsers(
+        req.params.idProject
+      );
+      res.status(200).json(projectUsers);
+    } catch (err) {
+      errorsHandlerWrapper(res, err);
+    }
+  },
+
+  getUserRoleOnProject: async (req, res) => {
+    try {
+      const userRoleOnProject =
+        await usersProjectsRolesService.getUserRoleOnProject(
+          req.params.idUser,
+          req.params.idProject
+        );
+      res.status(200).json(userRoleOnProject);
+    } catch (err) {
+      errorsHandlerWrapper(res, err);
+    }
+  },
+
+  getUserRoles: async (req, res) => {
+    try {
+      const userRoles = await usersProjectsRolesService.getUserRoles(
+        req.params.idUser
+      );
+      res.status(200).json(userRoles);
+    } catch (err) {
+      errorsHandlerWrapper(res, err);
+    }
+  },
+
+  getRoleUsers: async (req, res) => {
+    try {
+      const roleUsers = await usersProjectsRolesService.getRoleUsers(
+        req.params.idRole
+      );
+      res.status(200).json(roleUsers);
+    } catch (err) {
+      errorsHandlerWrapper(res, err);
+    }
+  },
+
+  getProjectRoles: async (req, res) => {
+    try {
+      const projectRoles = await usersProjectsRolesService.getProjectRoles(
+        req.params.idProject
+      );
+      res.status(200).json(projectRoles);
+    } catch (err) {
+      errorsHandlerWrapper(res, err);
+    }
+  },
+
+  getRoleProjects: async (req, res) => {
+    try {
+      const roleProjects = await usersProjectsRolesService.getRoleProjects(
+        req.params.idRole
+      );
+      res.status(200).json(roleProjects);
+    } catch (err) {
+      errorsHandlerWrapper(res, err);
+    }
+  },
 };
 
 module.exports = controller;

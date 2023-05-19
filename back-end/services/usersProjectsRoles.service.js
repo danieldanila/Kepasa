@@ -5,9 +5,13 @@ const usersProjectsRolesValidation =
 const {
   throwValidationErrorWithMessage,
 } = require("../utils/errorsWrappers.util");
+
 const { NotFoundError } = require("../errors").NotFoundError;
 
 const UsersProjectsRoles = require("../models").UsersProjectsRoles;
+const Project = require("../models").Project;
+const User = require("../models").User;
+const Role = require("../models").Role;
 
 const getAllUsers = require("./user.service").getAllUsers;
 const getAllProjects = require("./project.service").getAllProjects;
@@ -106,6 +110,215 @@ const service = {
     );
 
     usersProjectsRoles.destroy();
+  },
+
+  getUserProjects: async (userId) => {
+    const errors = [];
+
+    idParamaterValidation(userId, "User id", errors);
+
+    const userProjects = await User.findOne({
+      where: {
+        id: userId,
+      },
+      include: [
+        {
+          model: Project,
+          through: {
+            attributes: [],
+          },
+        },
+      ],
+    });
+
+    if (userProjects) {
+      return userProjects.Projects;
+    } else {
+      throw new NotFoundError("User not found.");
+    }
+  },
+
+  getProjectUsers: async (projectId) => {
+    const errors = [];
+
+    idParamaterValidation(projectId, "Project id", errors);
+
+    const projectUsers = await Project.findOne({
+      where: {
+        id: projectId,
+      },
+      include: [
+        {
+          model: User,
+          through: {
+            attributes: [],
+          },
+        },
+      ],
+    });
+
+    if (projectUsers) {
+      return projectUsers.Users;
+    } else {
+      throw new NotFoundError("Project not found.");
+    }
+  },
+
+  getUserRoleOnProject: async (userId, projectId) => {
+    const errors = [];
+
+    idParamaterValidation(userId, "User id", errors);
+    idParamaterValidation(projectId, "Project id", errors);
+
+    const userRoleOnProject = await UsersProjectsRoles.findOne({
+      where: {
+        idUser: userId,
+        idProject: projectId,
+      },
+      include: [
+        {
+          model: Role,
+        },
+      ],
+    });
+
+    if (userRoleOnProject) {
+      return userRoleOnProject.Role;
+    } else {
+      throw new NotFoundError("User on given project not found.");
+    }
+  },
+
+  getUserRoles: async (userId) => {
+    const errors = [];
+
+    idParamaterValidation(userId, "User id", errors);
+
+    const usersProjectsRolesWithUserId = await UsersProjectsRoles.findAll({
+      where: {
+        idUser: userId,
+      },
+    });
+
+    const userRoles = await Promise.all(
+      usersProjectsRolesWithUserId.map(async (userRole) => {
+        const project = await Project.findByPk(userRole.idProject);
+        const role = await Role.findByPk(userRole.idRole);
+
+        const nestedJson = {
+          Project: project,
+          Role: role,
+        };
+
+        return nestedJson;
+      })
+    );
+
+    if (userRoles.length > 0) {
+      return userRoles;
+    } else {
+      throw new NotFoundError("User not found.");
+    }
+  },
+
+  getRoleUsers: async (roleId) => {
+    const errors = [];
+
+    idParamaterValidation(roleId, "Role id", errors);
+
+    const usersProjectsRolesWithRoleId = await UsersProjectsRoles.findAll({
+      where: {
+        idRole: roleId,
+      },
+    });
+
+    const roleUsers = await Promise.all(
+      usersProjectsRolesWithRoleId.map(async (roleUser) => {
+        const user = await User.findByPk(roleUser.idUser);
+        const project = await Project.findByPk(roleUser.idProject);
+
+        const nestedJson = {
+          User: user,
+          Project: project,
+        };
+
+        return nestedJson;
+      })
+    );
+
+    if (roleUsers.length > 0) {
+      return roleUsers;
+    } else {
+      throw new NotFoundError("Role not found.");
+    }
+  },
+
+  getProjectRoles: async (projectId) => {
+    const errors = [];
+
+    idParamaterValidation(projectId, "Project id", errors);
+
+    const projectRoles = await UsersProjectsRoles.findAll({
+      where: {
+        idProject: projectId,
+      },
+      include: [
+        {
+          model: Role,
+        },
+      ],
+    });
+
+    const uniqueProjectRoles = [];
+    const uniqueRoleIds = new Set();
+
+    projectRoles.forEach((projectRole) => {
+      const roleId = projectRole.Role.id;
+      if (!uniqueRoleIds.has(roleId)) {
+        uniqueRoleIds.add(roleId);
+        uniqueProjectRoles.push(projectRole.Role);
+      }
+    });
+
+    if (uniqueProjectRoles.length > 0) {
+      return uniqueProjectRoles;
+    } else {
+      throw new NotFoundError("Project not found.");
+    }
+  },
+
+  getRoleProjects: async (roleId) => {
+    const errors = [];
+
+    idParamaterValidation(roleId, "Role id", errors);
+
+    const usersProjectsRolesWithRoleId = await UsersProjectsRoles.findAll({
+      where: {
+        idRole: roleId,
+      },
+    });
+
+    const projectIds = new Set();
+    const uniqueRoleProjects = [];
+
+    await Promise.all(
+      usersProjectsRolesWithRoleId.map(async (roleProject) => {
+        const projectId = roleProject.idProject;
+
+        if (!projectIds.has(projectId)) {
+          projectIds.add(projectId);
+
+          const project = await Project.findByPk(projectId);
+          uniqueRoleProjects.push(project);
+        }
+      })
+    );
+
+    if (uniqueRoleProjects.length > 0) {
+      return uniqueRoleProjects;
+    } else {
+      throw new NotFoundError("Role not found.");
+    }
   },
 };
 
