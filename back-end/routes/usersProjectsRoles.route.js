@@ -32,15 +32,21 @@ router.get(
   "/user/:idUser/project/:idProject/role",
   usersProjectsRolesController.getUserRoleOnProject
 );
-router.get("/user/:idUser/role", usersProjectsRolesController.getUserRoles);
-router.get("/role/:idRole/user", usersProjectsRolesController.getRoleUsers);
+router.get(
+  "/user/:idUser/role",
+  usersProjectsRolesController.getUserRolesOnProjects
+);
+router.get(
+  "/role/:idRole/user",
+  usersProjectsRolesController.getRoleUsersOnProjects
+);
 router.get(
   "/project/:idProject/role",
-  usersProjectsRolesController.getProjectRoles
+  usersProjectsRolesController.getProjectRolesWithUsers
 );
 router.get(
   "/role/:idRole/project",
-  usersProjectsRolesController.getRoleProjects
+  usersProjectsRolesController.getRoleProjectsWithUsers
 );
 
 module.exports = router;

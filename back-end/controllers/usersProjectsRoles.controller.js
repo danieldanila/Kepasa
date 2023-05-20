@@ -112,9 +112,9 @@ const controller = {
     }
   },
 
-  getUserRoles: async (req, res) => {
+  getUserRolesOnProjects: async (req, res) => {
     try {
-      const userRoles = await usersProjectsRolesService.getUserRoles(
+      const userRoles = await usersProjectsRolesService.getUserRolesOnProjects(
         req.params.idUser
       );
       res.status(200).json(userRoles);
@@ -123,9 +123,9 @@ const controller = {
     }
   },
 
-  getRoleUsers: async (req, res) => {
+  getRoleUsersOnProjects: async (req, res) => {
     try {
-      const roleUsers = await usersProjectsRolesService.getRoleUsers(
+      const roleUsers = await usersProjectsRolesService.getRoleUsersOnProjects(
         req.params.idRole
       );
       res.status(200).json(roleUsers);
@@ -134,22 +134,24 @@ const controller = {
     }
   },
 
-  getProjectRoles: async (req, res) => {
+  getProjectRolesWithUsers: async (req, res) => {
     try {
-      const projectRoles = await usersProjectsRolesService.getProjectRoles(
-        req.params.idProject
-      );
+      const projectRoles =
+        await usersProjectsRolesService.getProjectRolesWithUsers(
+          req.params.idProject
+        );
       res.status(200).json(projectRoles);
     } catch (err) {
       errorsHandlerWrapper(res, err);
     }
   },
 
-  getRoleProjects: async (req, res) => {
+  getRoleProjectsWithUsers: async (req, res) => {
     try {
-      const roleProjects = await usersProjectsRolesService.getRoleProjects(
-        req.params.idRole
-      );
+      const roleProjects =
+        await usersProjectsRolesService.getRoleProjectsWithUsers(
+          req.params.idRole
+        );
       res.status(200).json(roleProjects);
     } catch (err) {
       errorsHandlerWrapper(res, err);

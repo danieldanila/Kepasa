@@ -189,7 +189,7 @@ const service = {
     }
   },
 
-  getUserRoles: async (userId) => {
+  getUserRolesOnProjects: async (userId) => {
     const errors = [];
 
     idParamaterValidation(userId, "User id", errors);
@@ -221,7 +221,7 @@ const service = {
     }
   },
 
-  getRoleUsers: async (roleId) => {
+  getRoleUsersOnProjects: async (roleId) => {
     const errors = [];
 
     idParamaterValidation(roleId, "Role id", errors);
@@ -253,41 +253,39 @@ const service = {
     }
   },
 
-  getProjectRoles: async (projectId) => {
+  getProjectRolesWithUsers: async (projectId) => {
     const errors = [];
 
     idParamaterValidation(projectId, "Project id", errors);
 
-    const projectRoles = await UsersProjectsRoles.findAll({
+    const usersProjectsRolesWithRoleId = await UsersProjectsRoles.findAll({
       where: {
         idProject: projectId,
       },
-      include: [
-        {
-          model: Role,
-        },
-      ],
     });
 
-    const uniqueProjectRoles = [];
-    const uniqueRoleIds = new Set();
+    const projectRolesWithUsers = await Promise.all(
+      usersProjectsRolesWithRoleId.map(async (projectRole) => {
+        const user = await User.findByPk(projectRole.idUser);
+        const role = await Role.findByPk(projectRole.idRole);
 
-    projectRoles.forEach((projectRole) => {
-      const roleId = projectRole.Role.id;
-      if (!uniqueRoleIds.has(roleId)) {
-        uniqueRoleIds.add(roleId);
-        uniqueProjectRoles.push(projectRole.Role);
-      }
-    });
+        const nestedJson = {
+          User: user,
+          Role: role,
+        };
 
-    if (uniqueProjectRoles.length > 0) {
-      return uniqueProjectRoles;
+        return nestedJson;
+      })
+    );
+
+    if (projectRolesWithUsers.length > 0) {
+      return projectRolesWithUsers;
     } else {
       throw new NotFoundError("Project not found.");
     }
   },
 
-  getRoleProjects: async (roleId) => {
+  getRoleProjectsWithUsers: async (roleId) => {
     const errors = [];
 
     idParamaterValidation(roleId, "Role id", errors);
@@ -298,24 +296,22 @@ const service = {
       },
     });
 
-    const projectIds = new Set();
-    const uniqueRoleProjects = [];
-
-    await Promise.all(
+    const roleProjectsWithUser = await Promise.all(
       usersProjectsRolesWithRoleId.map(async (roleProject) => {
-        const projectId = roleProject.idProject;
+        const user = await User.findByPk(roleProject.idUser);
+        const project = await Project.findByPk(roleProject.idProject);
 
-        if (!projectIds.has(projectId)) {
-          projectIds.add(projectId);
+        const nestedJson = {
+          User: user,
+          Project: project,
+        };
 
-          const project = await Project.findByPk(projectId);
-          uniqueRoleProjects.push(project);
-        }
+        return nestedJson;
       })
     );
 
-    if (uniqueRoleProjects.length > 0) {
-      return uniqueRoleProjects;
+    if (roleProjectsWithUser.length > 0) {
+      return roleProjectsWithUser;
     } else {
       throw new NotFoundError("Role not found.");
     }
