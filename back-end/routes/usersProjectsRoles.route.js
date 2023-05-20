@@ -33,20 +33,16 @@ router.get(
   usersProjectsRolesController.getUserRoleOnProject
 );
 router.get(
-  "/user/:idUser/role",
+  "/user/:idUser",
   usersProjectsRolesController.getUserRolesOnProjects
 );
 router.get(
-  "/role/:idRole/user",
+  "/role/:idRole",
   usersProjectsRolesController.getRoleUsersOnProjects
 );
 router.get(
-  "/project/:idProject/role",
+  "/project/:idProject",
   usersProjectsRolesController.getProjectRolesWithUsers
-);
-router.get(
-  "/role/:idRole/project",
-  usersProjectsRolesController.getRoleProjectsWithUsers
 );
 
 module.exports = router;

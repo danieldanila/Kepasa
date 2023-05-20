@@ -284,38 +284,6 @@ const service = {
       throw new NotFoundError("Project not found.");
     }
   },
-
-  getRoleProjectsWithUsers: async (roleId) => {
-    const errors = [];
-
-    idParamaterValidation(roleId, "Role id", errors);
-
-    const usersProjectsRolesWithRoleId = await UsersProjectsRoles.findAll({
-      where: {
-        idRole: roleId,
-      },
-    });
-
-    const roleProjectsWithUser = await Promise.all(
-      usersProjectsRolesWithRoleId.map(async (roleProject) => {
-        const user = await User.findByPk(roleProject.idUser);
-        const project = await Project.findByPk(roleProject.idProject);
-
-        const nestedJson = {
-          User: user,
-          Project: project,
-        };
-
-        return nestedJson;
-      })
-    );
-
-    if (roleProjectsWithUser.length > 0) {
-      return roleProjectsWithUser;
-    } else {
-      throw new NotFoundError("Role not found.");
-    }
-  },
 };
 
 module.exports = service;

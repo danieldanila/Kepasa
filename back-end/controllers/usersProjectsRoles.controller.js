@@ -145,18 +145,6 @@ const controller = {
       errorsHandlerWrapper(res, err);
     }
   },
-
-  getRoleProjectsWithUsers: async (req, res) => {
-    try {
-      const roleProjects =
-        await usersProjectsRolesService.getRoleProjectsWithUsers(
-          req.params.idRole
-        );
-      res.status(200).json(roleProjects);
-    } catch (err) {
-      errorsHandlerWrapper(res, err);
-    }
-  },
 };
 
 module.exports = controller;
