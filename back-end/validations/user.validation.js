@@ -5,7 +5,7 @@ const {
   phoneValidation,
   urlValidation,
   passwordValidation,
-  birthdayValidation,
+  dateValidation,
   foreignUuidValidation,
   duplicateFieldValidation,
   booleanFieldValidation,
@@ -64,7 +64,7 @@ const validation = {
       isUpdateRequest
     );
     validateCompletedField(
-      birthdayValidation,
+      dateValidation,
       user.birthday,
       "Birthday",
       errors,

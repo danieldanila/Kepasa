@@ -60,31 +60,18 @@ const service = {
     );
 
     if (errors.length === 0) {
-      idParamaterValidation(departmentId, "Department id", errors);
-      const departmentFound = await Department.findByPk(departmentId);
-
-      if (departmentFound) {
-        const updatedDepartment = await departmentFound.update(departmentBody);
-        return updatedDepartment;
-      } else {
-        throw new NotFoundError("Department not found.");
-      }
+      const departmentFound = await Department.getDepartmentById(departmentId);
+      const updatedDepartment = await departmentFound.update(departmentBody);
+      return updatedDepartment;
     } else {
       throwValidationErrorWithMessage(errors);
     }
   },
 
   deleteDepartment: async (departmentId) => {
-    const errors = [];
+    const department = await Department.getDepartmentById(departmentId);
 
-    idParamaterValidation(departmentId, "Department id", errors);
-    const department = await Department.findByPk(departmentId);
-
-    if (department) {
-      department.destroy();
-    } else {
-      throw new NotFoundError("Department not found.");
-    }
+    department.destroy();
   },
 
   getDepartmentUsers: async (departmentId) => {

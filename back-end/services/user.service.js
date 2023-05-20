@@ -69,7 +69,6 @@ const service = {
     );
 
     if (errors.length === 0) {
-      idParamaterValidation(userId, "User id", errors);
       const userFound = await service.getUserById(userId);
 
       if (userBody.hasOwnProperty("password")) {

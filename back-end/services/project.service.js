@@ -58,31 +58,18 @@ const service = {
     );
 
     if (errors.length === 0) {
-      idParamaterValidation(projectId, "Project id", errors);
-      const projectFound = await Project.findByPk(projectId);
-
-      if (projectFound) {
-        const updatedProject = await projectFound.update(projectBody);
-        return updatedProject;
-      } else {
-        throw NotFoundError("Project not found.");
-      }
+      const projectFound = await Project.getProjectById(projectId);
+      const updatedProject = await projectFound.update(projectBody);
+      return updatedProject;
     } else {
       throwValidationErrorWithMessage(errors);
     }
   },
 
   deleteProject: async (projectId) => {
-    const errors = [];
+    const project = await Project.getProjectById(projectId);
 
-    idParamaterValidation(projectId, "Project id", errors);
-    const project = await Project.findByPk(projectId);
-
-    if (project) {
-      project.destroy();
-    } else {
-      throw new NotFoundError("Project not found.");
-    }
+    project.destroy();
   },
 };
 

@@ -97,9 +97,25 @@ const validation = {
     return true;
   },
 
-  birthdayValidation: (field, fieldName, errorsArray) => {
+  dateValidation: (field, fieldName, errorsArray) => {
     if (!field.match(/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/)) {
       errorsArray.push(`${fieldName} field must use yyyy-mm-dd fomrat.`);
+      return false;
+    }
+    return true;
+  },
+
+  periodDatesValidation: (
+    firstDate,
+    firstFieldName,
+    secondDate,
+    secondFieldName,
+    errorsArray
+  ) => {
+    if (firstDate > secondDate) {
+      errorsArray.push(
+        `${secondFieldName} must be greater than ${firstFieldName}.`
+      );
       return false;
     }
     return true;

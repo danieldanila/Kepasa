@@ -65,31 +65,18 @@ const service = {
     );
 
     if (errors.length === 0) {
-      idParamaterValidation(roleId, "Role id", errors);
-      const roleFound = await Role.findByPk(roleId);
-
-      if (roleFound) {
-        const updatedRole = await roleFound.update(roleBody);
-        return updatedRole;
-      } else {
-        throw new NotFoundError("Role not found.");
-      }
+      const roleFound = await Role.getRoleById(roleId);
+      const updatedRole = await roleFound.update(roleBody);
+      return updatedRole;
     } else {
       throwValidationErrorWithMessage(errors);
     }
   },
 
   deleteRole: async (roleId) => {
-    const errors = [];
+    const role = await Role.getRoleById(roleId);
 
-    idParamaterValidation(roleId, "Role id", errors);
-    const role = await Role.findByPk(roleId);
-
-    if (role) {
-      role.destroy();
-    } else {
-      throw new NotFoundError("Role not found.");
-    }
+    role.destroy();
   },
 
   getRoleDepartment: async (roleId) => {
