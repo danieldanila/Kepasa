@@ -185,6 +185,14 @@ const validation = {
     }
     return entityId;
   },
+
+  moneyFieldValidation: (field, fieldName, errorsArray) => {
+    if (!field.match(/^(\d+(\.\d{1,2})?)$/)) {
+      errorsArray.push(
+        `${fieldName} must be a number with a maximum of 2 decimals.`
+      );
+    }
+  },
 };
 
 module.exports = validation;

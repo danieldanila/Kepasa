@@ -5,6 +5,7 @@ const AuthenticationController = require("./authentication.controller");
 const ProjectController = require("./project.controller");
 const RoleController = require("./role.controller");
 const UsersProjectsRolesController = require("./usersProjectsRoles.controller");
+const RolesProjectsController = require("./rolesProjects.controller");
 
 module.exports = {
   DatabaseController,
@@ -14,4 +15,5 @@ module.exports = {
   ProjectController,
   RoleController,
   UsersProjectsRolesController,
+  RolesProjectsController,
 };

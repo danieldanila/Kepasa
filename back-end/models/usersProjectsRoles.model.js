@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
       idUser: {
         type: DataTypes.UUID,
         primaryKey: true,
-        unique: "compositeIndex",
+        unique: "usersProjectsRolesCompositeIndex",
         validate: {
           isUUID: 4,
         },
@@ -29,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
       idProject: {
         type: DataTypes.UUID,
         primaryKey: true,
-        unique: "compositeIndex",
+        unique: "usersProjectsRolesCompositeIndex",
         validate: {
           isUUID: 4,
         },
@@ -57,7 +57,7 @@ module.exports = (sequelize, DataTypes) => {
         {
           unique: true,
           fields: ["id_user", "id_project"],
-          name: "compositeIndex",
+          name: "usersProjectsRolesCompositeIndex",
         },
       ],
     }

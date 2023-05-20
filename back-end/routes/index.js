@@ -7,6 +7,7 @@ const AuthenticationRouter = require("./authentication.route");
 const ProjectRouter = require("./project.route");
 const RoleRouter = require("./role.route");
 const UsersProjectsRolesRouter = require("./usersProjectsRoles.route");
+const RolesProjectsRouter = require("./rolesProjects.route");
 
 router.use("/database", DatabaseRouter);
 router.use("/user", UserRouter);
@@ -15,5 +16,6 @@ router.use("/authentication", AuthenticationRouter);
 router.use("/project", ProjectRouter);
 router.use("/role", RoleRouter);
 router.use("/usersProjectsRoles", UsersProjectsRolesRouter);
+router.use("/rolesProjects", RolesProjectsRouter);
 
 module.exports = router;
