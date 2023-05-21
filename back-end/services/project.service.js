@@ -67,7 +67,7 @@ const service = {
   },
 
   deleteProject: async (projectId) => {
-    const project = await Project.getProjectById(projectId);
+    const project = await service.getProjectById(projectId);
 
     project.destroy();
   },

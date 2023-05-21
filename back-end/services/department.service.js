@@ -60,7 +60,7 @@ const service = {
     );
 
     if (errors.length === 0) {
-      const departmentFound = await Department.getDepartmentById(departmentId);
+      const departmentFound = await service.getDepartmentById(departmentId);
       const updatedDepartment = await departmentFound.update(departmentBody);
       return updatedDepartment;
     } else {
@@ -69,7 +69,7 @@ const service = {
   },
 
   deleteDepartment: async (departmentId) => {
-    const department = await Department.getDepartmentById(departmentId);
+    const department = await service.getDepartmentById(departmentId);
 
     department.destroy();
   },

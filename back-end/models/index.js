@@ -10,6 +10,7 @@ const UsersProjectsRolesModel = require("./usersProjectsRoles.model");
 const RolesProjectsModel = require("./rolesProjects.model");
 const PeriodModel = require("./period.model");
 const ObjectiveModel = require("./objective.model");
+const TaskTypeModel = require("./taskType.model");
 
 const User = UserModel(Database, Sequelize);
 const Department = DepartmentModel(Database, Sequelize);
@@ -19,6 +20,7 @@ const UsersProjectsRoles = UsersProjectsRolesModel(Database, Sequelize);
 const RolesProjects = RolesProjectsModel(Database, Sequelize);
 const Period = PeriodModel(Database, Sequelize);
 const Objective = ObjectiveModel(Database, Sequelize);
+const TaskType = TaskTypeModel(Database, Sequelize);
 
 User.belongsTo(User, {
   as: "mentor",
@@ -248,5 +250,6 @@ module.exports = {
   RolesProjects,
   Period,
   Objective,
+  TaskType,
   connection: Database,
 };

@@ -10,6 +10,7 @@ const UsersProjectsRolesRouter = require("./usersProjectsRoles.route");
 const RolesProjectsRouter = require("./rolesProjects.route");
 const PeriodRouter = require("./period.route");
 const ObjectiveRouter = require("./objective.route");
+const TaskTypeRouter = require("./taskType.route");
 
 router.use("/database", DatabaseRouter);
 router.use("/user", UserRouter);
@@ -21,5 +22,6 @@ router.use("/usersProjectsRoles", UsersProjectsRolesRouter);
 router.use("/rolesProjects", RolesProjectsRouter);
 router.use("/period", PeriodRouter);
 router.use("/objective", ObjectiveRouter);
+router.use("/taskType", TaskTypeRouter);
 
 module.exports = router;

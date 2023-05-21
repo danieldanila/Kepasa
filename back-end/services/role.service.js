@@ -65,7 +65,7 @@ const service = {
     );
 
     if (errors.length === 0) {
-      const roleFound = await Role.getRoleById(roleId);
+      const roleFound = await service.getRoleById(roleId);
       const updatedRole = await roleFound.update(roleBody);
       return updatedRole;
     } else {
@@ -74,7 +74,7 @@ const service = {
   },
 
   deleteRole: async (roleId) => {
-    const role = await Role.getRoleById(roleId);
+    const role = await service.getRoleById(roleId);
 
     role.destroy();
   },
