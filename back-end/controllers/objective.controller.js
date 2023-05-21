@@ -62,6 +62,28 @@ const controller = {
       errorsHandlerWrapper(res, err);
     }
   },
+
+  getObjectiveUser: async (req, res) => {
+    try {
+      const objectiveUser = await objectiveService.getObjectiveUser(
+        req.params.id
+      );
+      res.status(200).json(objectiveUser);
+    } catch (err) {
+      errorsHandlerWrapper(res, err);
+    }
+  },
+
+  getObjectivePeriod: async (req, res) => {
+    try {
+      const objectivePeriod = await objectiveService.getObjectivePeriod(
+        req.params.id
+      );
+      res.status(200).json(objectivePeriod);
+    } catch (err) {
+      errorsHandlerWrapper(res, err);
+    }
+  },
 };
 
 module.exports = controller;

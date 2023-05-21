@@ -7,6 +7,8 @@ const { idParamaterValidation } = require("../validations/general.validation");
 const objectiveValidations = require("../validations").ObjectiveValidation;
 
 const Objective = require("../models").Objective;
+const User = require("../models").User;
+const Period = require("../models").Period;
 
 const getAllUsers = require("./user.service").getAllUsers;
 const getAllPeriods = require("./period.service").getAllPeriods;
@@ -82,6 +84,52 @@ const service = {
     const objective = await service.getObjectiveById(objectiveId);
 
     objective.destroy();
+  },
+
+  getObjectiveUser: async (objectiveId) => {
+    const errors = [];
+
+    idParamaterValidation(objectiveId, "Objective id", errors);
+
+    const objective = await Objective.findOne({
+      where: {
+        id: objectiveId,
+      },
+      include: [
+        {
+          model: User,
+        },
+      ],
+    });
+
+    if (objective) {
+      return objective.User;
+    } else {
+      throw new NotFoundError("Objective not found.");
+    }
+  },
+
+  getObjectivePeriod: async (objectiveId) => {
+    const errors = [];
+
+    idParamaterValidation(objectiveId, "Objective id", errors);
+
+    const objective = await Objective.findOne({
+      where: {
+        id: objectiveId,
+      },
+      include: [
+        {
+          model: Period,
+        },
+      ],
+    });
+
+    if (objective) {
+      return objective.Period;
+    } else {
+      throw new NotFoundError("Objective not found.");
+    }
   },
 };
 

@@ -7,6 +7,7 @@ const { idParamaterValidation } = require("../validations/general.validation");
 const periodValidation = require("../validations").PeriodValidation;
 
 const Period = require("../models").Period;
+const Objective = require("../models").Objective;
 
 const service = {
   createPeriod: async (periodBody) => {
@@ -70,6 +71,55 @@ const service = {
     const period = await service.getPeriodById(periodId);
 
     period.destroy();
+  },
+
+  getPeriodObjectives: async (periodId) => {
+    const errors = [];
+
+    idParamaterValidation(periodId, "Period id", errors);
+
+    const period = await Period.findOne({
+      where: {
+        id: periodId,
+      },
+      include: [
+        {
+          model: Objective,
+        },
+      ],
+    });
+
+    if (period) {
+      return period.Objectives;
+    } else {
+      throw new NotFoundError("Period not found.");
+    }
+  },
+
+  getPeriodObjectiveById: async (periodId, objectiveId) => {
+    const errors = [];
+
+    idParamaterValidation(periodId, "Period id", errors);
+
+    const period = await Period.findOne({
+      where: {
+        id: periodId,
+      },
+      include: [
+        {
+          model: Objective,
+          where: {
+            id: objectiveId,
+          },
+        },
+      ],
+    });
+
+    if (period) {
+      return period.Objectives[0];
+    } else {
+      throw new NotFoundError("Period with the specified objective not found.");
+    }
   },
 };
 

@@ -10,6 +10,7 @@ const { passwordEncrypt } = require("../utils/passwordEncrypt.utils");
 
 const User = require("../models").User;
 const Department = require("../models").Department;
+const Objective = require("../models").Objective;
 
 const getAllDepartments = require("./department.service").getAllDepartments;
 
@@ -157,6 +158,165 @@ const service = {
       return userDepartment.Department;
     } else {
       throw new NotFoundError("User not found.");
+    }
+  },
+
+  getUserObjectives: async (userId) => {
+    const errors = [];
+
+    idParamaterValidation(userId, "User id", errors);
+
+    const userObjectives = await User.findOne({
+      where: {
+        id: userId,
+      },
+      include: [
+        {
+          model: Objective,
+        },
+      ],
+    });
+
+    if (userObjectives) {
+      return userObjectives.Objectives;
+    } else {
+      throw new NotFoundError("User not found");
+    }
+  },
+
+  getUserObjectiveById: async (userId, objectiveId) => {
+    const errors = [];
+
+    idParamaterValidation(userId, "User id", errors);
+
+    const userObjective = await User.findOne({
+      where: {
+        id: userId,
+      },
+      include: [
+        {
+          model: Objective,
+          where: {
+            id: objectiveId,
+          },
+        },
+      ],
+    });
+
+    if (userObjective) {
+      return userObjective.Objectives;
+    } else {
+      throw new NotFoundError("User with the the specific objective not found");
+    }
+  },
+
+  getUserMenteesObjectives: async (userId) => {
+    const errors = [];
+
+    idParamaterValidation(userId, "User id", errors);
+
+    const user = await User.findOne({
+      where: {
+        id: userId,
+      },
+      include: [
+        {
+          model: User,
+          as: "mentees",
+          include: [
+            {
+              model: Objective,
+            },
+          ],
+        },
+      ],
+    });
+
+    if (user) {
+      const userMentees = user.mentees;
+      const userMenteesObjectives = userMentees.map(
+        (userMentee) => userMentee.Objectives
+      );
+      return userMenteesObjectives;
+    } else {
+      throw new NotFoundError("User not found");
+    }
+  },
+
+  getUserMenteeObjectives: async (userId, menteeId) => {
+    const errors = [];
+
+    idParamaterValidation(userId, "User id", errors);
+
+    const user = await User.findOne({
+      where: {
+        id: userId,
+      },
+      include: [
+        {
+          model: User,
+          as: "mentees",
+          where: {
+            id: menteeId,
+          },
+          include: [
+            {
+              model: Objective,
+            },
+          ],
+        },
+      ],
+    });
+
+    if (user) {
+      const userMentee = user.mentees;
+      const userMenteeObjectives = userMentee.map(
+        (userMentee) => userMentee.Objectives
+      );
+      return userMenteeObjectives[0];
+    } else {
+      throw new NotFoundError("User with the specified mentee not found");
+    }
+  },
+
+  getUserMenteeObjectiveById: async (userId, menteeId, objectiveId) => {
+    const errors = [];
+
+    idParamaterValidation(userId, "User id", errors);
+
+    const user = await User.findOne({
+      where: {
+        id: userId,
+      },
+      include: [
+        {
+          model: User,
+          as: "mentees",
+          where: {
+            id: menteeId,
+          },
+          include: [
+            {
+              model: Objective,
+              where: {
+                id: objectiveId,
+              },
+            },
+          ],
+        },
+      ],
+    });
+
+    if (user) {
+      const userMentee = user.mentees;
+      const userMenteeObjective = userMentee.map(
+        (userMentee) => userMentee.Objectives
+      );
+      return userMenteeObjective[0][0];
+    } else {
+      throw new NotFoundError(
+        "User with the specified mentee with the specified objective not found"
+      );
     }
   },
 };

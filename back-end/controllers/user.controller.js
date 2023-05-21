@@ -86,6 +86,63 @@ const controller = {
       errorsHandlerWrapper(res, err);
     }
   },
+
+  getUserObjectives: async (req, res) => {
+    try {
+      const userObjectives = await userService.getUserObjectives(req.params.id);
+      res.status(200).json(userObjectives);
+    } catch (err) {
+      errorsHandlerWrapper(res, err);
+    }
+  },
+
+  getUserObjectiveById: async (req, res) => {
+    try {
+      const userObjective = await userService.getUserObjectiveById(
+        req.params.id,
+        req.params.idObjective
+      );
+      res.status(200).json(userObjective);
+    } catch (err) {
+      errorsHandlerWrapper(res, err);
+    }
+  },
+
+  getUserMenteesObjectives: async (req, res) => {
+    try {
+      const userMenteesObjectives = await userService.getUserMenteesObjectives(
+        req.params.id
+      );
+      res.status(200).json(userMenteesObjectives);
+    } catch (err) {
+      errorsHandlerWrapper(res, err);
+    }
+  },
+
+  getUserMenteeObjectives: async (req, res) => {
+    try {
+      const userMenteeObjectives = await userService.getUserMenteeObjectives(
+        req.params.id,
+        req.params.idMentee
+      );
+      res.status(200).json(userMenteeObjectives);
+    } catch (err) {
+      errorsHandlerWrapper(res, err);
+    }
+  },
+
+  getUserMenteeObjectiveById: async (req, res) => {
+    try {
+      const userMenteeObjective = await userService.getUserMenteeObjectiveById(
+        req.params.id,
+        req.params.idMentee,
+        req.params.idObjective
+      );
+      res.status(200).json(userMenteeObjective);
+    } catch (err) {
+      errorsHandlerWrapper(res, err);
+    }
+  },
 };
 
 module.exports = controller;

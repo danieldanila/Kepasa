@@ -59,6 +59,29 @@ const controller = {
       errorsHandlerWrapper(res, err);
     }
   },
+
+  getPeriodObjectives: async (req, res) => {
+    try {
+      const periodObjectives = await periodService.getPeriodObjectives(
+        req.params.id
+      );
+      res.status(200).json(periodObjectives);
+    } catch (err) {
+      errorsHandlerWrapper(res, err);
+    }
+  },
+
+  getPeriodObjectiveById: async (req, res) => {
+    try {
+      const periodObjective = await periodService.getPeriodObjectiveById(
+        req.params.id,
+        req.params.idObjective
+      );
+      res.status(200).json(periodObjective);
+    } catch (err) {
+      errorsHandlerWrapper(res, err);
+    }
+  },
 };
 
 module.exports = controller;

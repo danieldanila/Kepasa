@@ -173,6 +173,50 @@ Project.belongsToMany(Role, {
   },
 });
 
+User.hasMany(Objective, {
+  foreignKey: {
+    name: "idUser",
+    type: DataTypes.UUID,
+    allowNull: false,
+    validate: {
+      isUUID: 4,
+    },
+  },
+});
+
+Objective.belongsTo(User, {
+  foreignKey: {
+    name: "idUser",
+    type: DataTypes.UUID,
+    allowNull: false,
+    validate: {
+      isUUID: 4,
+    },
+  },
+});
+
+Period.hasMany(Objective, {
+  foreignKey: {
+    name: "idPeriod",
+    type: DataTypes.UUID,
+    allowNull: false,
+    validate: {
+      isUUID: 4,
+    },
+  },
+});
+
+Objective.belongsTo(Period, {
+  foreignKey: {
+    name: "idPeriod",
+    type: DataTypes.UUID,
+    allowNull: false,
+    validate: {
+      isUUID: 4,
+    },
+  },
+});
+
 module.exports = {
   User,
   Department,
