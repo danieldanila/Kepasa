@@ -9,6 +9,7 @@ const RolesProjectsController = require("./rolesProjects.controller");
 const PeriodController = require("./period.controller");
 const ObjectiveController = require("./objective.controller");
 const TaskTypeController = require("./taskType.controller");
+const ActivityReportController = require("./activityReport.controller");
 
 module.exports = {
   DatabaseController,
@@ -22,4 +23,5 @@ module.exports = {
   PeriodController,
   ObjectiveController,
   TaskTypeController,
+  ActivityReportController,
 };

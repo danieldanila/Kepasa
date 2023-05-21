@@ -229,6 +229,22 @@ const validation = {
       );
     }
   },
+
+  minutesFieldValidation: (field, fieldName, errorsArray) => {
+    const fieldInteger = Math.floor(Number(field));
+    if (
+      !(
+        fieldInteger !== Infinity &&
+        String(fieldInteger) === field &&
+        fieldInteger > 0 &&
+        fieldInteger <= 1440
+      )
+    ) {
+      errorsArray.push(
+        `${fieldName} must be an integer number between 1 and 1440 (where 1440 minutes = 24 hours).`
+      );
+    }
+  },
 };
 
 module.exports = validation;

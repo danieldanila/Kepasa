@@ -9,6 +9,7 @@ const RolesProjectsService = require("./rolesProjects.service");
 const PeriodService = require("./period.service");
 const ObjectiveService = require("./objective.service");
 const TaskTypeService = require("./taskType.service");
+const ActivityReportService = require("./activityReport.service");
 
 module.exports = {
   DatabaseService,
@@ -22,4 +23,5 @@ module.exports = {
   PeriodService,
   ObjectiveService,
   TaskTypeService,
+  ActivityReportService,
 };

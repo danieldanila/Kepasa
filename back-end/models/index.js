@@ -11,6 +11,7 @@ const RolesProjectsModel = require("./rolesProjects.model");
 const PeriodModel = require("./period.model");
 const ObjectiveModel = require("./objective.model");
 const TaskTypeModel = require("./taskType.model");
+const ActivityReportModel = require("./activityReport.model");
 
 const User = UserModel(Database, Sequelize);
 const Department = DepartmentModel(Database, Sequelize);
@@ -21,6 +22,7 @@ const RolesProjects = RolesProjectsModel(Database, Sequelize);
 const Period = PeriodModel(Database, Sequelize);
 const Objective = ObjectiveModel(Database, Sequelize);
 const TaskType = TaskTypeModel(Database, Sequelize);
+const ActivityReport = ActivityReportModel(Database, Sequelize);
 
 User.belongsTo(User, {
   as: "mentor",
@@ -241,6 +243,94 @@ Objective.belongsTo(Period, {
   },
 });
 
+User.hasMany(ActivityReport, {
+  foreignKey: {
+    name: "idUser",
+    type: DataTypes.UUID,
+    allowNull: false,
+    validate: {
+      isUUID: 4,
+    },
+  },
+});
+
+ActivityReport.belongsTo(User, {
+  foreignKey: {
+    name: "idUser",
+    type: DataTypes.UUID,
+    allowNull: false,
+    validate: {
+      isUUID: 4,
+    },
+  },
+});
+
+Period.hasMany(ActivityReport, {
+  foreignKey: {
+    name: "idPeriod",
+    type: DataTypes.UUID,
+    allowNull: false,
+    validate: {
+      isUUID: 4,
+    },
+  },
+});
+
+ActivityReport.belongsTo(Period, {
+  foreignKey: {
+    name: "idPeriod",
+    type: DataTypes.UUID,
+    allowNull: false,
+    validate: {
+      isUUID: 4,
+    },
+  },
+});
+
+Project.hasMany(ActivityReport, {
+  foreignKey: {
+    name: "idProject",
+    type: DataTypes.UUID,
+    allowNull: false,
+    validate: {
+      isUUID: 4,
+    },
+  },
+});
+
+ActivityReport.belongsTo(Project, {
+  foreignKey: {
+    name: "idProject",
+    type: DataTypes.UUID,
+    allowNull: false,
+    validate: {
+      isUUID: 4,
+    },
+  },
+});
+
+TaskType.hasMany(ActivityReport, {
+  foreignKey: {
+    name: "idTaskType",
+    type: DataTypes.UUID,
+    allowNull: false,
+    validate: {
+      isUUID: 4,
+    },
+  },
+});
+
+ActivityReport.belongsTo(TaskType, {
+  foreignKey: {
+    name: "idTaskType",
+    type: DataTypes.UUID,
+    allowNull: false,
+    validate: {
+      isUUID: 4,
+    },
+  },
+});
+
 module.exports = {
   User,
   Department,
@@ -251,5 +341,6 @@ module.exports = {
   Period,
   Objective,
   TaskType,
+  ActivityReport,
   connection: Database,
 };

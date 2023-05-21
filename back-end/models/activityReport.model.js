@@ -4,13 +4,17 @@ const Database = require("../configs/database.config");
 
 const UserModel = require("./user.model");
 const PeriodModel = require("./period.model");
+const ProjectModel = require("./project.model");
+const TaskTypeModel = require("./taskType.model");
 
 const User = UserModel(Database, Sequelize);
 const Period = PeriodModel(Database, Sequelize);
+const Project = ProjectModel(Database, Sequelize);
+const TaskType = TaskTypeModel(Database, Sequelize);
 
 module.exports = (sequelize, DataTypes) => {
   return sequelize.define(
-    "Objective",
+    "ActivityReport",
     {
       id: {
         type: DataTypes.UUID,
@@ -20,13 +24,6 @@ module.exports = (sequelize, DataTypes) => {
           isUUID: 4,
         },
       },
-      name: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-          notEmpty: true,
-        },
-      },
       description: {
         type: DataTypes.TEXT,
         allowNull: false,
@@ -34,24 +31,24 @@ module.exports = (sequelize, DataTypes) => {
           notEmpty: true,
         },
       },
-      details: {
-        type: DataTypes.TEXT,
+      investedTime: {
+        type: DataTypes.SMALLINT,
         allowNull: false,
         validate: {
           notEmpty: true,
         },
       },
-      feedback: {
+      isApproved: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+        allowNull: false,
+      },
+      rejectJustification: {
         type: DataTypes.TEXT,
         allowNull: true,
         validate: {
           notEmpty: true,
         },
-      },
-      isFinished: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
-        allowNull: false,
       },
       idUser: {
         type: DataTypes.UUID,
@@ -73,10 +70,30 @@ module.exports = (sequelize, DataTypes) => {
           key: "id",
         },
       },
+      idProject: {
+        type: DataTypes.UUID,
+        validate: {
+          isUUID: 4,
+        },
+        references: {
+          model: Project,
+          key: "id",
+        },
+      },
+      idTaskType: {
+        type: DataTypes.UUID,
+        validate: {
+          isUUID: 4,
+        },
+        references: {
+          model: TaskType,
+          key: "id",
+        },
+      },
     },
     {
       underscored: true,
-      tableName: "Objectives",
+      tableName: "Activity_Reports",
     }
   );
 };
