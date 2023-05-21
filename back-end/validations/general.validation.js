@@ -59,8 +59,9 @@ const validation = {
         fieldName,
         errorsArray
       ) &&
-      this.onlyLettersAndSpacesAndHyphensValidation(
-        field.fieldName,
+      validation.onlyLettersAndSpacesAndHyphensValidation(
+        field,
+        fieldName,
         errorsArray
       )
     );
@@ -160,7 +161,7 @@ const validation = {
     });
 
     if (!doesUuidExists) {
-      errorsArray.push(`${fieldName} doesn't exist.`);
+      errorsArray.push(`${fieldName} with the value "${field}" doesn't exist.`);
     }
   },
 

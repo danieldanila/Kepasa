@@ -31,7 +31,7 @@ const validation = {
 
       if (project.id) {
         duplicateFieldValidation(
-          period.id,
+          project.id,
           "Period id",
           errors,
           existingProjects,

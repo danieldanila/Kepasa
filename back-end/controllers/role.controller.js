@@ -66,6 +66,26 @@ const controller = {
       errorsHandlerWrapper(res, err);
     }
   },
+
+  getRoleSuperiorRole: async (req, res) => {
+    try {
+      const roleSuperiorRole = await roleService.getRoleSuperiorRole(
+        req.params.id
+      );
+      res.status(200).json(roleSuperiorRole);
+    } catch (err) {
+      errorsHandlerWrapper(res, err);
+    }
+  },
+
+  getRoleSubRoles: async (req, res) => {
+    try {
+      const roleSubRoles = await roleService.getRoleSubRoles(req.params.id);
+      res.status(200).json(roleSubRoles);
+    } catch (err) {
+      errorsHandlerWrapper(res, err);
+    }
+  },
 };
 
 module.exports = controller;

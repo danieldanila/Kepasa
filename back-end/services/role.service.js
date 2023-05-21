@@ -101,6 +101,54 @@ const service = {
       throw new NotFoundError("Role not found.");
     }
   },
+
+  getRoleSuperiorRole: async (roleId) => {
+    const errors = [];
+
+    idParamaterValidation(roleId, "Role id", errors);
+
+    const role = await Role.findOne({
+      where: {
+        id: roleId,
+      },
+      include: [
+        {
+          model: Role,
+          as: "superiorRole",
+        },
+      ],
+    });
+
+    if (role) {
+      return role.superiorRole;
+    } else {
+      throw new NotFoundError("Role not found.");
+    }
+  },
+
+  getRoleSubRoles: async (roleId) => {
+    const errors = [];
+
+    idParamaterValidation(roleId, "Role id", errors);
+
+    const role = await Role.findOne({
+      where: {
+        id: roleId,
+      },
+      include: [
+        {
+          model: Role,
+          as: "subRoles",
+        },
+      ],
+    });
+
+    if (role) {
+      return role.subRoles;
+    } else {
+      throw new NotFoundError("Role not found.");
+    }
+  },
 };
 
 module.exports = service;
