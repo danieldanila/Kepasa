@@ -5,6 +5,7 @@ const RoleValidation = require("./role.validation");
 const UsersProjectsRolesValidation = require("./usersProjectsRoles.validation");
 const RolesProjectsValidation = require("./rolesProjects.validation");
 const PeriodValidation = require("./period.validation");
+const ObjectiveValidation = require("./objective.validation");
 
 module.exports = {
   UserValidation,
@@ -14,4 +15,5 @@ module.exports = {
   UsersProjectsRolesValidation,
   RolesProjectsValidation,
   PeriodValidation,
+  ObjectiveValidation,
 };

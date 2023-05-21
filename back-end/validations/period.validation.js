@@ -43,6 +43,10 @@ const validation = {
       errors
     );
 
+    if (period.id) {
+      uuidValidation(period.id, "Period id", errors);
+    }
+
     if (existingPeriods.length > 0) {
       duplicateFieldValidation(
         period.name,
@@ -51,10 +55,16 @@ const validation = {
         existingPeriods,
         "name"
       );
-    }
 
-    if (period.id) {
-      uuidValidation(period.id, "Period id", errors);
+      if (period.id) {
+        duplicateFieldValidation(
+          period.id,
+          "Period id",
+          errors,
+          existingPeriods,
+          "id"
+        );
+      }
     }
 
     return errors;

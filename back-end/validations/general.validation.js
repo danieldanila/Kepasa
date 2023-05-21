@@ -29,14 +29,17 @@ const validation = {
     return false;
   },
 
-  nameValidation: (field, fieldName, errorsArray) => {
+  lengthGreaterThanThreeValidation: (field, fieldName, errorsArray) => {
     if (field.length < 3) {
       errorsArray.push(
         `${fieldName} field must have a length greater than 3 characters!`
       );
       return false;
     }
+    return true;
+  },
 
+  onlyLettersAndSpacesAndHyphensValidation: (field, fieldName, errorsArray) => {
     const onlyLettersAndSpacesAndHyphensRegex = /^[a-zA-Z]+(?:[- ][a-zA-Z]+)*$/;
 
     if (!field.match(onlyLettersAndSpacesAndHyphensRegex)) {
@@ -47,6 +50,20 @@ const validation = {
     }
 
     return true;
+  },
+
+  nameValidation: (field, fieldName, errorsArray) => {
+    return (
+      validation.lengthGreaterThanThreeValidation(
+        field,
+        fieldName,
+        errorsArray
+      ) &&
+      this.onlyLettersAndSpacesAndHyphensValidation(
+        field.fieldName,
+        errorsArray
+      )
+    );
   },
 
   emailValidation: (field, fieldName, errorsArray) => {
@@ -160,7 +177,9 @@ const validation = {
         entityObject[propertyName].toString().toLowerCase() ===
           field.toString().toLowerCase()
       ) {
-        errorsArray.push(`${fieldName} already exists.`);
+        errorsArray.push(
+          `${fieldName} with the value "${field}" already exists.`
+        );
       }
     });
   },

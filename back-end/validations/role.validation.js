@@ -31,6 +31,10 @@ const validation = {
       existingDepartments
     );
 
+    if (role.id) {
+      uuidValidation(role.id, "Role id", errors);
+    }
+
     if (existingRoles.length > 0) {
       duplicateFieldValidation(
         role.name,
@@ -39,10 +43,16 @@ const validation = {
         existingRoles,
         "name"
       );
-    }
 
-    if (role.id) {
-      uuidValidation(role.id, "Role id", errors);
+      if (role.id) {
+        duplicateFieldValidation(
+          role.id,
+          "Role id",
+          errors,
+          existingRoles,
+          "id"
+        );
+      }
     }
 
     return errors;

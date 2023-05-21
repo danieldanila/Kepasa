@@ -20,6 +20,10 @@ const validation = {
       isUpdateRequest
     );
 
+    if (department.id) {
+      uuidValidation(department.id, "Department id", errors);
+    }
+
     if (existingDepartments.length > 0) {
       duplicateFieldValidation(
         department.name,
@@ -28,10 +32,16 @@ const validation = {
         existingDepartments,
         "name"
       );
-    }
 
-    if (department.id) {
-      uuidValidation(department.id, "Department id", errors);
+      if (department.id) {
+        duplicateFieldValidation(
+          department.id,
+          "Department id",
+          errors,
+          existingDepartments,
+          "id"
+        );
+      }
     }
 
     return errors;

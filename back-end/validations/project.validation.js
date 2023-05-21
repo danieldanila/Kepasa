@@ -16,6 +16,10 @@ const validation = {
       isUpdateRequest
     );
 
+    if (project.id) {
+      uuidValidation(project.id, "Project id", errors);
+    }
+
     if (existingProjects.length > 0) {
       duplicateFieldValidation(
         project.name,
@@ -24,10 +28,16 @@ const validation = {
         existingProjects,
         "name"
       );
-    }
 
-    if (project.id) {
-      uuidValidation(project.id, "Project id", errors);
+      if (project.id) {
+        duplicateFieldValidation(
+          period.id,
+          "Period id",
+          errors,
+          existingProjects,
+          "id"
+        );
+      }
     }
 
     return errors;

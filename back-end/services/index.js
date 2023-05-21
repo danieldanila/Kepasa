@@ -7,6 +7,7 @@ const RoleService = require("./role.service");
 const UsersProjectsRolesService = require("./usersProjectsRoles.service");
 const RolesProjectsService = require("./rolesProjects.service");
 const PeriodService = require("./period.service");
+const ObjectiveService = require("./objective.service");
 
 module.exports = {
   DatabaseService,
@@ -18,4 +19,5 @@ module.exports = {
   UsersProjectsRolesService,
   RolesProjectsService,
   PeriodService,
+  ObjectiveService,
 };

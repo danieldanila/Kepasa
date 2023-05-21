@@ -80,6 +80,13 @@ const validation = {
       existingDepartments
     );
 
+    booleanFieldValidation(user.isActive, "Is Active", errors);
+    booleanFieldValidation(user.isAdministrator, "Is Administrator", errors);
+
+    if (user.id) {
+      uuidValidation(user.id, "User id", errors);
+    }
+
     if (existingUsers.length > 0) {
       validateCompletedField(
         foreignUuidValidation,
@@ -125,13 +132,6 @@ const validation = {
       }
     } else {
       user.idMentor = null;
-    }
-
-    booleanFieldValidation(user.isActive, "Is Active", errors);
-    booleanFieldValidation(user.isAdministrator, "Is Administrator", errors);
-
-    if (user.id) {
-      uuidValidation(user.id, "User id", errors);
     }
 
     return errors;

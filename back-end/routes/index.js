@@ -9,6 +9,7 @@ const RoleRouter = require("./role.route");
 const UsersProjectsRolesRouter = require("./usersProjectsRoles.route");
 const RolesProjectsRouter = require("./rolesProjects.route");
 const PeriodRouter = require("./period.route");
+const ObjectiveRouter = require("./objective.route");
 
 router.use("/database", DatabaseRouter);
 router.use("/user", UserRouter);
@@ -19,5 +20,6 @@ router.use("/role", RoleRouter);
 router.use("/usersProjectsRoles", UsersProjectsRolesRouter);
 router.use("/rolesProjects", RolesProjectsRouter);
 router.use("/period", PeriodRouter);
+router.use("/objective", ObjectiveRouter);
 
 module.exports = router;
