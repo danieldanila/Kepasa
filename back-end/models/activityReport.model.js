@@ -43,6 +43,13 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: false,
         allowNull: false,
       },
+      date: {
+        type: DataTypes.DATEONLY,
+        allowNull: false,
+        validate: {
+          isDate: true,
+        },
+      },
       rejectJustification: {
         type: DataTypes.TEXT,
         allowNull: true,

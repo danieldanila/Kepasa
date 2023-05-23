@@ -7,6 +7,7 @@ const {
 const { idParamaterValidation } = require("../validations/general.validation");
 
 const Project = require("../models").Project;
+const ActivityReport = require("../models").ActivityReport;
 
 const service = {
   createProject: async (projectBody) => {
@@ -70,6 +71,57 @@ const service = {
     const project = await service.getProjectById(projectId);
 
     project.destroy();
+  },
+
+  getProjectActivityReports: async (projectId) => {
+    const errors = [];
+
+    idParamaterValidation(projectId, "Project id", errors);
+
+    const project = await Project.findOne({
+      where: {
+        id: projectId,
+      },
+      include: [
+        {
+          model: ActivityReport,
+        },
+      ],
+    });
+
+    if (project) {
+      return project.ActivityReports;
+    } else {
+      throw new NotFoundError("Project not found");
+    }
+  },
+
+  getProjectActivityReportById: async (projectId, activityReportId) => {
+    const errors = [];
+
+    idParamaterValidation(projectId, "Project id", errors);
+
+    const project = await Project.findOne({
+      where: {
+        id: projectId,
+      },
+      include: [
+        {
+          model: ActivityReport,
+          where: {
+            id: activityReportId,
+          },
+        },
+      ],
+    });
+
+    if (project) {
+      return project.ActivityReports[0];
+    } else {
+      throw new NotFoundError(
+        "Project with the the specific activity report not found"
+      );
+    }
   },
 };
 

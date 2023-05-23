@@ -21,5 +21,10 @@ router.get(
   "/:id/mentee/:idMentee/objective/:idObjective",
   userController.getUserMenteeObjectiveById
 );
+router.get("/:id/activityReports", userController.getUserActivityReports);
+router.get(
+  "/:id/activityReport/:idActivityReport",
+  userController.getUserActivityReportById
+);
 
 module.exports = router;

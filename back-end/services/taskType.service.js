@@ -7,6 +7,7 @@ const {
 const { NotFoundError } = require("../errors").NotFoundError;
 
 const TaskType = require("../models").TaskType;
+const ActivityReport = require("../models").ActivityReport;
 
 const service = {
   createTaskType: async (taskTypeBody) => {
@@ -70,6 +71,57 @@ const service = {
     const taskType = await service.getTaskTypeById(taskTypeId);
 
     taskType.destroy();
+  },
+
+  getTaskTypeActivityReports: async (taskTypeId) => {
+    const errors = [];
+
+    idParamaterValidation(taskTypeId, "Task Type id", errors);
+
+    const taskType = await TaskType.findOne({
+      where: {
+        id: taskTypeId,
+      },
+      include: [
+        {
+          model: ActivityReport,
+        },
+      ],
+    });
+
+    if (taskType) {
+      return taskType.ActivityReports;
+    } else {
+      throw new NotFoundError("Task Type not found");
+    }
+  },
+
+  getTaskTypeActivityReportById: async (taskTypeId, activityReportId) => {
+    const errors = [];
+
+    idParamaterValidation(taskTypeId, "Task Type id", errors);
+
+    const taskType = await TaskType.findOne({
+      where: {
+        id: taskTypeId,
+      },
+      include: [
+        {
+          model: ActivityReport,
+          where: {
+            id: activityReportId,
+          },
+        },
+      ],
+    });
+
+    if (taskType) {
+      return taskType.ActivityReports[0];
+    } else {
+      throw new NotFoundError(
+        "Task Type with the the specific activity report not found"
+      );
+    }
   },
 };
 

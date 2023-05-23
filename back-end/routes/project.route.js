@@ -7,5 +7,10 @@ router.get("/", projectController.getAllProjects);
 router.get("/:id", projectController.getProjectById);
 router.put("/:id", projectController.updateProject);
 router.delete("/:id", projectController.deleteProject);
+router.get("/:id/activityReports", projectController.getProjectActivityReports);
+router.get(
+  "/:id/activityReport/:idActivityReport",
+  projectController.getProjectActivityReportById
+);
 
 module.exports = router;

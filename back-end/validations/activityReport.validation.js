@@ -6,6 +6,7 @@ const {
   foreignUuidValidation,
   duplicateFieldValidation,
   minutesFieldValidation,
+  dateValidation,
 } = require("./general.validation");
 
 const validation = {
@@ -37,6 +38,14 @@ const validation = {
     );
 
     booleanFieldValidation(activityReport.isApproved, "Is Approved", errors);
+
+    validateCompletedField(
+      dateValidation,
+      activityReport.date,
+      "Date",
+      errors,
+      isUpdateRequest
+    );
 
     validateCompletedField(
       lengthGreaterThanThreeValidation,

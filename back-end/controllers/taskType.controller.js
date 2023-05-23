@@ -84,6 +84,29 @@ const controller = {
       errorsHandlerWrapper(res, err);
     }
   },
+
+  getTaskTypeActivityReports: async (req, res) => {
+    try {
+      const taskTypeActivityReports =
+        await taskTypeService.getTaskTypeActivityReports(req.params.id);
+      res.status(200).json(taskTypeActivityReports);
+    } catch (err) {
+      errorsHandlerWrapper(res, err);
+    }
+  },
+
+  getTaskTypeActivityReportById: async (req, res) => {
+    try {
+      const taskTypeActivityReport =
+        await taskTypeService.getTaskTypeActivityReportById(
+          req.params.id,
+          req.params.idActivityReport
+        );
+      res.status(200).json(taskTypeActivityReport);
+    } catch (err) {
+      errorsHandlerWrapper(res, err);
+    }
+  },
 };
 
 module.exports = controller;

@@ -60,6 +60,29 @@ const controller = {
       errorsHandlerWrapper(res, err);
     }
   },
+
+  getProjectActivityReports: async (req, res) => {
+    try {
+      const projectActivityReports =
+        await projectService.getProjectActivityReports(req.params.id);
+      res.status(200).json(projectActivityReports);
+    } catch (err) {
+      errorsHandlerWrapper(res, err);
+    }
+  },
+
+  getProjectActivityReportById: async (req, res) => {
+    try {
+      const projectActivityReport =
+        await projectService.getProjectActivityReportById(
+          req.params.id,
+          req.params.idActivityReport
+        );
+      res.status(200).json(projectActivityReport);
+    } catch (err) {
+      errorsHandlerWrapper(res, err);
+    }
+  },
 };
 
 module.exports = controller;

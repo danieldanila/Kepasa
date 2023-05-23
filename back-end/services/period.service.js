@@ -8,6 +8,7 @@ const periodValidation = require("../validations").PeriodValidation;
 
 const Period = require("../models").Period;
 const Objective = require("../models").Objective;
+const ActivityReport = require("../models").ActivityReport;
 
 const service = {
   createPeriod: async (periodBody) => {
@@ -119,6 +120,57 @@ const service = {
       return period.Objectives[0];
     } else {
       throw new NotFoundError("Period with the specified objective not found.");
+    }
+  },
+
+  getPeriodActivityReports: async (periodId) => {
+    const errors = [];
+
+    idParamaterValidation(periodId, "Period id", errors);
+
+    const period = await Period.findOne({
+      where: {
+        id: periodId,
+      },
+      include: [
+        {
+          model: ActivityReport,
+        },
+      ],
+    });
+
+    if (period) {
+      return period.ActivityReports;
+    } else {
+      throw new NotFoundError("Period not found.");
+    }
+  },
+
+  getPeriodActivityReportById: async (periodId, activityReportId) => {
+    const errors = [];
+
+    idParamaterValidation(periodId, "Period id", errors);
+
+    const period = await Period.findOne({
+      where: {
+        id: periodId,
+      },
+      include: [
+        {
+          model: ActivityReport,
+          where: {
+            id: activityReportId,
+          },
+        },
+      ],
+    });
+
+    if (period) {
+      return period.ActivityReports[0];
+    } else {
+      throw new NotFoundError(
+        "Period with the the specific activity report not found"
+      );
     }
   },
 };

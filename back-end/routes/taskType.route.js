@@ -7,5 +7,13 @@ router.get("/", taskTypeController.getAllTaskTypes);
 router.get("/:id", taskTypeController.getTaskTypeById);
 router.put("/:id", taskTypeController.updateTaskType);
 router.delete("/:id", taskTypeController.deleteTaskType);
+router.get(
+  "/:id/activityReports",
+  taskTypeController.getTaskTypeActivityReports
+);
+router.get(
+  "/:id/activityReport/:idActivityReport",
+  taskTypeController.getTaskTypeActivityReportById
+);
 
 module.exports = router;

@@ -11,6 +11,7 @@ const { passwordEncrypt } = require("../utils/passwordEncrypt.utils");
 const User = require("../models").User;
 const Department = require("../models").Department;
 const Objective = require("../models").Objective;
+const ActivityReport = require("../models").ActivityReport;
 
 const getAllDepartments = require("./department.service").getAllDepartments;
 
@@ -204,7 +205,7 @@ const service = {
     });
 
     if (userObjective) {
-      return userObjective.Objectives;
+      return userObjective.Objectives[0];
     } else {
       throw new NotFoundError("User with the the specific objective not found");
     }
@@ -316,6 +317,57 @@ const service = {
     } else {
       throw new NotFoundError(
         "User with the specified mentee with the specified objective not found"
+      );
+    }
+  },
+
+  getUserActivityReports: async (userId) => {
+    const errors = [];
+
+    idParamaterValidation(userId, "User id", errors);
+
+    const user = await User.findOne({
+      where: {
+        id: userId,
+      },
+      include: [
+        {
+          model: ActivityReport,
+        },
+      ],
+    });
+
+    if (user) {
+      return user.ActivityReports;
+    } else {
+      throw new NotFoundError("User not found");
+    }
+  },
+
+  getUserActivityReportById: async (userId, activityReportId) => {
+    const errors = [];
+
+    idParamaterValidation(userId, "User id", errors);
+
+    const user = await User.findOne({
+      where: {
+        id: userId,
+      },
+      include: [
+        {
+          model: ActivityReport,
+          where: {
+            id: activityReportId,
+          },
+        },
+      ],
+    });
+
+    if (user) {
+      return user.ActivityReports[0];
+    } else {
+      throw new NotFoundError(
+        "User with the the specific activity report not found"
       );
     }
   },

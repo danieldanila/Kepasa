@@ -143,6 +143,29 @@ const controller = {
       errorsHandlerWrapper(res, err);
     }
   },
+
+  getUserActivityReports: async (req, res) => {
+    try {
+      const userActivityReports = await userService.getUserActivityReports(
+        req.params.id
+      );
+      res.status(200).json(userActivityReports);
+    } catch (err) {
+      errorsHandlerWrapper(res, err);
+    }
+  },
+
+  getUserActivityReportById: async (req, res) => {
+    try {
+      const userActivityReport = await userService.getUserActivityReportById(
+        req.params.id,
+        req.params.idActivityReport
+      );
+      res.status(200).json(userActivityReport);
+    } catch (err) {
+      errorsHandlerWrapper(res, err);
+    }
+  },
 };
 
 module.exports = controller;

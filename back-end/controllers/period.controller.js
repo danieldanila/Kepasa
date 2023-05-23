@@ -82,6 +82,29 @@ const controller = {
       errorsHandlerWrapper(res, err);
     }
   },
+
+  getPeriodActivityReports: async (req, res) => {
+    try {
+      const periodActivityReports =
+        await periodService.getPeriodActivityReports(req.params.id);
+      res.status(200).json(periodActivityReports);
+    } catch (err) {
+      errorsHandlerWrapper(res, err);
+    }
+  },
+
+  getPeriodActivityReportById: async (req, res) => {
+    try {
+      const periodActivityReport =
+        await periodService.getPeriodActivityReportById(
+          req.params.id,
+          req.params.idActivityReport
+        );
+      res.status(200).json(periodActivityReport);
+    } catch (err) {
+      errorsHandlerWrapper(res, err);
+    }
+  },
 };
 
 module.exports = controller;

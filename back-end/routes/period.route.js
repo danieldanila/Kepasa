@@ -12,5 +12,10 @@ router.get(
   "/:id/objective/:idObjective",
   periodController.getPeriodObjectiveById
 );
+router.get("/:id/activityReports", periodController.getPeriodActivityReports);
+router.get(
+  "/:id/activityReport/:idActivityReport",
+  periodController.getPeriodActivityReportById
+);
 
 module.exports = router;
