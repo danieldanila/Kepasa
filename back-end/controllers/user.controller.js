@@ -169,10 +169,9 @@ const controller = {
 
   getUserSubUsersActivityReports: async (req, res) => {
     try {
-      const user = await userService.getUserSubUsersActivityReports(
-        req.params.id
-      );
-      res.status(200).json(user);
+      const userSubUsersActivityReports =
+        await userService.getUserSubUsersActivityReports(req.params.id);
+      res.status(200).json(userSubUsersActivityReports);
     } catch (err) {
       errorsHandlerWrapper(res, err);
     }

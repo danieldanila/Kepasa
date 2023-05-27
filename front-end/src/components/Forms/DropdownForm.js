@@ -1,10 +1,11 @@
 import { AutoComplete } from "primereact/autocomplete";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 export default function DropdownForm({
   id,
   label,
   suggestions,
+  fieldNameToBeShown,
   customOnChange,
 }) {
   const [selectedOption, setSelectedOption] = useState(null);
@@ -21,9 +22,19 @@ export default function DropdownForm({
     if (!event.query.trim().length) {
       filteredOptionsCopy = [...suggestions];
     } else {
-      filteredOptionsCopy = suggestions.filter((sugestion) => {
-        return sugestion.toLowerCase().startsWith(event.query.toLowerCase());
-      });
+      filteredOptionsCopy = suggestions
+        .filter((sugestion) => {
+          return sugestion[fieldNameToBeShown]
+            .toLowerCase()
+            .startsWith(event.query.toLowerCase());
+        })
+        .map((suggestion) => {
+          return {
+            ...suggestion,
+            label: suggestion[fieldNameToBeShown],
+            value: suggestion.id,
+          };
+        });
     }
 
     setFilteredOptions(filteredOptionsCopy);
@@ -34,6 +45,7 @@ export default function DropdownForm({
       <AutoComplete
         id={id}
         suggestions={filteredOptions}
+        field="label"
         forceSelection
         completeMethod={searchOption}
         value={selectedOption}

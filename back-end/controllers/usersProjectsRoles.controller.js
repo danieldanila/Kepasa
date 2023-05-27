@@ -112,6 +112,18 @@ const controller = {
     }
   },
 
+  getUserRoleOnDepartmentProject: async (req, res) => {
+    try {
+      const userRoleOnDepartmentProject =
+        await usersProjectsRolesService.getUserRoleOnDepartmentProject(
+          req.params.idUser
+        );
+      res.status(200).json(userRoleOnDepartmentProject);
+    } catch (err) {
+      errorsHandlerWrapper(res, err);
+    }
+  },
+
   getUserRolesOnProjects: async (req, res) => {
     try {
       const userRoles = await usersProjectsRolesService.getUserRolesOnProjects(

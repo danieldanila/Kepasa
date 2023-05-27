@@ -189,6 +189,19 @@ const service = {
     }
   },
 
+  getUserRoleOnDepartmentProject: async (userId) => {
+    const userroleOnDepartmentProject = await service.getUserRoleOnProject(
+      userId,
+      process.env.DEPARTMENT_PROJECT_ID
+    );
+
+    if (userroleOnDepartmentProject) {
+      return userroleOnDepartmentProject;
+    } else {
+      throw new NotFoundError("User on given project not found.");
+    }
+  },
+
   getUserRolesOnProjects: async (userId) => {
     const errors = [];
 

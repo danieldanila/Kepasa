@@ -74,13 +74,22 @@ export default function DataTableWrapper({
 
   const closeFormDialog = () => {
     setShowformDialog(false);
+    setDataEntity(emptyDataEntity);
   };
 
   const saveFormDialog = () => {
-    // const uniqueId = uuid();
-    // let dataEntityCopy = { ...dataEntity };
-    // dataEntityCopy["id"] = uniqueId;
-    // setDataEntity(dataEntityCopy);
+    async function postData() {
+      dataEntity.id = uuid();
+      await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/user/create`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(dataEntity),
+      });
+    }
+
+    postData();
 
     let dataCopy = [...data];
 
@@ -88,7 +97,7 @@ export default function DataTableWrapper({
 
     setData(dataCopy);
 
-    setShowformDialog(false);
+    closeFormDialog();
   };
 
   const exportCSV = (selectionOnly) => {
@@ -190,7 +199,7 @@ export default function DataTableWrapper({
         value={data}
         removableSort
         paginator
-        rows={25}
+        rows={5}
         rowsPerPageOptions={[5, 25, 50, 75, 100]}
         paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
         currentPageReportTemplate="{first} to {last} of {totalRecords}"

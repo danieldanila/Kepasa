@@ -9,7 +9,32 @@ import { UsersContext } from "@/pages/_app";
 import { useContext, useEffect, useState } from "react";
 
 export default function PeopleForm({ visible, onHide, dialogFooter }) {
+  const [departments, setDepartments] = useState(null);
+  const [users, setUsers] = useState(null);
   const { emptyPerson, user, setUser } = useContext(UsersContext);
+
+  useEffect(() => {
+    async function getDepartments() {
+      const departmentsResponse = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/department/`
+      );
+      const departments = await departmentsResponse.json();
+
+      setDepartments(departments);
+    }
+
+    async function getUsers() {
+      const usersResponse = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/user/`
+      );
+      const users = await usersResponse.json();
+
+      setUsers(users);
+    }
+
+    getDepartments();
+    getUsers();
+  }, []);
 
   const onInputTextChange = (e, idName) => {
     const inputValue = (e.target && e.target.value) || "";
@@ -25,13 +50,10 @@ export default function PeopleForm({ visible, onHide, dialogFooter }) {
   };
 
   const onInputDropdownChange = (e, idName) => {
-    //TODO: when back-end will be done, change this code
     let inputValue = (e.target && e.target.value) || "";
     let userCopy = { ...user };
-    if (inputValue == "IT" || inputValue == "Dani") {
-      inputValue = 1;
-    }
-    userCopy[`${idName}`] = inputValue;
+
+    userCopy[`${idName}`] = inputValue.id;
     setUser(userCopy);
   };
 
@@ -83,13 +105,15 @@ export default function PeopleForm({ visible, onHide, dialogFooter }) {
         <DropdownForm
           id="idDepartment"
           label="Department"
-          suggestions={["IT", "HR", "EDU", "I&P", "FR"]}
+          suggestions={departments}
+          fieldNameToBeShown="name"
           customOnChange={onInputDropdownChange}
         />
         <DropdownForm
           id="idMentor"
           label="Mentor"
-          suggestions={["Dani", "Alex"]}
+          suggestions={users}
+          fieldNameToBeShown="fullName"
           customOnChange={onInputDropdownChange}
         />
         <PasswordForm

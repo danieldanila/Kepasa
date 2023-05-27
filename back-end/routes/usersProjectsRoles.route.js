@@ -33,6 +33,10 @@ router.get(
   usersProjectsRolesController.getUserRoleOnProject
 );
 router.get(
+  "/user/:idUser/department/role",
+  usersProjectsRolesController.getUserRoleOnDepartmentProject
+);
+router.get(
   "/user/:idUser",
   usersProjectsRolesController.getUserRolesOnProjects
 );
