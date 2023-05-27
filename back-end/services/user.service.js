@@ -12,8 +12,12 @@ const User = require("../models").User;
 const Department = require("../models").Department;
 const Objective = require("../models").Objective;
 const ActivityReport = require("../models").ActivityReport;
+const UsersProjectsRoles = require("../models").UsersProjectsRoles;
+const Role = require("../models").Role;
 
 const getAllDepartments = require("./department.service").getAllDepartments;
+
+const { Op } = require("sequelize");
 
 const service = {
   createUser: async (userBody) => {
@@ -369,6 +373,62 @@ const service = {
       throw new NotFoundError(
         "User with the the specific activity report not found"
       );
+    }
+  },
+
+  getUserSubUsersActivityReports: async (userId) => {
+    const errors = [];
+
+    idParamaterValidation(userId, "User id", errors);
+
+    const usersProjectsRoles = await UsersProjectsRoles.findAll({
+      where: {
+        idUser: userId,
+      },
+    });
+
+    const usersSubUsersActivityReports = [];
+
+    for (const userProjectRole of usersProjectsRoles) {
+      const role = await Role.findOne({
+        where: {
+          id: userProjectRole.idRole,
+        },
+        include: {
+          model: Role,
+          as: "subRoles",
+        },
+      });
+
+      for (const subRole of role.subRoles) {
+        const subUsersProjectsRoles = await UsersProjectsRoles.findAll({
+          where: {
+            idRole: subRole.id,
+            ...(userProjectRole.idProject !== process.env.ALL_PROJECTS_ID && {
+              idProject: { [Op.eq]: userProjectRole.idProject },
+            }),
+          },
+        });
+
+        for (const subUserProjectRole of subUsersProjectsRoles) {
+          const subUsersActivityReports = await ActivityReport.findAll({
+            where: {
+              idUser: subUserProjectRole.idUser,
+              idProject: subUserProjectRole.idProject,
+            },
+          });
+
+          if (subUsersActivityReports.length > 0) {
+            usersSubUsersActivityReports.push(subUsersActivityReports);
+          }
+        }
+      }
+    }
+
+    if (usersSubUsersActivityReports) {
+      return usersSubUsersActivityReports;
+    } else {
+      throw new NotFoundError("User has no sub users with activity reports.");
     }
   },
 };

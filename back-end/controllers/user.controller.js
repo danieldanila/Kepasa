@@ -166,6 +166,17 @@ const controller = {
       errorsHandlerWrapper(res, err);
     }
   },
+
+  getUserSubUsersActivityReports: async (req, res) => {
+    try {
+      const user = await userService.getUserSubUsersActivityReports(
+        req.params.id
+      );
+      res.status(200).json(user);
+    } catch (err) {
+      errorsHandlerWrapper(res, err);
+    }
+  },
 };
 
 module.exports = controller;

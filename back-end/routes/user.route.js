@@ -26,5 +26,9 @@ router.get(
   "/:id/activityReport/:idActivityReport",
   userController.getUserActivityReportById
 );
+router.get(
+  "/:id/subUsersActivityReports",
+  userController.getUserSubUsersActivityReports
+);
 
 module.exports = router;
