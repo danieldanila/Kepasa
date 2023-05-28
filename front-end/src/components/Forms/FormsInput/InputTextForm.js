@@ -6,13 +6,14 @@ export default function InputTextForm({
   label,
   keyfilter,
   customOnChange,
+  initialValue,
 }) {
   const handleInputTextChange = (e, id) => {
     setText(e.target.value);
     customOnChange(e, id);
   };
 
-  const [text, setText] = useState("");
+  const [text, setText] = useState(initialValue);
   return (
     <span className="p-float-label">
       <InputText

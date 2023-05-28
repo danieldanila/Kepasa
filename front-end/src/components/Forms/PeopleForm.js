@@ -1,17 +1,22 @@
 import { Dialog } from "primereact/dialog";
-import InputTextForm from "./InputTextForm";
-import CalendarForm from "./CalendarForm";
-import DropdownForm from "./DropdownForm";
-import PasswordForm from "./PasswordForm";
-import ToggleButtonForm from "./ToggleButtonForm";
+import InputTextForm from "./FormsInput/InputTextForm";
+import CalendarForm from "./FormsInput/CalendarForm";
+import DropdownForm from "./FormsInput/DropdownForm";
+import PasswordForm from "./FormsInput/PasswordForm";
+import ToggleButtonForm from "./FormsInput/ToggleButtonForm";
 import styles from "../../styles/PeopleForm.module.css";
 import { UsersContext } from "@/pages/_app";
 import { useContext, useEffect, useState } from "react";
 
-export default function PeopleForm({ visible, onHide, dialogFooter }) {
+export default function PeopleForm({
+  visible,
+  onHide,
+  dialogFooter,
+  isUpdate,
+  person,
+}) {
   const [departments, setDepartments] = useState(null);
-  const [users, setUsers] = useState(null);
-  const { emptyPerson, user, setUser } = useContext(UsersContext);
+  const { users, user, setUser } = useContext(UsersContext);
 
   useEffect(() => {
     async function getDepartments() {
@@ -23,17 +28,7 @@ export default function PeopleForm({ visible, onHide, dialogFooter }) {
       setDepartments(departments);
     }
 
-    async function getUsers() {
-      const usersResponse = await fetch(
-        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/user/`
-      );
-      const users = await usersResponse.json();
-
-      setUsers(users);
-    }
-
     getDepartments();
-    getUsers();
   }, []);
 
   const onInputTextChange = (e, idName) => {
@@ -45,7 +40,7 @@ export default function PeopleForm({ visible, onHide, dialogFooter }) {
 
   const onInputBooleanChange = (e, idName) => {
     let userCopy = { ...user };
-    userCopy[`${idName}`] = e.value;
+    userCopy[`${idName}`] = e.value.toString();
     setUser(userCopy);
   };
 
@@ -71,36 +66,40 @@ export default function PeopleForm({ visible, onHide, dialogFooter }) {
         <InputTextForm
           id="firstName"
           label="First Name"
-          keyfilter="alpha"
           customOnChange={onInputTextChange}
+          initialValue={person.firstName}
         />
         <InputTextForm
           id="lastName"
           label="Last Name"
-          keyfilter="alpha"
           customOnChange={onInputTextChange}
+          initialValue={person.lastName}
         />
         <InputTextForm
           id="email"
           label="Email"
           keyfilter="email"
           customOnChange={onInputTextChange}
+          initialValue={person.email}
         />
         <InputTextForm
           id="phone"
           label="Phone"
           keyfilter="pint"
           customOnChange={onInputTextChange}
+          initialValue={person.phone}
         />
         <CalendarForm
           id="birthday"
           label="Birthday"
           customOnChange={onInputTextChange}
+          initialValue={person.birthday}
         />
         <InputTextForm
           id="socialMediaLink"
           label="Social Media Link"
           customOnChange={onInputTextChange}
+          initialValue={person.socialMediaLink}
         />
         <DropdownForm
           id="idDepartment"
@@ -108,6 +107,7 @@ export default function PeopleForm({ visible, onHide, dialogFooter }) {
           suggestions={departments}
           fieldNameToBeShown="name"
           customOnChange={onInputDropdownChange}
+          initialValue={person.departmentName}
         />
         <DropdownForm
           id="idMentor"
@@ -115,17 +115,30 @@ export default function PeopleForm({ visible, onHide, dialogFooter }) {
           suggestions={users}
           fieldNameToBeShown="fullName"
           customOnChange={onInputDropdownChange}
+          initialValue={person.mentorName}
         />
-        <PasswordForm
-          id="password"
-          label="Initial password"
-          customOnChange={onInputTextChange}
-        />
+        {isUpdate ? (
+          <ToggleButtonForm
+            id="isActive"
+            onLabel="Is Active"
+            offLabel="Is NOT Active"
+            customOnChange={onInputBooleanChange}
+            initialValue={person.isActive}
+          />
+        ) : (
+          <PasswordForm
+            id="password"
+            label="Initial password"
+            customOnChange={onInputTextChange}
+          />
+        )}
+
         <ToggleButtonForm
           id="isAdministrator"
           onLabel="Is Administrator"
           offLabel="Is NOT Administrator"
           customOnChange={onInputBooleanChange}
+          initialValue={person.isAdministrator}
         />
       </div>
     </Dialog>

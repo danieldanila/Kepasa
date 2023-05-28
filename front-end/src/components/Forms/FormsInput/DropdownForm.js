@@ -1,5 +1,5 @@
 import { AutoComplete } from "primereact/autocomplete";
-import { useRef, useState } from "react";
+import { useState } from "react";
 
 export default function DropdownForm({
   id,
@@ -7,8 +7,9 @@ export default function DropdownForm({
   suggestions,
   fieldNameToBeShown,
   customOnChange,
+  initialValue,
 }) {
-  const [selectedOption, setSelectedOption] = useState(null);
+  const [selectedOption, setSelectedOption] = useState(initialValue);
   const [filteredOptions, setFilteredOptions] = useState(null);
 
   const handleInputDropdownChange = (e, id) => {

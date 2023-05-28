@@ -1,8 +1,15 @@
 import { Calendar } from "primereact/calendar";
 import { useState } from "react";
 
-export default function CalendarForm({ id, label, customOnChange }) {
-  const [date, setDate] = useState(null);
+export default function CalendarForm({
+  id,
+  label,
+  customOnChange,
+  initialValue,
+}) {
+  const [date, setDate] = useState(
+    initialValue ? new Date(initialValue) : null
+  );
 
   const handleInputCalendarChange = (e, id) => {
     setDate(e.target.value);

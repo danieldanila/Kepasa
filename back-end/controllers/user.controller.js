@@ -45,7 +45,10 @@ const controller = {
   updateUser: async (req, res) => {
     try {
       const updatedUser = await userService.updateUser(req.params.id, req.body);
-      res.status(202).json(updatedUser);
+      res.status(202).json({
+        user: updatedUser,
+        message: `User ${updatedUser.fullName} has been updated.`,
+      });
     } catch (err) {
       errorsHandlerWrapper(res, err);
     }

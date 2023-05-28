@@ -9,6 +9,7 @@ import styles from "../styles/DataTableWrapper.module.css";
 import PeopleForm from "./Forms/PeopleForm";
 import { v4 as uuid } from "uuid";
 import SearchBar from "./SearchBar";
+import { Toast } from "primereact/toast";
 
 export default function DataTableWrapper({
   dataContext,
@@ -26,12 +27,11 @@ export default function DataTableWrapper({
 
   const [filters, setFilters] = useState(null);
   const [showFormDialog, setShowformDialog] = useState(false);
+  const [isUpdate, setIsUpdate] = useState(false);
   const [selectedData, setSelectedData] = useState(null);
+  const [selectedDataEntity, setSelectedDataEntity] = useState(null);
   const dataTableRef = useRef(null);
-
-  useEffect(() => {
-    console.log(dataEntity);
-  }, [dataEntity, data]);
+  const toastRef = useRef(null);
 
   const initialFilters = () => {
     setFilters(
@@ -51,6 +51,12 @@ export default function DataTableWrapper({
   const clearFilters = () => {
     initialFilters();
     setSelectedData(null);
+    toastRef.current.show({
+      severity: "info",
+      summary: "Info",
+      detail: "The filters have been cleared",
+      time: 1000,
+    });
   };
 
   const onGlobalFilterChange = (e) => {
@@ -69,6 +75,14 @@ export default function DataTableWrapper({
   };
 
   const openFormDialog = () => {
+    setIsUpdate(false);
+    setShowformDialog(true);
+  };
+
+  const openEditFormDialog = (rowData) => {
+    setSelectedDataEntity(rowData);
+    setDataEntity(rowData);
+    setIsUpdate(true);
     setShowformDialog(true);
   };
 
@@ -79,29 +93,92 @@ export default function DataTableWrapper({
 
   const saveFormDialog = () => {
     async function postData() {
-      dataEntity.id = uuid();
-      await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/user/create`, {
-        method: "POST",
+      let url;
+      let method;
+      let dataBody;
+      let index;
+
+      if (isUpdate) {
+        url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/user/${dataEntity.id}`;
+        method = "PUT";
+
+        index = data.findIndex((item) => item.id === selectedDataEntity.id);
+
+        const modifiedFields = Object.keys(dataEntity).filter((key) => {
+          return dataEntity[key] !== selectedDataEntity[key];
+        });
+
+        const modifiedData = {};
+
+        modifiedFields.forEach((field) => {
+          modifiedData[field] = dataEntity[field];
+        });
+
+        dataBody = modifiedData;
+      } else {
+        url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/user/create`;
+        method = "POST";
+
+        const id = uuid();
+        dataEntity.id = id;
+
+        dataBody = dataEntity;
+      }
+
+      const response = await fetch(url, {
+        method: method,
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(dataEntity),
+        body: JSON.stringify(dataBody),
       });
+
+      const responseMessage = await response.json();
+
+      if (!response.ok) {
+        const toastErrors = [];
+        for (const error of responseMessage.message) {
+          toastErrors.push({
+            severity: "error",
+            summary: "Error",
+            detail: error,
+            life: 3000,
+          });
+        }
+        toastRef.current.show(toastErrors);
+      } else {
+        let dataCopy = [...data];
+
+        if (isUpdate) {
+          dataCopy[index] = { ...dataCopy[index], ...dataBody };
+        } else {
+          dataCopy.push(dataBody);
+        }
+
+        setData(dataCopy);
+
+        closeFormDialog();
+
+        toastRef.current.show({
+          severity: "success",
+          summary: "Success",
+          detail: responseMessage.message,
+          life: 3000,
+        });
+      }
     }
 
     postData();
-
-    let dataCopy = [...data];
-
-    dataCopy.push(dataEntity);
-
-    setData(dataCopy);
-
-    closeFormDialog();
   };
 
   const exportCSV = (selectionOnly) => {
     dataTableRef.current.exportCSV({ selectionOnly });
+    toastRef.current.show({
+      severity: "info",
+      summary: "Info",
+      detail: "The data has been exported to a .csv file",
+      time: 1000,
+    });
   };
 
   const textEditor = (options) => {
@@ -141,11 +218,14 @@ export default function DataTableWrapper({
           icon="pi pi-trash"
           severity="danger"
         />
+        <Toast ref={toastRef} />
         {openFormDialog && (
           <PeopleForm
             visible={showFormDialog}
             onHide={closeFormDialog}
             dialogFooter={dialogFooter}
+            isUpdate={isUpdate}
+            person={dataEntity}
           />
         )}
       </div>
@@ -183,6 +263,19 @@ export default function DataTableWrapper({
           customOnChange={onGlobalFilterChange}
         />
       </div>
+    );
+  };
+
+  const actionBodyTemplate = (rowData) => {
+    return (
+      <>
+        <Button
+          icon="pi pi-pencil"
+          rounded
+          outlined
+          onClick={() => openEditFormDialog(rowData)}
+        />
+      </>
     );
   };
 
@@ -230,7 +323,7 @@ export default function DataTableWrapper({
             editor={(options) => textEditor(options)}
           />
         ))}
-        <Column rowEditor />
+        <Column body={actionBodyTemplate} exportable={false}></Column>
       </DataTable>
     </>
   );

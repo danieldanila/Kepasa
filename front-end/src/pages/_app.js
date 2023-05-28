@@ -6,6 +6,7 @@ import Navbar from "@/components/Navbar";
 import Sidebar from "@/components/Sidebar";
 import { useRouter } from "next/router";
 import { createContext, useEffect, useState } from "react";
+import useCompareArrayOfObjects from "@/hooks/useCompare";
 
 export const UsersContext = createContext(null);
 
@@ -14,7 +15,7 @@ export default function App({ Component, pageProps }) {
   global.pageRoute = router.pathname;
   global.currentPage = pageRoute.slice(1, pageRoute.length).toLocaleLowerCase();
 
-  const emptyPerson = {
+  const emptyUser = {
     id: null,
     email: "",
     phone: "",
@@ -30,22 +31,60 @@ export default function App({ Component, pageProps }) {
   };
 
   const [users, setUsers] = useState(null);
-  const [user, setUser] = useState(emptyPerson);
+  const [user, setUser] = useState(emptyUser);
+  const haveUsersChanged = useCompareArrayOfObjects(users);
 
   useEffect(() => {
     async function getUserData() {
       const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/user`);
       const usersData = await res.json();
-      setUsers(usersData);
+
+      const filteredUsers = [];
+
+      for (const user of usersData) {
+        const userDepartmentResponse = await fetch(
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/user/${user.id}/department`
+        );
+
+        const userDepartment = await userDepartmentResponse.json();
+
+        const userMentorResponse = await fetch(
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/user/${user.id}/mentor`
+        );
+
+        const userMentor = await userMentorResponse.json();
+
+        const filteredUser = {
+          id: user.id,
+          email: user.email,
+          phone: user.phone,
+          socialMediaLink: user.socialMediaLink,
+          password: user.password,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          fullName: user.fullName,
+          birthday: user.birthday,
+          isActive: user.isActive,
+          isAdministrator: user.isAdministrator,
+          idDepartment: user.idDepartment,
+          departmentName: userDepartment.name,
+          idMentor: user.idMentor,
+          mentorName: userMentor ? userMentor.fullName : "No mentor",
+        };
+
+        filteredUsers.push(filteredUser);
+      }
+
+      setUsers(filteredUsers);
     }
 
     getUserData();
-  }, []);
+  }, [haveUsersChanged]);
 
   return (
     <>
       <UsersContext.Provider
-        value={{ users, setUsers, emptyPerson, user, setUser }}
+        value={{ users, setUsers, emptyUser, user, setUser }}
       >
         <Navbar />
         <Sidebar />
