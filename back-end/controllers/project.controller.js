@@ -46,7 +46,11 @@ const controller = {
         req.params.id,
         req.body
       );
-      res.status(202).json(updatedProject);
+
+      res.status(202).json({
+        data: updatedProject,
+        message: `Project ${updatedProject.name} has been updated.`,
+      });
     } catch (err) {
       errorsHandlerWrapper(res, err);
     }

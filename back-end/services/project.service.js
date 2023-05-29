@@ -59,7 +59,7 @@ const service = {
     );
 
     if (errors.length === 0) {
-      const projectFound = await Project.getProjectById(projectId);
+      const projectFound = await service.getProjectById(projectId);
       const updatedProject = await projectFound.update(projectBody);
       return updatedProject;
     } else {

@@ -9,6 +9,7 @@ import { createContext, useEffect, useState } from "react";
 import useCompareArrayOfObjects from "@/hooks/useCompare";
 
 export const UsersContext = createContext(null);
+export const ProjectsContext = createContext(null);
 
 export default function App({ Component, pageProps }) {
   global.router = useRouter();
@@ -81,14 +82,40 @@ export default function App({ Component, pageProps }) {
     getUserData();
   }, [haveUsersChanged]);
 
+  const emptyProject = {
+    id: null,
+    name: "",
+  };
+
+  const [projects, setProjects] = useState(null);
+  const [project, setProject] = useState(emptyProject);
+  const haveProjectsChanged = useCompareArrayOfObjects(projects);
+
+  useEffect(() => {
+    async function getProjectData() {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/project`
+      );
+      const projectsData = await res.json();
+
+      setProjects(projectsData);
+    }
+
+    getProjectData();
+  }, [haveProjectsChanged]);
+
   return (
     <>
       <UsersContext.Provider
         value={{ users, setUsers, emptyUser, user, setUser }}
       >
-        <Navbar />
-        <Sidebar />
-        <Component {...pageProps} />
+        <ProjectsContext.Provider
+          value={{ projects, setProjects, emptyProject, project, setProject }}
+        >
+          <Navbar />
+          <Sidebar />
+          <Component {...pageProps} />
+        </ProjectsContext.Provider>
       </UsersContext.Provider>
     </>
   );

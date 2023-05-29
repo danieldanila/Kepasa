@@ -46,7 +46,7 @@ const controller = {
     try {
       const updatedUser = await userService.updateUser(req.params.id, req.body);
       res.status(202).json({
-        user: updatedUser,
+        data: updatedUser,
         message: `User ${updatedUser.fullName} has been updated.`,
       });
     } catch (err) {
