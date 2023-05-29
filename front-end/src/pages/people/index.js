@@ -1,6 +1,7 @@
 import { FilterMatchMode, FilterOperator } from "primereact/api";
 import DataTableWrapper from "@/components/DataTableWrapper";
 import { UsersContext } from "../_app";
+import PeopleForm from "@/components/Forms/PeopleForm";
 
 export default function People() {
   const peopleColumns = [
@@ -88,6 +89,8 @@ export default function People() {
         dataContext={UsersContext}
         columns={peopleColumns}
         customInitialFilters={peopleInitialFilters}
+        dataName="user"
+        DataForm={PeopleForm}
       />
     </main>
   );

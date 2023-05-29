@@ -13,7 +13,7 @@ export default function PeopleForm({
   onHide,
   dialogFooter,
   isUpdate,
-  person,
+  dataEntity,
 }) {
   const [departments, setDepartments] = useState(null);
   const { users, user, setUser } = useContext(UsersContext);
@@ -67,39 +67,39 @@ export default function PeopleForm({
           id="firstName"
           label="First Name"
           customOnChange={onInputTextChange}
-          initialValue={person.firstName}
+          initialValue={dataEntity.firstName}
         />
         <InputTextForm
           id="lastName"
           label="Last Name"
           customOnChange={onInputTextChange}
-          initialValue={person.lastName}
+          initialValue={dataEntity.lastName}
         />
         <InputTextForm
           id="email"
           label="Email"
           keyfilter="email"
           customOnChange={onInputTextChange}
-          initialValue={person.email}
+          initialValue={dataEntity.email}
         />
         <InputTextForm
           id="phone"
           label="Phone"
           keyfilter="pint"
           customOnChange={onInputTextChange}
-          initialValue={person.phone}
+          initialValue={dataEntity.phone}
         />
         <CalendarForm
           id="birthday"
           label="Birthday"
           customOnChange={onInputTextChange}
-          initialValue={person.birthday}
+          initialValue={dataEntity.birthday}
         />
         <InputTextForm
           id="socialMediaLink"
           label="Social Media Link"
           customOnChange={onInputTextChange}
-          initialValue={person.socialMediaLink}
+          initialValue={dataEntity.socialMediaLink}
         />
         <DropdownForm
           id="idDepartment"
@@ -107,7 +107,7 @@ export default function PeopleForm({
           suggestions={departments}
           fieldNameToBeShown="name"
           customOnChange={onInputDropdownChange}
-          initialValue={person.departmentName}
+          initialValue={dataEntity.departmentName}
         />
         <DropdownForm
           id="idMentor"
@@ -115,7 +115,7 @@ export default function PeopleForm({
           suggestions={users}
           fieldNameToBeShown="fullName"
           customOnChange={onInputDropdownChange}
-          initialValue={person.mentorName}
+          initialValue={dataEntity.mentorName}
         />
         {isUpdate ? (
           <ToggleButtonForm
@@ -123,7 +123,7 @@ export default function PeopleForm({
             onLabel="Is Active"
             offLabel="Is NOT Active"
             customOnChange={onInputBooleanChange}
-            initialValue={person.isActive}
+            initialValue={dataEntity.isActive}
           />
         ) : (
           <PasswordForm
@@ -138,7 +138,7 @@ export default function PeopleForm({
           onLabel="Is Administrator"
           offLabel="Is NOT Administrator"
           customOnChange={onInputBooleanChange}
-          initialValue={person.isAdministrator}
+          initialValue={dataEntity.isAdministrator}
         />
       </div>
     </Dialog>

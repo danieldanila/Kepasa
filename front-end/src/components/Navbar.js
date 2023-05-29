@@ -26,7 +26,7 @@ export default function Navbar() {
       <SearchBar
         items={items}
         losesFocus={true}
-        placeHolder="Search people, projects and more..."
+        placeHolder="Search anything..."
       />
       <NotificationBar />
       <UserMenu />

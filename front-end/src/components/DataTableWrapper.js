@@ -6,15 +6,17 @@ import { InputText } from "primereact/inputtext";
 import { Toolbar } from "primereact/toolbar";
 import { Button } from "primereact/button";
 import styles from "../styles/DataTableWrapper.module.css";
-import PeopleForm from "./Forms/PeopleForm";
 import { v4 as uuid } from "uuid";
 import SearchBar from "./SearchBar";
 import { Toast } from "primereact/toast";
+import { Dialog } from "primereact/dialog";
 
 export default function DataTableWrapper({
   dataContext,
   columns,
   customInitialFilters,
+  dataName,
+  DataForm,
 }) {
   const contextValues = useContext(dataContext);
   const {
@@ -28,8 +30,14 @@ export default function DataTableWrapper({
   const [filters, setFilters] = useState(null);
   const [showFormDialog, setShowformDialog] = useState(false);
   const [isUpdate, setIsUpdate] = useState(false);
-  const [selectedData, setSelectedData] = useState(null);
+  const [selectedDataEntities, setSelectedDataEntities] = useState(null);
   const [selectedDataEntity, setSelectedDataEntity] = useState(null);
+  const [deleteSelectedDataEntityDialog, setDeleteSelectedDataEntityDialog] =
+    useState(false);
+  const [
+    deleteSelectedDataEntitiesDialog,
+    setDeleteSelectedDataEntitiesDialog,
+  ] = useState(false);
   const dataTableRef = useRef(null);
   const toastRef = useRef(null);
 
@@ -50,7 +58,7 @@ export default function DataTableWrapper({
 
   const clearFilters = () => {
     initialFilters();
-    setSelectedData(null);
+    setSelectedDataEntities(null);
     toastRef.current.show({
       severity: "info",
       summary: "Info",
@@ -86,9 +94,26 @@ export default function DataTableWrapper({
     setShowformDialog(true);
   };
 
+  const confirmDeleteSelectedDataEntity = (rowData) => {
+    setSelectedDataEntity(rowData);
+    setDeleteSelectedDataEntityDialog(true);
+  };
+
+  const confirmDeleteSelectedDataEntities = () => {
+    setDeleteSelectedDataEntitiesDialog(true);
+  };
+
   const closeFormDialog = () => {
     setShowformDialog(false);
     setDataEntity(emptyDataEntity);
+  };
+
+  const hideDeleteSelectedDataEntityDialog = () => {
+    setDeleteSelectedDataEntityDialog(false);
+  };
+
+  const hideDeleteSelectedDataEntitiesDialog = () => {
+    setDeleteSelectedDataEntitiesDialog(false);
   };
 
   const saveFormDialog = () => {
@@ -99,7 +124,7 @@ export default function DataTableWrapper({
       let index;
 
       if (isUpdate) {
-        url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/user/${dataEntity.id}`;
+        url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/${dataName}/${dataEntity.id}`;
         method = "PUT";
 
         index = data.findIndex((item) => item.id === selectedDataEntity.id);
@@ -116,7 +141,7 @@ export default function DataTableWrapper({
 
         dataBody = modifiedData;
       } else {
-        url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/user/create`;
+        url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/${dataName}/create`;
         method = "POST";
 
         const id = uuid();
@@ -171,6 +196,52 @@ export default function DataTableWrapper({
     postData();
   };
 
+  const deleteSelectedDataEntity = (dataEntity) => {
+    async function deleteRequest() {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/${dataName}/${dataEntity.id}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      const responseMessage = await response.json();
+
+      if (!response.ok) {
+        toastRef.current.show({
+          severity: "error",
+          summary: "Error",
+          detail: responseMessage.message,
+          life: 3000,
+        });
+      } else {
+        let dataCopy = data.filter((item) => item.id !== dataEntity.id);
+
+        setData(dataCopy);
+        setDeleteSelectedDataEntityDialog(false);
+        setSelectedDataEntity(emptyDataEntity);
+
+        toastRef.current.show({
+          severity: "success",
+          summary: "Success",
+          detail: `${
+            dataEntity.name ? dataEntity.name : dataEntity.fullName
+          } has been deleted.`,
+          life: 3000,
+        });
+      }
+    }
+    deleteRequest();
+  };
+
+  const deleteSelectedDataEntities = () => {
+    for (const dataEntity of selectedDataEntities) {
+      deleteSelectedDataEntity(dataEntity);
+    }
+    setDeleteSelectedDataEntitiesDialog(false);
+    setSelectedDataEntities(null);
+  };
+
   const exportCSV = (selectionOnly) => {
     dataTableRef.current.exportCSV({ selectionOnly });
     toastRef.current.show({
@@ -203,6 +274,40 @@ export default function DataTableWrapper({
     </>
   );
 
+  const deleteSelectedDataEntitytDialogFooter = (
+    <>
+      <Button
+        label="No"
+        icon="pi pi-times"
+        outlined
+        onClick={hideDeleteSelectedDataEntityDialog}
+      />
+      <Button
+        label="Yes"
+        icon="pi pi-check"
+        severity="danger"
+        onClick={() => deleteSelectedDataEntity(selectedDataEntity)}
+      />
+    </>
+  );
+
+  const deleteSelectedDataEntitiesDialogFooter = (
+    <>
+      <Button
+        label="No"
+        icon="pi pi-times"
+        outlined
+        onClick={hideDeleteSelectedDataEntitiesDialog}
+      />
+      <Button
+        label="Yes"
+        icon="pi pi-check"
+        severity="danger"
+        onClick={deleteSelectedDataEntities}
+      />
+    </>
+  );
+
   const leftToolbarTemplate = () => {
     return (
       <div className={styles.leftContainer}>
@@ -217,15 +322,17 @@ export default function DataTableWrapper({
           label="Delete"
           icon="pi pi-trash"
           severity="danger"
+          onClick={confirmDeleteSelectedDataEntities}
+          disabled={!selectedDataEntities || !selectedDataEntities.length}
         />
         <Toast ref={toastRef} />
         {openFormDialog && (
-          <PeopleForm
+          <DataForm
             visible={showFormDialog}
             onHide={closeFormDialog}
             dialogFooter={dialogFooter}
             isUpdate={isUpdate}
-            person={dataEntity}
+            dataEntity={dataEntity}
           />
         )}
       </div>
@@ -268,14 +375,21 @@ export default function DataTableWrapper({
 
   const actionBodyTemplate = (rowData) => {
     return (
-      <>
+      <div className={styles.actionBodyTemplaContainer}>
         <Button
           icon="pi pi-pencil"
           rounded
           outlined
           onClick={() => openEditFormDialog(rowData)}
         />
-      </>
+        <Button
+          icon="pi pi-trash"
+          rounded
+          outlined
+          severity="danger"
+          onClick={() => confirmDeleteSelectedDataEntity(rowData)}
+        />
+      </div>
     );
   };
 
@@ -303,8 +417,8 @@ export default function DataTableWrapper({
         emptyMessage={`No ${global.currentPage} found`}
         selectionMode="multiple"
         dragSelection
-        selection={selectedData}
-        onSelectionChange={(e) => setSelectedData(e.value)}
+        selection={selectedDataEntities}
+        onSelectionChange={(e) => setSelectedDataEntities(e.value)}
         selectionPageOnly
         editMode="row"
         onRowEditComplete={onRowEditComplete}
@@ -325,6 +439,39 @@ export default function DataTableWrapper({
         ))}
         <Column body={actionBodyTemplate} exportable={false}></Column>
       </DataTable>
+      <Dialog
+        visible={deleteSelectedDataEntityDialog}
+        onHide={hideDeleteSelectedDataEntityDialog}
+        header="Confirm"
+        modal
+        footer={deleteSelectedDataEntitytDialogFooter}
+      >
+        {selectedDataEntity && (
+          <span>
+            Are you sure you want to delete{" "}
+            <strong>
+              {selectedDataEntity.name
+                ? selectedDataEntity.name
+                : selectedDataEntity.fullName}
+            </strong>
+            ?
+          </span>
+        )}
+      </Dialog>
+      <Dialog
+        visible={deleteSelectedDataEntitiesDialog}
+        header="Confirm"
+        modal
+        footer={deleteSelectedDataEntitiesDialogFooter}
+        onHide={hideDeleteSelectedDataEntitiesDialog}
+      >
+        {selectedDataEntities && (
+          <span>
+            Are you sure you want to delete the {selectedDataEntities.length}{" "}
+            selected data?
+          </span>
+        )}
+      </Dialog>
     </>
   );
 }

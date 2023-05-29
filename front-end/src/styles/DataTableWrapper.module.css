@@ -12,3 +12,9 @@
   display: flex;
   gap: 1rem;
 }
+
+.actionBodyTemplaContainer {
+  display: flex;
+  justify-content: space-around;
+  gap: 0.5rem;
+}
