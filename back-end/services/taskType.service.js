@@ -4,7 +4,7 @@ const taskTypeValidations = require("../validations").TaskTypeValidation;
 const {
   throwValidationErrorWithMessage,
 } = require("../utils/errorsWrappers.util");
-const { NotFoundError } = require("../errors").NotFoundError;
+const { NotFoundError } = require("../errors");
 
 const TaskType = require("../models").TaskType;
 const ActivityReport = require("../models").ActivityReport;

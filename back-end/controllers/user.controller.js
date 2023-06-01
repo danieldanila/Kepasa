@@ -1,184 +1,123 @@
 const userService = require("../services").UserService;
-const { errorsHandlerWrapper } = require("../utils/errorsHandlers.util");
+const catchAsync = require("../utils/catchAsync.util");
 
 const controller = {
-  createUser: async (req, res) => {
-    try {
-      await userService.createUser(req.body);
-      res.status(201).json({
-        message: `User ${req.body.firstName} ${req.body.lastName} created.`,
-      });
-    } catch (err) {
-      errorsHandlerWrapper(res, err);
-    }
-  },
+  createUser: catchAsync(async (req, res, next) => {
+    const result = await userService.createUser(req.body);
+    const token = result.token;
+    const newUser = result.newUser;
 
-  createMultipleUsers: async (req, res) => {
-    try {
-      await userService.createMultipleUsers(req.body);
-      res.status(201).json({
-        message: `${req.body.length} users created.`,
-      });
-    } catch (err) {
-      errorsHandlerWrapper(res, err);
-    }
-  },
+    res.status(201).json({
+      message: `User ${newUser.firstName} ${newUser.lastName} created.`,
+      token,
+      data: {
+        user: newUser,
+      },
+    });
+  }),
 
-  getAllUsers: async (req, res) => {
-    try {
-      const users = await userService.getAllUsers();
-      res.status(200).json(users);
-    } catch (err) {
-      errorsHandlerWrapper(res, err);
-    }
-  },
+  createMultipleUsers: catchAsync(async (req, res, next) => {
+    await userService.createMultipleUsers(req.body);
+    res.status(201).json({
+      message: `${req.body.length} users created.`,
+    });
+  }),
 
-  getUserById: async (req, res) => {
-    try {
-      const user = await userService.getUserById(req.params.id);
-      res.status(200).json(user);
-    } catch (err) {
-      errorsHandlerWrapper(res, err);
-    }
-  },
+  getAllUsers: catchAsync(async (req, res, next) => {
+    const users = await userService.getAllUsers();
+    res.status(200).json(users);
+  }),
 
-  updateUser: async (req, res) => {
-    try {
-      const updatedUser = await userService.updateUser(req.params.id, req.body);
-      res.status(202).json({
-        data: updatedUser,
-        message: `User ${updatedUser.fullName} has been updated.`,
-      });
-    } catch (err) {
-      errorsHandlerWrapper(res, err);
-    }
-  },
+  getUserById: catchAsync(async (req, res, next) => {
+    const user = await userService.getUserById(req.params.id);
+    res.status(200).json(user);
+  }),
 
-  deleteUser: async (req, res) => {
-    try {
-      await userService.deleteUser(req.params.id);
-      res.status(200).json({ message: "User deleted." });
-    } catch (err) {
-      errorsHandlerWrapper(res, err);
-    }
-  },
+  updateUser: catchAsync(async (req, res, next) => {
+    const updatedUser = await userService.updateUser(req.params.id, req.body);
+    res.status(202).json({
+      data: updatedUser,
+      message: `User ${updatedUser.fullName} has been updated.`,
+    });
+  }),
 
-  getUserMentor: async (req, res) => {
-    try {
-      const userMentor = await userService.getUserMentor(req.params.id);
-      res.status(200).json(userMentor);
-    } catch (err) {
-      errorsHandlerWrapper(res, err);
-    }
-  },
+  deleteUser: catchAsync(async (req, res, next) => {
+    await userService.deleteUser(req.params.id);
+    res.status(200).json({ message: "User deleted." });
+  }),
 
-  getUserMentees: async (req, res) => {
-    try {
-      const userMentees = await userService.getUserMentees(req.params.id);
-      res.status(200).json(userMentees);
-    } catch (err) {
-      errorsHandlerWrapper(res, err);
-    }
-  },
+  getUserMentor: catchAsync(async (req, res, next) => {
+    const userMentor = await userService.getUserMentor(req.params.id);
+    res.status(200).json(userMentor);
+  }),
 
-  getUserDepartment: async (req, res) => {
-    try {
-      const userDepartment = await userService.getUserDepartment(req.params.id);
-      res.status(200).json(userDepartment);
-    } catch (err) {
-      errorsHandlerWrapper(res, err);
-    }
-  },
+  getUserMentees: catchAsync(async (req, res, next) => {
+    const userMentees = await userService.getUserMentees(req.params.id);
+    res.status(200).json(userMentees);
+  }),
 
-  getUserObjectives: async (req, res) => {
-    try {
-      const userObjectives = await userService.getUserObjectives(req.params.id);
-      res.status(200).json(userObjectives);
-    } catch (err) {
-      errorsHandlerWrapper(res, err);
-    }
-  },
+  getUserDepartment: catchAsync(async (req, res, next) => {
+    const userDepartment = await userService.getUserDepartment(req.params.id);
+    res.status(200).json(userDepartment);
+  }),
 
-  getUserObjectiveById: async (req, res) => {
-    try {
-      const userObjective = await userService.getUserObjectiveById(
-        req.params.id,
-        req.params.idObjective
-      );
-      res.status(200).json(userObjective);
-    } catch (err) {
-      errorsHandlerWrapper(res, err);
-    }
-  },
+  getUserObjectives: catchAsync(async (req, res, next) => {
+    const userObjectives = await userService.getUserObjectives(req.params.id);
+    res.status(200).json(userObjectives);
+  }),
 
-  getUserMenteesObjectives: async (req, res) => {
-    try {
-      const userMenteesObjectives = await userService.getUserMenteesObjectives(
-        req.params.id
-      );
-      res.status(200).json(userMenteesObjectives);
-    } catch (err) {
-      errorsHandlerWrapper(res, err);
-    }
-  },
+  getUserObjectiveById: catchAsync(async (req, res, next) => {
+    const userObjective = await userService.getUserObjectiveById(
+      req.params.id,
+      req.params.idObjective
+    );
+    res.status(200).json(userObjective);
+  }),
 
-  getUserMenteeObjectives: async (req, res) => {
-    try {
-      const userMenteeObjectives = await userService.getUserMenteeObjectives(
-        req.params.id,
-        req.params.idMentee
-      );
-      res.status(200).json(userMenteeObjectives);
-    } catch (err) {
-      errorsHandlerWrapper(res, err);
-    }
-  },
+  getUserMenteesObjectives: catchAsync(async (req, res, next) => {
+    const userMenteesObjectives = await userService.getUserMenteesObjectives(
+      req.params.id
+    );
+    res.status(200).json(userMenteesObjectives);
+  }),
 
-  getUserMenteeObjectiveById: async (req, res) => {
-    try {
-      const userMenteeObjective = await userService.getUserMenteeObjectiveById(
-        req.params.id,
-        req.params.idMentee,
-        req.params.idObjective
-      );
-      res.status(200).json(userMenteeObjective);
-    } catch (err) {
-      errorsHandlerWrapper(res, err);
-    }
-  },
+  getUserMenteeObjectives: catchAsync(async (req, res, next) => {
+    const userMenteeObjectives = await userService.getUserMenteeObjectives(
+      req.params.id,
+      req.params.idMentee
+    );
+    res.status(200).json(userMenteeObjectives);
+  }),
 
-  getUserActivityReports: async (req, res) => {
-    try {
-      const userActivityReports = await userService.getUserActivityReports(
-        req.params.id
-      );
-      res.status(200).json(userActivityReports);
-    } catch (err) {
-      errorsHandlerWrapper(res, err);
-    }
-  },
+  getUserMenteeObjectiveById: catchAsync(async (req, res, next) => {
+    const userMenteeObjective = await userService.getUserMenteeObjectiveById(
+      req.params.id,
+      req.params.idMentee,
+      req.params.idObjective
+    );
+    res.status(200).json(userMenteeObjective);
+  }),
 
-  getUserActivityReportById: async (req, res) => {
-    try {
-      const userActivityReport = await userService.getUserActivityReportById(
-        req.params.id,
-        req.params.idActivityReport
-      );
-      res.status(200).json(userActivityReport);
-    } catch (err) {
-      errorsHandlerWrapper(res, err);
-    }
-  },
+  getUserActivityReports: catchAsync(async (req, res, next) => {
+    const userActivityReports = await userService.getUserActivityReports(
+      req.params.id
+    );
+    res.status(200).json(userActivityReports);
+  }),
 
-  getUserSubUsersActivityReports: async (req, res) => {
-    try {
-      const userSubUsersActivityReports =
-        await userService.getUserSubUsersActivityReports(req.params.id);
-      res.status(200).json(userSubUsersActivityReports);
-    } catch (err) {
-      errorsHandlerWrapper(res, err);
-    }
-  },
+  getUserActivityReportById: catchAsync(async (req, res, next) => {
+    const userActivityReport = await userService.getUserActivityReportById(
+      req.params.id,
+      req.params.idActivityReport
+    );
+    res.status(200).json(userActivityReport);
+  }),
+
+  getUserSubUsersActivityReports: catchAsync(async (req, res, next) => {
+    const userSubUsersActivityReports =
+      await userService.getUserSubUsersActivityReports(req.params.id);
+    res.status(200).json(userSubUsersActivityReports);
+  }),
 };
 
 module.exports = controller;

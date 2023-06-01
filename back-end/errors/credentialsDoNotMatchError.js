@@ -5,6 +5,4 @@ class CredentialsDoNotMatchError extends Error {
   }
 }
 
-module.exports = {
-  CredentialsDoNotMatchError,
-};
+module.exports = CredentialsDoNotMatchError;

@@ -4,7 +4,7 @@ const departmentValidations = require("../validations").DepartmentValidation;
 const {
   throwValidationErrorWithMessage,
 } = require("../utils/errorsWrappers.util");
-const { NotFoundError } = require("../errors").NotFoundError;
+const { NotFoundError } = require("../errors");
 
 const Department = require("../models").Department;
 const User = require("../models").User;

@@ -1,6 +1,6 @@
 const roleValidations = require("../validations").RoleValidation;
 
-const { NotFoundError } = require("../errors").NotFoundError;
+const { NotFoundError } = require("../errors");
 const {
   throwValidationErrorWithMessage,
 } = require("../utils/errorsWrappers.util");

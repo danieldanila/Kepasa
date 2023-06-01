@@ -1,91 +1,57 @@
 const departmentService = require("../services").DepartmentService;
-const { errorsHandlerWrapper } = require("../utils/errorsHandlers.util");
+const catchAsync = require("../utils/catchAsync.util");
 
 const controller = {
-  createDepartment: async (req, res) => {
-    try {
-      await departmentService.createDepartment(req.body);
-      res.status(201).json({
-        message: `Department ${req.body.name} created.`,
-      });
-    } catch (err) {
-      errorsHandlerWrapper(res, err);
-    }
-  },
+  createDepartment: catchAsync(async (req, res, next) => {
+    await departmentService.createDepartment(req.body);
+    res.status(201).json({
+      message: `Department ${req.body.name} created.`,
+    });
+  }),
 
-  createMultipleDepartments: async (req, res) => {
-    try {
-      await departmentService.createMultipleDepartments(req.body);
-      res
-        .status(201)
-        .json({ message: `${req.body.length} departments created.` });
-    } catch (err) {
-      errorsHandlerWrapper(res, err);
-    }
-  },
+  createMultipleDepartments: catchAsync(async (req, res, next) => {
+    await departmentService.createMultipleDepartments(req.body);
+    res
+      .status(201)
+      .json({ message: `${req.body.length} departments created.` });
+  }),
 
-  getAllDepartments: async (req, res) => {
-    try {
-      const departments = await departmentService.getAllDepartments();
-      res.status(200).json(departments);
-    } catch (err) {
-      errorsHandlerWrapper(res, err);
-    }
-  },
+  getAllDepartments: catchAsync(async (req, res, next) => {
+    const departments = await departmentService.getAllDepartments();
+    res.status(200).json(departments);
+  }),
 
-  getDepartmentById: async (req, res) => {
-    try {
-      const department = await departmentService.getDepartmentById(
-        req.params.id
-      );
-      res.status(200).json(department);
-    } catch (err) {
-      errorsHandlerWrapper(res, err);
-    }
-  },
+  getDepartmentById: catchAsync(async (req, res, next) => {
+    const department = await departmentService.getDepartmentById(req.params.id);
+    res.status(200).json(department);
+  }),
 
-  updateDepartment: async (req, res) => {
-    try {
-      const updatedDepartment = await departmentService.updateDepartment(
-        req.params.id,
-        req.body
-      );
-      res.status(202).json(updatedDepartment);
-    } catch (err) {
-      errorsHandlerWrapper(res, err);
-    }
-  },
+  updateDepartment: catchAsync(async (req, res, next) => {
+    const updatedDepartment = await departmentService.updateDepartment(
+      req.params.id,
+      req.body
+    );
+    res.status(202).json(updatedDepartment);
+  }),
 
-  deleteDepartment: async (req, res) => {
-    try {
-      await departmentService.deleteDepartment(req.params.id);
-      res.status(200).json({ message: "Department deleted." });
-    } catch (err) {
-      errorsHandlerWrapper(res, err);
-    }
-  },
+  deleteDepartment: catchAsync(async (req, res, next) => {
+    await departmentService.deleteDepartment(req.params.id);
+    res.status(200).json({ message: "Department deleted." });
+  }),
 
-  getDepartmentUsers: async (req, res) => {
-    try {
-      const departmentUsers = await departmentService.getDepartmentUsers(
-        req.params.id
-      );
-      res.status(200).json(departmentUsers);
-    } catch (err) {
-      errorsHandlerWrapper(res, err);
-    }
-  },
+  getDepartmentUsers: catchAsync(async (req, res, next) => {
+    const departmentUsers = await departmentService.getDepartmentUsers(
+      req.params.id
+    );
+    res.status(200).json(departmentUsers);
+  }),
 
-  getDeparmentRoles: async (req, res) => {
-    try {
-      const departmentRoles = await departmentService.getDepartmentRoles(
-        req.params.id
-      );
-      res.status(200).json(departmentRoles);
-    } catch (err) {
-      errorsHandlerWrapper(res, err);
-    }
-  },
+  getDeparmentRoles: catchAsync(async (req, res, next) => {
+    const departmentRoles = await departmentService.getDepartmentRoles(
+      req.params.id
+    );
+    res.status(200).json(departmentRoles);
+  }),
 };
 
 module.exports = controller;

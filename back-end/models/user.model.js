@@ -66,6 +66,10 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: false,
         allowNull: false,
       },
+      passwordChangedAt: {
+        type: DataTypes.DATE,
+        allowNull: true,
+      },
       fullName: {
         type: DataTypes.VIRTUAL,
         get() {

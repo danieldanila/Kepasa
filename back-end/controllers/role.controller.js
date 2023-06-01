@@ -1,91 +1,55 @@
 const roleService = require("../services").RoleService;
-const { errorsHandlerWrapper } = require("../utils/errorsHandlers.util");
+const catchAsync = require("../utils/catchAsync.util");
 
 const controller = {
-  createRole: async (req, res) => {
-    try {
-      await roleService.createRole(req.body);
-      res.status(201).json({
-        message: `Role ${req.body.name} created.`,
-      });
-    } catch (err) {
-      errorsHandlerWrapper(res, err);
-    }
-  },
+  createRole: catchAsync(async (req, res, next) => {
+    await roleService.createRole(req.body);
+    res.status(201).json({
+      message: `Role ${req.body.name} created.`,
+    });
+  }),
 
-  createMultipleRoles: async (req, res) => {
-    try {
-      await roleService.createMultipleRoles(req.body);
-      res.status(201).json({ message: `${req.body.length} roles created.` });
-    } catch (err) {
-      errorsHandlerWrapper(res, err);
-    }
-  },
+  createMultipleRoles: catchAsync(async (req, res, next) => {
+    await roleService.createMultipleRoles(req.body);
+    res.status(201).json({ message: `${req.body.length} roles created.` });
+  }),
 
-  getAllRoles: async (req, res) => {
-    try {
-      const roles = await roleService.getAllRoles();
-      res.status(200).json(roles);
-    } catch (err) {
-      errorsHandlerWrapper(res, err);
-    }
-  },
+  getAllRoles: catchAsync(async (req, res, next) => {
+    const roles = await roleService.getAllRoles();
+    res.status(200).json(roles);
+  }),
 
-  getRoleById: async (req, res) => {
-    try {
-      const role = await roleService.getRoleById(req.params.id);
-      res.status(200).json(role);
-    } catch (err) {
-      errorsHandlerWrapper(res, err);
-    }
-  },
+  getRoleById: catchAsync(async (req, res, next) => {
+    const role = await roleService.getRoleById(req.params.id);
+    res.status(200).json(role);
+  }),
 
-  updateRole: async (req, res) => {
-    try {
-      const updatedRole = await roleService.updateRole(req.params.id, req.body);
-      res.status(202).json(updatedRole);
-    } catch (err) {
-      errorsHandlerWrapper(res, err);
-    }
-  },
+  updateRole: catchAsync(async (req, res, next) => {
+    const updatedRole = await roleService.updateRole(req.params.id, req.body);
+    res.status(202).json(updatedRole);
+  }),
 
-  deleteRole: async (req, res) => {
-    try {
-      await roleService.deleteRole(req.params.id);
-      res.status(200).json({ message: "Role deleted." });
-    } catch (err) {
-      errorsHandlerWrapper(res, err);
-    }
-  },
+  deleteRole: catchAsync(async (req, res, next) => {
+    await roleService.deleteRole(req.params.id);
+    res.status(200).json({ message: "Role deleted." });
+  }),
 
-  getRoleDepartment: async (req, res) => {
-    try {
-      const roleDepartment = await roleService.getRoleDepartment(req.params.id);
-      res.status(200).json(roleDepartment);
-    } catch (err) {
-      errorsHandlerWrapper(res, err);
-    }
-  },
+  getRoleDepartment: catchAsync(async (req, res, next) => {
+    const roleDepartment = await roleService.getRoleDepartment(req.params.id);
+    res.status(200).json(roleDepartment);
+  }),
 
-  getRoleSuperiorRole: async (req, res) => {
-    try {
-      const roleSuperiorRole = await roleService.getRoleSuperiorRole(
-        req.params.id
-      );
-      res.status(200).json(roleSuperiorRole);
-    } catch (err) {
-      errorsHandlerWrapper(res, err);
-    }
-  },
+  getRoleSuperiorRole: catchAsync(async (req, res, next) => {
+    const roleSuperiorRole = await roleService.getRoleSuperiorRole(
+      req.params.id
+    );
+    res.status(200).json(roleSuperiorRole);
+  }),
 
-  getRoleSubRoles: async (req, res) => {
-    try {
-      const roleSubRoles = await roleService.getRoleSubRoles(req.params.id);
-      res.status(200).json(roleSubRoles);
-    } catch (err) {
-      errorsHandlerWrapper(res, err);
-    }
-  },
+  getRoleSubRoles: catchAsync(async (req, res, next) => {
+    const roleSubRoles = await roleService.getRoleSubRoles(req.params.id);
+    res.status(200).json(roleSubRoles);
+  }),
 };
 
 module.exports = controller;

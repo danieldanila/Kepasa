@@ -3,6 +3,8 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const router = require("./routes");
+const errorsHandlerWrapper = require("./utils/errorsHandlers.util");
+const { NotFoundError } = require("./errors");
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -19,6 +21,12 @@ app.use((req, res, next) => {
 });
 
 app.use("/api", router);
+
+app.all("*", (req, res, next) => {
+  next(new NotFoundError(`${req.originalUrl} does not exist on this server.`));
+});
+
+app.use(errorsHandlerWrapper);
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is online on the following port: ${process.env.PORT}`);

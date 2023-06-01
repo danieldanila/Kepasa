@@ -1,162 +1,108 @@
-const { errorsHandlerWrapper } = require("../utils/errorsHandlers.util");
+const catchAsync = require("../utils/catchAsync.util");
 
 const usersProjectsRolesService =
   require("../services").UsersProjectsRolesService;
 
 const controller = {
-  createUsersProjectRoles: async (req, res) => {
-    try {
-      await usersProjectsRolesService.createUsersProjectsRoles(req.body);
-      res.status(201).json({
-        message: `User ${req.body.idUser} on the ${req.body.idProject} project with the following role: ${req.body.idRole} was created.`,
-      });
-    } catch (err) {
-      errorsHandlerWrapper(res, err);
-    }
-  },
+  createUsersProjectRoles: catchAsync(async (req, res, next) => {
+    await usersProjectsRolesService.createUsersProjectsRoles(req.body);
+    res.status(201).json({
+      message: `User ${req.body.idUser} on the ${req.body.idProject} project with the following role: ${req.body.idRole} was created.`,
+    });
+  }),
 
-  createMultipleUsersProjectsRoles: async (req, res) => {
-    try {
-      await usersProjectsRolesService.createMultipleUsersProjectsRoles(
-        req.body
-      );
-      res.status(201).json({
-        message: `${req.body.length} usersProjectsRoles created`,
-      });
-    } catch (err) {
-      errorsHandlerWrapper(res, err);
-    }
-  },
+  createMultipleUsersProjectsRoles: catchAsync(async (req, res, next) => {
+    await usersProjectsRolesService.createMultipleUsersProjectsRoles(req.body);
+    res.status(201).json({
+      message: `${req.body.length} usersProjectsRoles created`,
+    });
+  }),
 
-  getAllUsersProjectsRoles: async (req, res) => {
-    try {
-      const usersProjectsRoles =
-        await usersProjectsRolesService.getAllUsersProjectsRoles();
-      res.status(200).json(usersProjectsRoles);
-    } catch (err) {
-      errorsHandlerWrapper(res, err);
-    }
-  },
+  getAllUsersProjectsRoles: catchAsync(async (req, res, next) => {
+    const usersProjectsRoles =
+      await usersProjectsRolesService.getAllUsersProjectsRoles();
+    res.status(200).json(usersProjectsRoles);
+  }),
 
-  getUsersProjectsRolesByCompositeId: async (req, res) => {
-    try {
-      const usersProjectsRoles =
-        await usersProjectsRolesService.getUsersProjectsRolesByCompositeId(
-          req.params.idUser,
-          req.params.idProject
-        );
-      res.status(200).json(usersProjectsRoles);
-    } catch (err) {
-      errorsHandlerWrapper(res, err);
-    }
-  },
-
-  updateUsersProjectsRoles: async (req, res) => {
-    try {
-      const updatedUsersProjectsRoles =
-        await usersProjectsRolesService.updateUsersProjectsRoles(
-          req.params.idUser,
-          req.params.idProject,
-          req.body
-        );
-      res.status(202).json(updatedUsersProjectsRoles);
-    } catch (err) {
-      errorsHandlerWrapper(res, err);
-    }
-  },
-
-  deleteUsersProjectsRoles: async (req, res) => {
-    try {
-      await usersProjectsRolesService.deleteUsersProjectsRoles(
+  getUsersProjectsRolesByCompositeId: catchAsync(async (req, res, next) => {
+    const usersProjectsRoles =
+      await usersProjectsRolesService.getUsersProjectsRolesByCompositeId(
         req.params.idUser,
         req.params.idProject
       );
-      res.status(200).json({ message: "Users Porjects Roles deleted." });
-    } catch (err) {
-      errorsHandlerWrapper(res, err);
-    }
-  },
+    res.status(200).json(usersProjectsRoles);
+  }),
 
-  getUserProjects: async (req, res) => {
-    try {
-      const userProjects = await usersProjectsRolesService.getUserProjects(
-        req.params.idUser
+  updateUsersProjectsRoles: catchAsync(async (req, res, next) => {
+    const updatedUsersProjectsRoles =
+      await usersProjectsRolesService.updateUsersProjectsRoles(
+        req.params.idUser,
+        req.params.idProject,
+        req.body
       );
-      res.status(200).json(userProjects);
-    } catch (err) {
-      errorsHandlerWrapper(res, err);
-    }
-  },
+    res.status(202).json(updatedUsersProjectsRoles);
+  }),
 
-  getProjectUsers: async (req, res) => {
-    try {
-      const projectUsers = await usersProjectsRolesService.getProjectUsers(
+  deleteUsersProjectsRoles: catchAsync(async (req, res, next) => {
+    await usersProjectsRolesService.deleteUsersProjectsRoles(
+      req.params.idUser,
+      req.params.idProject
+    );
+    res.status(200).json({ message: "Users Porjects Roles deleted." });
+  }),
+
+  getUserProjects: catchAsync(async (req, res, next) => {
+    const userProjects = await usersProjectsRolesService.getUserProjects(
+      req.params.idUser
+    );
+    res.status(200).json(userProjects);
+  }),
+
+  getProjectUsers: catchAsync(async (req, res, next) => {
+    const projectUsers = await usersProjectsRolesService.getProjectUsers(
+      req.params.idProject
+    );
+    res.status(200).json(projectUsers);
+  }),
+
+  getUserRoleOnProject: catchAsync(async (req, res, next) => {
+    const userRoleOnProject =
+      await usersProjectsRolesService.getUserRoleOnProject(
+        req.params.idUser,
         req.params.idProject
       );
-      res.status(200).json(projectUsers);
-    } catch (err) {
-      errorsHandlerWrapper(res, err);
-    }
-  },
+    res.status(200).json(userRoleOnProject);
+  }),
 
-  getUserRoleOnProject: async (req, res) => {
-    try {
-      const userRoleOnProject =
-        await usersProjectsRolesService.getUserRoleOnProject(
-          req.params.idUser,
-          req.params.idProject
-        );
-      res.status(200).json(userRoleOnProject);
-    } catch (err) {
-      errorsHandlerWrapper(res, err);
-    }
-  },
-
-  getUserRoleOnDepartmentProject: async (req, res) => {
-    try {
-      const userRoleOnDepartmentProject =
-        await usersProjectsRolesService.getUserRoleOnDepartmentProject(
-          req.params.idUser
-        );
-      res.status(200).json(userRoleOnDepartmentProject);
-    } catch (err) {
-      errorsHandlerWrapper(res, err);
-    }
-  },
-
-  getUserRolesOnProjects: async (req, res) => {
-    try {
-      const userRoles = await usersProjectsRolesService.getUserRolesOnProjects(
+  getUserRoleOnDepartmentProject: catchAsync(async (req, res, next) => {
+    const userRoleOnDepartmentProject =
+      await usersProjectsRolesService.getUserRoleOnDepartmentProject(
         req.params.idUser
       );
-      res.status(200).json(userRoles);
-    } catch (err) {
-      errorsHandlerWrapper(res, err);
-    }
-  },
+    res.status(200).json(userRoleOnDepartmentProject);
+  }),
 
-  getRoleUsersOnProjects: async (req, res) => {
-    try {
-      const roleUsers = await usersProjectsRolesService.getRoleUsersOnProjects(
-        req.params.idRole
+  getUserRolesOnProjects: catchAsync(async (req, res, next) => {
+    const userRoles = await usersProjectsRolesService.getUserRolesOnProjects(
+      req.params.idUser
+    );
+    res.status(200).json(userRoles);
+  }),
+
+  getRoleUsersOnProjects: catchAsync(async (req, res, next) => {
+    const roleUsers = await usersProjectsRolesService.getRoleUsersOnProjects(
+      req.params.idRole
+    );
+    res.status(200).json(roleUsers);
+  }),
+
+  getProjectRolesWithUsers: catchAsync(async (req, res, next) => {
+    const projectRoles =
+      await usersProjectsRolesService.getProjectRolesWithUsers(
+        req.params.idProject
       );
-      res.status(200).json(roleUsers);
-    } catch (err) {
-      errorsHandlerWrapper(res, err);
-    }
-  },
-
-  getProjectRolesWithUsers: async (req, res) => {
-    try {
-      const projectRoles =
-        await usersProjectsRolesService.getProjectRolesWithUsers(
-          req.params.idProject
-        );
-      res.status(200).json(projectRoles);
-    } catch (err) {
-      errorsHandlerWrapper(res, err);
-    }
-  },
+    res.status(200).json(projectRoles);
+  }),
 };
 
 module.exports = controller;

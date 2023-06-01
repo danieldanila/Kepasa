@@ -6,7 +6,7 @@ const {
   throwValidationErrorWithMessage,
 } = require("../utils/errorsWrappers.util");
 
-const { NotFoundError } = require("../errors").NotFoundError;
+const { NotFoundError } = require("../errors");
 
 const Project = require("../models").Project;
 const Role = require("../models").Role;

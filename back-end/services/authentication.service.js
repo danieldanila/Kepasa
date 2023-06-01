@@ -1,8 +1,8 @@
+const { signToken } = require("../utils/authorization.util");
 const { comparePasswords } = require("../utils/passwordEncrypt.utils");
 
-const { CredentialsDoNotMatchError } =
-  require("../errors").CredentialsDoNotMatchError;
-const { NotFoundError } = require("../errors").NotFoundError;
+const { CredentialsDoNotMatchError } = require("../errors");
+const { NotFoundError } = require("../errors");
 
 const User = require("../models").User;
 
@@ -35,8 +35,9 @@ const service = {
     if (!doPasswordsMatch) {
       throw new CredentialsDoNotMatchError("Email and password do not match.");
     }
+    const token = signToken(user.id);
 
-    return user;
+    return token;
   },
 };
 

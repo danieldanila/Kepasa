@@ -1,4 +1,4 @@
-const { ValidationError } = require("../errors").ValidationError;
+const { ValidationError } = require("../errors");
 
 const throwValidationErrorWithMessage = (errors) => {
   const errorMessage = `${errors.join("; ")}`;

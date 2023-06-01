@@ -1,8 +1,8 @@
-class ValidationError extends Error {
+class UnauthorizedError extends Error {
   constructor(message = "Validations failed.", ...args) {
     super(message, ...args);
     this.message = message;
   }
 }
 
-module.exports = ValidationError;
+module.exports = UnauthorizedError;

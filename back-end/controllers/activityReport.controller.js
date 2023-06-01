@@ -1,110 +1,67 @@
 const activityReportService = require("../services").ActivityReportService;
-const { errorsHandlerWrapper } = require("../utils/errorsHandlers.util");
+const catchAsync = require("../utils/catchAsync.util");
 
 const controller = {
-  createActivityReport: async (req, res) => {
-    try {
-      await activityReportService.createActivityReport(req.body);
-      res.status(201).json({
-        message: `Activity Report ${req.body.name} created.`,
-      });
-    } catch (err) {
-      errorsHandlerWrapper(res, err);
-    }
-  },
+  createActivityReport: catchAsync(async (req, res, next) => {
+    await activityReportService.createActivityReport(req.body);
+    res.status(201).json({
+      message: `Activity Report ${req.body.name} created.`,
+    });
+  }),
 
-  createMultipleActivityReports: async (req, res) => {
-    try {
-      await activityReportService.createMultipleActivityReports(req.body);
-      res.status(201).json({
-        message: `${req.body.length} activity reports created.`,
-      });
-    } catch (err) {
-      errorsHandlerWrapper(res, err);
-    }
-  },
+  createMultipleActivityReports: catchAsync(async (req, res, next) => {
+    await activityReportService.createMultipleActivityReports(req.body);
+    res.status(201).json({
+      message: `${req.body.length} activity reports created.`,
+    });
+  }),
 
-  getAllActivityReports: async (req, res) => {
-    try {
-      const objectives = await activityReportService.getAllActivityReports();
-      res.status(200).json(objectives);
-    } catch (err) {
-      errorsHandlerWrapper(res, err);
-    }
-  },
+  getAllActivityReports: catchAsync(async (req, res, next) => {
+    const objectives = await activityReportService.getAllActivityReports();
+    res.status(200).json(objectives);
+  }),
 
-  getActivityReportById: async (req, res) => {
-    try {
-      const activityReport = await activityReportService.getActivityReportById(
-        req.params.id
-      );
-      res.status(200).json(activityReport);
-    } catch (err) {
-      errorsHandlerWrapper(res, err);
-    }
-  },
+  getActivityReportById: catchAsync(async (req, res, next) => {
+    const activityReport = await activityReportService.getActivityReportById(
+      req.params.id
+    );
+    res.status(200).json(activityReport);
+  }),
 
-  updateActivityReport: async (req, res) => {
-    try {
-      const updatedActivityReport =
-        await activityReportService.updateActivityReport(
-          req.params.id,
-          req.body
-        );
-      res.status(202).json(updatedActivityReport);
-    } catch (err) {
-      errorsHandlerWrapper(res, err);
-    }
-  },
+  updateActivityReport: catchAsync(async (req, res, next) => {
+    const updatedActivityReport =
+      await activityReportService.updateActivityReport(req.params.id, req.body);
+    res.status(202).json(updatedActivityReport);
+  }),
 
-  deleteActivityReport: async (req, res) => {
-    try {
-      await activityReportService.deleteActivityReport(req.params.id);
-      res.status(200).json({ message: "Activity Report deleted." });
-    } catch (err) {
-      errorsHandlerWrapper(res, err);
-    }
-  },
+  deleteActivityReport: catchAsync(async (req, res, next) => {
+    await activityReportService.deleteActivityReport(req.params.id);
+    res.status(200).json({ message: "Activity Report deleted." });
+  }),
 
-  getActivityReportUser: async (req, res) => {
-    try {
-      const activityReportUser =
-        await activityReportService.getActivityReportUser(req.params.id);
-      res.status(200).json(activityReportUser);
-    } catch (err) {
-      errorsHandlerWrapper(res, err);
-    }
-  },
+  getActivityReportUser: catchAsync(async (req, res, next) => {
+    const activityReportUser =
+      await activityReportService.getActivityReportUser(req.params.id);
+    res.status(200).json(activityReportUser);
+  }),
 
-  getActivityReportPeriod: async (req, res) => {
-    try {
-      const activityReportPeriod =
-        await activityReportService.getActivityReportPeriod(req.params.id);
-      res.status(200).json(activityReportPeriod);
-    } catch (err) {
-      errorsHandlerWrapper(res, err);
-    }
-  },
+  getActivityReportPeriod: catchAsync(async (req, res, next) => {
+    const activityReportPeriod =
+      await activityReportService.getActivityReportPeriod(req.params.id);
+    res.status(200).json(activityReportPeriod);
+  }),
 
-  getActivityReportProject: async (req, res) => {
-    try {
-      const activityReportProject =
-        await activityReportService.getActivityReportProject(req.params.id);
-      res.status(200).json(activityReportProject);
-    } catch (err) {
-      errorsHandlerWrapper(res, err);
-    }
-  },
+  getActivityReportProject: catchAsync(async (req, res, next) => {
+    const activityReportProject =
+      await activityReportService.getActivityReportProject(req.params.id);
+    res.status(200).json(activityReportProject);
+  }),
 
-  getActivityReportTaskType: async (req, res) => {
-    try {
-      const activityReportTaskType =
-        await activityReportService.getActivityReportTaskType(req.params.id);
-      res.status(200).json(activityReportTaskType);
-    } catch (err) {
-      errorsHandlerWrapper(res, err);
-    }
-  },
+  getActivityReportTaskType: catchAsync(async (req, res, next) => {
+    const activityReportTaskType =
+      await activityReportService.getActivityReportTaskType(req.params.id);
+    res.status(200).json(activityReportTaskType);
+  }),
 };
 
 module.exports = controller;

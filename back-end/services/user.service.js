@@ -4,7 +4,7 @@ const userValidations = require("../validations").UserValidation;
 const {
   throwValidationErrorWithMessage,
 } = require("../utils/errorsWrappers.util");
-const { NotFoundError } = require("../errors").NotFoundError;
+const { NotFoundError } = require("../errors");
 
 const { passwordEncrypt } = require("../utils/passwordEncrypt.utils");
 
@@ -18,6 +18,7 @@ const Role = require("../models").Role;
 const getAllDepartments = require("./department.service").getAllDepartments;
 
 const { Op } = require("sequelize");
+const { signToken } = require("../utils/authorization.util");
 
 const service = {
   createUser: async (userBody) => {
@@ -33,7 +34,11 @@ const service = {
     if (errors.length === 0) {
       const hashPassword = await passwordEncrypt(userBody.password);
       userBody.password = hashPassword;
-      await User.create(userBody);
+      const newUser = await User.create(userBody);
+
+      const token = signToken(newUser.id);
+
+      return { token, newUser };
     } else {
       throwValidationErrorWithMessage(errors);
     }
