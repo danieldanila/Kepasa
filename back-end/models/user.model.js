@@ -70,6 +70,14 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.DATE,
         allowNull: true,
       },
+      passwordResetToken: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      passwordResetExpires: {
+        type: DataTypes.DATE,
+        allowNull: true,
+      },
       fullName: {
         type: DataTypes.VIRTUAL,
         get() {
