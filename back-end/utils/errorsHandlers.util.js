@@ -4,6 +4,7 @@ const { ValidationError } = require("../errors");
 const { CredentialsDoNotMatchError } = require("../errors");
 const UnauthorizedError = require("../errors/unauthorizedError");
 const ForbiddenError = require("../errors/forbiddenError");
+const AppError = require("./appError");
 
 const notFoundErrorHandler = (res, err) => {
   res.status(404).json({ message: err.message });
@@ -36,6 +37,10 @@ const jwtErrorHandler = (res) => {
   res.status(401).json({ message: "Invalid token. Please log in again!" });
 };
 
+const appErrorHandler = (res, err) => {
+  res.status(err.statusCode).json({ message: err.message });
+};
+
 const serverErrorHandler = (res, err, message = "Server error.") => {
   console.log(err);
   res.status(500).json({ message: message });
@@ -56,6 +61,8 @@ const errorsHandlerWrapper = (err, req, res, next) => {
     jwtTokenExpiredErrorHandler(res);
   } else if (err instanceof JsonWebTokenError) {
     jwtErrorHandler(res);
+  } else if (err instanceof AppError) {
+    appErrorHandler(res, err);
   } else {
     serverErrorHandler(res, err);
   }

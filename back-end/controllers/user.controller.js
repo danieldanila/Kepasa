@@ -36,6 +36,14 @@ const controller = {
     });
   }),
 
+  updateMe: catchAsync(async (req, res, next) => {
+    const updatedUser = await userService.updateMe(req.user, req.body);
+    res.status(200).json({
+      data: updatedUser,
+      message: "You successfully updated your account.",
+    });
+  }),
+
   deleteUser: catchAsync(async (req, res, next) => {
     await userService.deleteUser(req.params.id);
     res.status(200).json({ message: "User deleted." });

@@ -16,6 +16,17 @@ const Role = require("../models").Role;
 const getAllDepartments = require("./department.service").getAllDepartments;
 
 const { Op } = require("sequelize");
+const AppError = require("../utils/appError");
+
+const filterObject = (object, ...allowedFields) => {
+  const newObject = {};
+  Object.keys(object).forEach((element) => {
+    if (allowedFields.includes(element)) {
+      newObject[element] = object[element];
+    }
+  });
+  return newObject;
+};
 
 const service = {
   createUser: async (userBody) => {
@@ -80,6 +91,28 @@ const service = {
     } else {
       throwValidationErrorWithMessage(errors);
     }
+  },
+
+  updateMe: async (loggedUser, userBody) => {
+    if (userBody.password) {
+      throw new AppError(
+        "You can't updated your password here. Please use the update password method.",
+        400
+      );
+    }
+
+    const filteredBody = filterObject(
+      userBody,
+      "email",
+      "phone",
+      "socialMediaLink",
+      "firstName",
+      "lastName",
+      "birthday"
+    );
+    const updatedUser = await service.updateUser(loggedUser.id, filteredBody);
+
+    return updatedUser;
   },
 
   deleteUser: async (userId) => {

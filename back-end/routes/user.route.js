@@ -27,6 +27,11 @@ router.put(
   authenticationMiddleware.restrictToAdministrator,
   userController.updateUser
 );
+router.patch(
+  "/updateMe",
+  authenticationMiddleware.protect,
+  userController.updateMe
+);
 router.delete(
   "/:id",
   authenticationMiddleware.protect,
