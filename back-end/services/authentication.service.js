@@ -2,10 +2,6 @@ const {
   signToken,
   createPasswordResetToken,
 } = require("../utils/authorization.util");
-const {
-  comparePasswords,
-  passwordEncrypt,
-} = require("../utils/passwordEncrypt.utils");
 
 const { CredentialsDoNotMatchError } = require("../errors");
 const { NotFoundError } = require("../errors");
@@ -41,12 +37,12 @@ const service = {
       throw new CredentialsDoNotMatchError("Email and password do not match.");
     }
 
-    const doPasswordsMatch = await comparePasswords(
+    const arePasswordsEqual = await User.arePasswordsEqual(
       payload.password,
       user.password
     );
 
-    if (!doPasswordsMatch) {
+    if (!arePasswordsEqual) {
       throw new CredentialsDoNotMatchError("Email and password do not match.");
     }
     const token = signToken(user.id);
@@ -118,11 +114,9 @@ const service = {
       throwValidationErrorWithMessage(errors);
     }
 
-    user.password = await passwordEncrypt(password);
+    user.password = password;
     user.passwordResetToken = undefined;
     user.passwordResetExpires = undefined;
-
-    // if(user.isModified("password") )
 
     await user.save();
 

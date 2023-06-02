@@ -24,8 +24,6 @@ const createPasswordResetToken = (user) => {
     .update(resetToken)
     .digest("hex");
 
-  console.log({ resetToken }, user.passwordResetToken);
-
   user.passwordResetExpires = Date.now() + 10 * 60 * 1000;
 
   return resetToken;

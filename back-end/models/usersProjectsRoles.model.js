@@ -2,11 +2,10 @@ const { Sequelize, DataTypes } = require("sequelize");
 
 const Database = require("../configs/database.config");
 
-const UserModel = require("./user.model");
+const User = require("./user.model");
 const ProjectModel = require("./project.model");
 const RoleModel = require("./role.model");
 
-const User = UserModel(Database, Sequelize);
 const Project = ProjectModel(Database, Sequelize);
 const Role = RoleModel(Database, Sequelize);
 

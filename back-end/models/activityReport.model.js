@@ -2,12 +2,11 @@ const { Sequelize, DataTypes } = require("sequelize");
 
 const Database = require("../configs/database.config");
 
-const UserModel = require("./user.model");
+const User = require("./user.model");
 const PeriodModel = require("./period.model");
 const ProjectModel = require("./project.model");
 const TaskTypeModel = require("./taskType.model");
 
-const User = UserModel(Database, Sequelize);
 const Period = PeriodModel(Database, Sequelize);
 const Project = ProjectModel(Database, Sequelize);
 const TaskType = TaskTypeModel(Database, Sequelize);

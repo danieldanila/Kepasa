@@ -2,7 +2,6 @@ const { Sequelize, DataTypes } = require("sequelize");
 
 const Database = require("../configs/database.config");
 
-const UserModel = require("./user.model");
 const DepartmentModel = require("./department.model");
 const RoleModel = require("./role.model");
 const ProjectModel = require("./project.model");
@@ -13,7 +12,7 @@ const ObjectiveModel = require("./objective.model");
 const TaskTypeModel = require("./taskType.model");
 const ActivityReportModel = require("./activityReport.model");
 
-const User = UserModel(Database, Sequelize);
+const User = require("./user.model");
 const Department = DepartmentModel(Database, Sequelize);
 const Role = RoleModel(Database, Sequelize);
 const Project = ProjectModel(Database, Sequelize);

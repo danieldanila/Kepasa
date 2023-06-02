@@ -6,8 +6,6 @@ const {
 } = require("../utils/errorsWrappers.util");
 const { NotFoundError } = require("../errors");
 
-const { passwordEncrypt } = require("../utils/passwordEncrypt.utils");
-
 const User = require("../models").User;
 const Department = require("../models").Department;
 const Objective = require("../models").Objective;
@@ -32,8 +30,6 @@ const service = {
     );
 
     if (errors.length === 0) {
-      const hashPassword = await passwordEncrypt(userBody.password);
-      userBody.password = hashPassword;
       const newUser = await User.create(userBody);
 
       const token = signToken(newUser.id);
@@ -81,11 +77,6 @@ const service = {
 
     if (errors.length === 0) {
       const userFound = await service.getUserById(userId);
-
-      if (userBody.hasOwnProperty("password")) {
-        const hashPassword = await passwordEncrypt(userBody.password);
-        userBody.password = hashPassword;
-      }
 
       const updatedUser = await userFound.update(userBody);
       return updatedUser;

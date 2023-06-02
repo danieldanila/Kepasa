@@ -2,10 +2,9 @@ const { Sequelize, DataTypes } = require("sequelize");
 
 const Database = require("../configs/database.config");
 
-const UserModel = require("./user.model");
+const User = require("./user.model");
 const PeriodModel = require("./period.model");
 
-const User = UserModel(Database, Sequelize);
 const Period = PeriodModel(Database, Sequelize);
 
 module.exports = (sequelize, DataTypes) => {
