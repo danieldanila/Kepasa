@@ -3,11 +3,21 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const router = require("./routes");
+const rateLimit = require("express-rate-limit");
+
 const errorsHandlerWrapper = require("./utils/errorsHandlers.util");
 const { NotFoundError } = require("./errors");
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+const limiter = rateLimit({
+  max: 100,
+  windowMs: 60 * 60 * 1000,
+  message: "Too many requests from this IP, please try again later.",
+});
+
+app.use("/api", limiter);
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
