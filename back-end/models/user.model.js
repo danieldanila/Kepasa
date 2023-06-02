@@ -92,6 +92,28 @@ const User = Database.define(
   {
     underscored: true,
     tableName: "Users",
+    defaultScope: {
+      attributes: {
+        exclude: [
+          "password",
+          "passwordChangedAt",
+          "passwordResetToken",
+          "passwordResetExpires",
+        ],
+      },
+    },
+    scopes: {
+      withPassword: {
+        attributes: {
+          include: [
+            "password",
+            "passwordChangedAt",
+            "passwordResetToken",
+            "passwordResetExpires",
+          ],
+        },
+      },
+    },
     hooks: {
       beforeSave: async (user) => {
         if (user.changed("password")) {

@@ -3,16 +3,11 @@ const catchAsync = require("../utils/catchAsync.util");
 
 const controller = {
   createUser: catchAsync(async (req, res, next) => {
-    const result = await userService.createUser(req.body);
-    const token = result.token;
-    const newUser = result.newUser;
+    const newUser = await userService.createUser(req.body);
 
     res.status(201).json({
       message: `User ${newUser.firstName} ${newUser.lastName} created.`,
-      token,
-      data: {
-        user: newUser,
-      },
+      newUser,
     });
   }),
 

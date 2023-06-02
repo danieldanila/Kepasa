@@ -16,7 +16,6 @@ const Role = require("../models").Role;
 const getAllDepartments = require("./department.service").getAllDepartments;
 
 const { Op } = require("sequelize");
-const { signToken } = require("../utils/authorization.util");
 
 const service = {
   createUser: async (userBody) => {
@@ -32,9 +31,7 @@ const service = {
     if (errors.length === 0) {
       const newUser = await User.create(userBody);
 
-      const token = signToken(newUser.id);
-
-      return { token, newUser };
+      return newUser;
     } else {
       throwValidationErrorWithMessage(errors);
     }
@@ -47,7 +44,7 @@ const service = {
   },
 
   getAllUsers: async () => {
-    const users = await User.findAll();
+    const users = await User.scope("withPassword").findAll();
     return users;
   },
 
@@ -56,7 +53,7 @@ const service = {
 
     idParamaterValidation(userId, "User id", errors);
 
-    const user = await User.findByPk(userId);
+    const user = await User.scope("withPassword").findByPk(userId);
 
     if (user) {
       return user;

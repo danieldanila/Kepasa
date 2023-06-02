@@ -17,7 +17,7 @@ const {
 const User = require("../models").User;
 
 const service = {
-  userAuthentication: async (userBody) => {
+  login: async (userBody) => {
     if (!userBody.email || !userBody.password) {
       throw new NotFoundError("Email or password fields were not found.");
     }
@@ -27,7 +27,7 @@ const service = {
       password: userBody.password,
     };
 
-    const user = await User.findOne({
+    const user = await User.scope("withPassword").findOne({
       where: {
         email: payload.email,
       },
@@ -76,8 +76,8 @@ const service = {
         message,
       });
     } catch (err) {
-      user.passwordResetToken = undefined;
-      user.passwordResetExpires = undefined;
+      user.passwordResetToken = null;
+      user.passwordResetExpires = null;
       await user.save();
 
       throw new Error("There was an error when sending the email.");
@@ -115,8 +115,39 @@ const service = {
     }
 
     user.password = password;
-    user.passwordResetToken = undefined;
-    user.passwordResetExpires = undefined;
+    user.passwordResetToken = null;
+    user.passwordResetExpires = null;
+
+    await user.save();
+
+    const token = signToken(user.id);
+
+    return token;
+  },
+
+  updatePassword: async (loggedUser, userBody) => {
+    const user = await User.scope("withPassword").findByPk(loggedUser.id);
+
+    if (
+      !(await User.arePasswordsEqual(userBody.currentPassword, user.password))
+    ) {
+      throw new CredentialsDoNotMatchError("Current password is wrong.");
+    }
+
+    const errors = [];
+    validateCompletedField(
+      passwordValidation,
+      userBody.password,
+      "Password",
+      errors,
+      true
+    );
+
+    if (errors.length > 0) {
+      throwValidationErrorWithMessage(errors);
+    }
+
+    user.password = userBody.password;
 
     await user.save();
 
