@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const router = require("./routes");
 const rateLimit = require("express-rate-limit");
 const helmet = require("helmet");
+const xss = require("xss-clean");
 
 const errorsHandlerWrapper = require("./utils/errorsHandlers.util");
 const { NotFoundError } = require("./errors");
@@ -21,6 +22,8 @@ app.use("/api", limiter);
 
 app.use(bodyParser.json({ limit: "10kb" }));
 app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(xss());
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
