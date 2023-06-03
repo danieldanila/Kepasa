@@ -7,6 +7,7 @@ import Sidebar from "@/components/Sidebar";
 import { useRouter } from "next/router";
 import { createContext, useEffect, useState } from "react";
 import useCompareArrayOfObjects from "@/hooks/useCompare";
+import axios from "axios";
 
 export const UsersContext = createContext(null);
 export const ProjectsContext = createContext(null);
@@ -39,23 +40,32 @@ export default function App({ Component, pageProps }) {
 
   useEffect(() => {
     async function getUserData() {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/user`);
-      const usersData = await res.json();
+      const res = await axios({
+        method: "GET",
+        url: `${process.env.NEXT_PUBLIC_SERVER_URL}/api/user`,
+        withCredentials: true,
+      });
+
+      const usersData = await res.data;
 
       const filteredUsers = [];
 
       for (const user of usersData) {
-        const userDepartmentResponse = await fetch(
-          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/user/${user.id}/department`
-        );
+        const userDepartmentResponse = await axios({
+          method: "GET",
+          url: `${process.env.NEXT_PUBLIC_SERVER_URL}/api/user/${user.id}/department`,
+          withCredentials: true,
+        });
 
-        const userDepartment = await userDepartmentResponse.json();
+        const userDepartment = await userDepartmentResponse.data;
 
-        const userMentorResponse = await fetch(
-          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/user/${user.id}/mentor`
-        );
+        const userMentorResponse = await axios({
+          method: "GET",
+          url: `${process.env.NEXT_PUBLIC_SERVER_URL}/api/user/${user.id}/mentor`,
+          withCredentials: true,
+        });
 
-        const userMentor = await userMentorResponse.json();
+        const userMentor = await userMentorResponse.data;
 
         const filteredUser = {
           id: user.id,
@@ -95,10 +105,13 @@ export default function App({ Component, pageProps }) {
 
   useEffect(() => {
     async function getProjectData() {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/project`
-      );
-      const projectsData = await res.json();
+      const res = await axios({
+        method: "GET",
+        url: `${process.env.NEXT_PUBLIC_SERVER_URL}/api/project`,
+        withCredentials: true,
+      });
+
+      const projectsData = await res.data;
 
       setProjects(projectsData);
     }

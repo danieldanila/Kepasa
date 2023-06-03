@@ -3,6 +3,20 @@ import DataTableWrapper from "@/components/DataTableWrapper";
 import { ProjectsContext } from "../_app";
 import ProjectForm from "@/components/Forms/ProjectForm";
 
+export async function getServerSideProps({ req }) {
+  const { jwt } = req.cookies;
+
+  if (!jwt) {
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    };
+  }
+  return { props: { jwt } };
+}
+
 export default function Projects() {
   const projectsColumn = [
     {

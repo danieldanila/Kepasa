@@ -1,15 +1,50 @@
 const router = require("express").Router();
 const projectController = require("../controllers").ProjectController;
+const authenticationMiddleware =
+  require("../middlewares").AuthenticationMiddleware;
 
-router.post("/create", projectController.createProject);
-router.post("/creates", projectController.createMultipleProjects);
-router.get("/", projectController.getAllProjects);
-router.get("/:id", projectController.getProjectById);
-router.put("/:id", projectController.updateProject);
-router.delete("/:id", projectController.deleteProject);
-router.get("/:id/activityReports", projectController.getProjectActivityReports);
+router.post(
+  "/create",
+  authenticationMiddleware.protect,
+  authenticationMiddleware.restrictToAdministrator,
+  projectController.createProject
+);
+router.post(
+  "/creates",
+  authenticationMiddleware.protect,
+  authenticationMiddleware.restrictToAdministrator,
+  projectController.createMultipleProjects
+);
+router.get(
+  "/",
+  authenticationMiddleware.protect,
+  projectController.getAllProjects
+);
+router.get(
+  "/:id",
+  authenticationMiddleware.protect,
+  projectController.getProjectById
+);
+router.put(
+  "/:id",
+  authenticationMiddleware.protect,
+  authenticationMiddleware.restrictToAdministrator,
+  projectController.updateProject
+);
+router.delete(
+  "/:id",
+  authenticationMiddleware.protect,
+  authenticationMiddleware.restrictToAdministrator,
+  projectController.deleteProject
+);
+router.get(
+  "/:id/activityReports",
+  authenticationMiddleware.protect,
+  projectController.getProjectActivityReports
+);
 router.get(
   "/:id/activityReport/:idActivityReport",
+  authenticationMiddleware.protect,
   projectController.getProjectActivityReportById
 );
 

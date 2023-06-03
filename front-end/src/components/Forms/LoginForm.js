@@ -29,6 +29,10 @@ export default function Login() {
       });
 
       successToast(toastRef, res.data.message);
+
+      window.setTimeout(() => {
+        location.assign("/home");
+      }, 1500);
     } catch (err) {
       errorToast(toastRef, err.response.data.message);
     }

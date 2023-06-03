@@ -160,7 +160,6 @@ export default function DataTableWrapper({
 
       const responseMessage = await response.json();
 
-      console.log(responseMessage);
       if (!response.ok) {
         const toastErrors = [];
         if (Array.isArray(responseMessage)) {

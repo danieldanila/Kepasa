@@ -13,6 +13,11 @@ const ObjectiveRouter = require("./objective.route");
 const TaskTypeRouter = require("./taskType.route");
 const ActivityReportRouter = require("./activityReport.route");
 
+const authenticationMiddleware =
+  require("../middlewares").AuthenticationMiddleware;
+
+router.use(authenticationMiddleware.isLoggedIn);
+
 router.use("/database", DatabaseRouter);
 router.use("/user", UserRouter);
 router.use("/department", DepartmentRouter);

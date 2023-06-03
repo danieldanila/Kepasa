@@ -1,51 +1,76 @@
 const router = require("express").Router();
 const usersProjectsRolesController =
   require("../controllers").UsersProjectsRolesController;
+const authenticationMiddleware =
+  require("../middlewares").AuthenticationMiddleware;
 
-router.post("/create", usersProjectsRolesController.createUsersProjectRoles);
+router.post(
+  "/create",
+  authenticationMiddleware.protect,
+  authenticationMiddleware.restrictToAdministrator,
+  usersProjectsRolesController.createUsersProjectRoles
+);
 router.post(
   "/creates",
+  authenticationMiddleware.protect,
+  authenticationMiddleware.restrictToAdministrator,
   usersProjectsRolesController.createMultipleUsersProjectsRoles
 );
-router.get("/", usersProjectsRolesController.getAllUsersProjectsRoles);
+router.get(
+  "/",
+  authenticationMiddleware.protect,
+  usersProjectsRolesController.getAllUsersProjectsRoles
+);
 router.get(
   "/user/:idUser/project/:idProject",
+  authenticationMiddleware.protect,
   usersProjectsRolesController.getUsersProjectsRolesByCompositeId
 );
 router.put(
   "/user/:idUser/project/:idProject",
+  authenticationMiddleware.protect,
+  authenticationMiddleware.restrictToAdministrator,
   usersProjectsRolesController.updateUsersProjectsRoles
 );
 router.delete(
   "/user/:idUser/project/:idProject",
+  authenticationMiddleware.protect,
+  authenticationMiddleware.restrictToAdministrator,
   usersProjectsRolesController.deleteUsersProjectsRoles
 );
 router.get(
   "/user/:idUser/project",
+  authenticationMiddleware.protect,
   usersProjectsRolesController.getUserProjects
 );
 router.get(
   "/project/:idProject/user",
+  authenticationMiddleware.protect,
   usersProjectsRolesController.getProjectUsers
 );
 router.get(
   "/user/:idUser/project/:idProject/role",
+  authenticationMiddleware.protect,
   usersProjectsRolesController.getUserRoleOnProject
 );
 router.get(
   "/user/:idUser/department/role",
+  authenticationMiddleware.protect,
   usersProjectsRolesController.getUserRoleOnDepartmentProject
 );
 router.get(
   "/user/:idUser",
+  authenticationMiddleware.protect,
   usersProjectsRolesController.getUserRolesOnProjects
 );
 router.get(
   "/role/:idRole",
+  authenticationMiddleware.protect,
   usersProjectsRolesController.getRoleUsersOnProjects
 );
 router.get(
   "/project/:idProject",
+  authenticationMiddleware.protect,
   usersProjectsRolesController.getProjectRolesWithUsers
 );
 

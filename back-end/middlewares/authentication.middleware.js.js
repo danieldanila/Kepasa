@@ -50,6 +50,29 @@ const middleware = {
     next();
   }),
 
+  isLoggedIn: catchAsync(async (req, res, next) => {
+    if (req.cookies.jwt) {
+      const decoded = await promisify(jwt.verify)(
+        req.cookies.jwt,
+        process.env.JWT_SECRET
+      );
+
+      const currentUser = await User.findByPk(decoded.id);
+
+      if (!currentUser) {
+        return next();
+      }
+
+      if (changedPasswordAfter(currentUser.passwordChangedAt, decoded.iat)) {
+        return next();
+      }
+
+      res.locals.user = currentUser;
+    }
+
+    next();
+  }),
+
   restrictToAdministrator: catchAsync(async (req, res, next) => {
     if (req.user.isAdministrator === false) {
       return next(

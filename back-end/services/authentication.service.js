@@ -19,7 +19,7 @@ const User = require("../models").User;
 const service = {
   login: async (userBody) => {
     if (!userBody.email || !userBody.password) {
-      throw new NotFoundError("Email or password fields were not found.");
+      throw new NotFoundError("Email or password field was not found.");
     }
 
     const payload = {
@@ -34,7 +34,9 @@ const service = {
     });
 
     if (!user) {
-      throw new CredentialsDoNotMatchError("Email and password do not match.");
+      throw new CredentialsDoNotMatchError(
+        "Credentials provided do not match with our records."
+      );
     }
 
     const arePasswordsEqual = await User.arePasswordsEqual(
@@ -43,7 +45,9 @@ const service = {
     );
 
     if (!arePasswordsEqual) {
-      throw new CredentialsDoNotMatchError("Email and password do not match.");
+      throw new CredentialsDoNotMatchError(
+        "Credentials provided do not match with our records."
+      );
     }
     const token = signToken(user.id);
 
