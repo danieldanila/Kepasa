@@ -7,10 +7,12 @@ export default function InputTextForm({
   keyfilter,
   customOnChange,
   initialValue,
+  objectState,
+  setObjectState,
 }) {
-  const handleInputTextChange = (e, id) => {
+  const handleInputTextChange = (e, id, objectState, setObjectState) => {
     setText(e.target.value);
-    customOnChange(e, id);
+    customOnChange(e, id, objectState, setObjectState);
   };
 
   const [text, setText] = useState(initialValue);
@@ -20,7 +22,9 @@ export default function InputTextForm({
         id={id}
         keyfilter={keyfilter}
         value={text}
-        onChange={(e) => handleInputTextChange(e, id)}
+        onChange={(e) =>
+          handleInputTextChange(e, id, objectState, setObjectState)
+        }
       />
       <label htmlFor={id}>{label}</label>
     </span>

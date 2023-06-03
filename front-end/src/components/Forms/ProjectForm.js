@@ -3,6 +3,7 @@ import InputTextForm from "./FormsInput/InputTextForm";
 import styles from "../../styles/PeopleForm.module.css";
 import { ProjectsContext } from "@/pages/_app";
 import { useContext } from "react";
+import onInputTextChange from "../../onInputChanges/onInputTextChange";
 
 export default function ProjectForm({
   visible,
@@ -12,13 +13,6 @@ export default function ProjectForm({
   dataEntity,
 }) {
   const { project, setProject } = useContext(ProjectsContext);
-
-  const onInputTextChange = (e, idName) => {
-    const inputValue = (e.target && e.target.value) || "";
-    let projectCopy = { ...project };
-    projectCopy[`${idName}`] = inputValue;
-    setProject(projectCopy);
-  };
 
   return (
     <Dialog
@@ -36,6 +30,8 @@ export default function ProjectForm({
           label="Name"
           customOnChange={onInputTextChange}
           initialValue={dataEntity.name}
+          objectState={project}
+          setObjectState={setProject}
         />
       </div>
     </Dialog>

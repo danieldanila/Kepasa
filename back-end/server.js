@@ -7,14 +7,16 @@ const rateLimit = require("express-rate-limit");
 const helmet = require("helmet");
 const xss = require("xss-clean");
 const hpp = require("hpp");
+const cors = require("cors");
 
 const errorsHandlerWrapper = require("./utils/errorsHandlers.util");
 const { NotFoundError } = require("./errors");
+const cookieParser = require("cookie-parser");
 
 app.use(helmet());
 
 const limiter = rateLimit({
-  max: 100,
+  max: 10000,
   windowMs: 60 * 60 * 1000,
   message: "Too many requests from this IP, please try again later.",
 });
@@ -23,6 +25,7 @@ app.use("/api", limiter);
 
 app.use(bodyParser.json({ limit: "10kb" }));
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 app.use(xss());
 
@@ -33,15 +36,10 @@ app.use(
 );
 
 app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET, POST, PUT, DELETE, PATCH"
-  );
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-  res.setHeader("Access-Control-Allow-Credentials", true);
   next();
 });
+
+app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 
 app.use("/api", router);
 

@@ -7,12 +7,14 @@ export default function ToggleButtonForm({
   offLabel,
   customOnChange,
   initialValue,
+  objectState,
+  setObjectState,
 }) {
   const [isSelected, setIsSelected] = useState(initialValue);
 
-  const handleInputBooleanChange = (e, id) => {
+  const handleInputBooleanChange = (e, id, objectState, setObjectState) => {
     setIsSelected(e.value);
-    customOnChange(e, id);
+    customOnChange(e, id, objectState, setObjectState);
   };
 
   return (
@@ -23,7 +25,9 @@ export default function ToggleButtonForm({
         value={isSelected}
         onLabel={onLabel}
         offLabel={offLabel}
-        onChange={(e) => handleInputBooleanChange(e, id)}
+        onChange={(e) =>
+          handleInputBooleanChange(e, id, objectState, setObjectState)
+        }
       />
     </span>
   );

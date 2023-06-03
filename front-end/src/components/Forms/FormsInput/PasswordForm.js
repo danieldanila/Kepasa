@@ -6,12 +6,15 @@ export default function PasswordForm({
   label,
   customOnChange,
   initialValue,
+  objectState,
+  setObjectState,
+  feedbackValue,
 }) {
   const [password, setPassowrd] = useState(initialValue);
 
-  const handleInputTextChange = (e, id) => {
+  const handleInputTextChange = (e, id, objectState, setObjectState) => {
     setPassowrd(e.target.value);
-    customOnChange(e, id);
+    customOnChange(e, id, objectState, setObjectState);
   };
 
   return (
@@ -19,7 +22,10 @@ export default function PasswordForm({
       <Password
         id={id}
         value={password}
-        onChange={(e) => handleInputTextChange(e, id)}
+        onChange={(e) =>
+          handleInputTextChange(e, id, objectState, setObjectState)
+        }
+        feedback={feedbackValue}
       />
       <label htmlFor={id}>{label}</label>
     </span>

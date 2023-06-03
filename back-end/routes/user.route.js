@@ -15,7 +15,7 @@ router.post(
   authenticationMiddleware.restrictToAdministrator,
   userController.createMultipleUsers
 );
-router.get("/", authenticationMiddleware.protect, userController.getAllUsers);
+router.get("/", userController.getAllUsers);
 router.get(
   "/:id",
   authenticationMiddleware.protect,
@@ -40,7 +40,7 @@ router.delete(
 );
 router.get(
   "/:id/mentor",
-  authenticationMiddleware.protect,
+
   userController.getUserMentor
 );
 router.get(
@@ -48,11 +48,7 @@ router.get(
   authenticationMiddleware.protect,
   userController.getUserMentees
 );
-router.get(
-  "/:id/department",
-  authenticationMiddleware.protect,
-  userController.getUserDepartment
-);
+router.get("/:id/department", userController.getUserDepartment);
 router.get(
   "/:id/objectives",
   authenticationMiddleware.protect,

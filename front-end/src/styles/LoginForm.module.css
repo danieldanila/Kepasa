@@ -1,0 +1,63 @@
+.container {
+  margin-right: var(--sidebarWidth);
+  height: 70vh;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.background {
+  background-image: url("../../public/images/login-background.jpg");
+  background-repeat: no-repeat;
+  background-position: 50%;
+  background-size: cover;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: -1;
+}
+
+.loginContainer {
+  background-color: var(--white);
+  box-shadow: var(--boxShadow);
+
+  display: flex;
+  flex-direction: column;
+
+  width: fit-content;
+  padding: 5rem;
+  border-radius: 1rem;
+}
+
+.fieldsContainer {
+  height: 14rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.applicationName {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.button {
+  background: var(--orange);
+}
+
+.button:enabled:hover {
+  background: var(--darkOrange);
+}
+
+.forgotPassword a {
+  text-decoration: none;
+  color: var(--black);
+  font-size: small;
+}
+
+.forgotPassword a:hover {
+  text-decoration: underline;
+}

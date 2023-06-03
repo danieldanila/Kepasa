@@ -8,13 +8,15 @@ export default function DropdownForm({
   fieldNameToBeShown,
   customOnChange,
   initialValue,
+  objectState,
+  setObjectState,
 }) {
   const [selectedOption, setSelectedOption] = useState(initialValue);
   const [filteredOptions, setFilteredOptions] = useState(null);
 
-  const handleInputDropdownChange = (e, id) => {
+  const handleInputDropdownChange = (e, id, objectState, setObjectState) => {
     setSelectedOption(e.target.value);
-    customOnChange(e, id);
+    customOnChange(e, id, objectState, setObjectState);
   };
 
   const searchOption = (event) => {
@@ -50,7 +52,9 @@ export default function DropdownForm({
         forceSelection
         completeMethod={searchOption}
         value={selectedOption}
-        onChange={(e) => handleInputDropdownChange(e, id)}
+        onChange={(e) =>
+          handleInputDropdownChange(e, id, objectState, setObjectState)
+        }
       />
       <label htmlFor={id}>{label}</label>
     </span>

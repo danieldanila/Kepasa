@@ -16,6 +16,8 @@ export default function App({ Component, pageProps }) {
   global.pageRoute = router.pathname;
   global.currentPage = pageRoute.slice(1, pageRoute.length).toLocaleLowerCase();
 
+  const showNavigation = global.pageRoute === "/login" ? false : true;
+
   const emptyUser = {
     id: null,
     email: "",
@@ -112,8 +114,13 @@ export default function App({ Component, pageProps }) {
         <ProjectsContext.Provider
           value={{ projects, setProjects, emptyProject, project, setProject }}
         >
-          <Navbar />
-          <Sidebar />
+          {showNavigation && (
+            <>
+              <Navbar />
+              <Sidebar />
+            </>
+          )}
+
           <Component {...pageProps} />
         </ProjectsContext.Provider>
       </UsersContext.Provider>

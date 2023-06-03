@@ -7,6 +7,9 @@ import ToggleButtonForm from "./FormsInput/ToggleButtonForm";
 import styles from "../../styles/PeopleForm.module.css";
 import { UsersContext } from "@/pages/_app";
 import { useContext, useEffect, useState } from "react";
+import onInputTextChange from "../../onInputChanges/onInputTextChange";
+import onInputDropdownChange from "../../onInputChanges/onInputDropdownChange";
+import onInputBooleanChange from "../../onInputChanges/onInputBooleanChange";
 
 export default function PeopleForm({
   visible,
@@ -31,27 +34,6 @@ export default function PeopleForm({
     getDepartments();
   }, []);
 
-  const onInputTextChange = (e, idName) => {
-    const inputValue = (e.target && e.target.value) || "";
-    let userCopy = { ...user };
-    userCopy[`${idName}`] = inputValue;
-    setUser(userCopy);
-  };
-
-  const onInputBooleanChange = (e, idName) => {
-    let userCopy = { ...user };
-    userCopy[`${idName}`] = e.value.toString();
-    setUser(userCopy);
-  };
-
-  const onInputDropdownChange = (e, idName) => {
-    let inputValue = (e.target && e.target.value) || "";
-    let userCopy = { ...user };
-
-    userCopy[`${idName}`] = inputValue.id;
-    setUser(userCopy);
-  };
-
   return (
     <Dialog
       className={styles.container}
@@ -68,12 +50,16 @@ export default function PeopleForm({
           label="First Name"
           customOnChange={onInputTextChange}
           initialValue={dataEntity.firstName}
+          objectState={user}
+          setObjectState={setUser}
         />
         <InputTextForm
           id="lastName"
           label="Last Name"
           customOnChange={onInputTextChange}
           initialValue={dataEntity.lastName}
+          objectState={user}
+          setObjectState={setUser}
         />
         <InputTextForm
           id="email"
@@ -81,6 +67,8 @@ export default function PeopleForm({
           keyfilter="email"
           customOnChange={onInputTextChange}
           initialValue={dataEntity.email}
+          objectState={user}
+          setObjectState={setUser}
         />
         <InputTextForm
           id="phone"
@@ -88,18 +76,24 @@ export default function PeopleForm({
           keyfilter="pint"
           customOnChange={onInputTextChange}
           initialValue={dataEntity.phone}
+          objectState={user}
+          setObjectState={setUser}
         />
         <CalendarForm
           id="birthday"
           label="Birthday"
           customOnChange={onInputTextChange}
           initialValue={dataEntity.birthday}
+          objectState={user}
+          setObjectState={setUser}
         />
         <InputTextForm
           id="socialMediaLink"
           label="Social Media Link"
           customOnChange={onInputTextChange}
           initialValue={dataEntity.socialMediaLink}
+          objectState={user}
+          setObjectState={setUser}
         />
         <DropdownForm
           id="idDepartment"
@@ -108,6 +102,8 @@ export default function PeopleForm({
           fieldNameToBeShown="name"
           customOnChange={onInputDropdownChange}
           initialValue={dataEntity.departmentName}
+          objectState={user}
+          setObjectState={setUser}
         />
         <DropdownForm
           id="idMentor"
@@ -116,6 +112,8 @@ export default function PeopleForm({
           fieldNameToBeShown="fullName"
           customOnChange={onInputDropdownChange}
           initialValue={dataEntity.mentorName}
+          objectState={user}
+          setObjectState={setUser}
         />
         {isUpdate ? (
           <ToggleButtonForm
@@ -124,12 +122,17 @@ export default function PeopleForm({
             offLabel="Is NOT Active"
             customOnChange={onInputBooleanChange}
             initialValue={dataEntity.isActive}
+            objectState={user}
+            setObjectState={setUser}
           />
         ) : (
           <PasswordForm
             id="password"
             label="Initial password"
             customOnChange={onInputTextChange}
+            objectState={user}
+            setObjectState={setUser}
+            feedbackValue={true}
           />
         )}
 
@@ -139,6 +142,8 @@ export default function PeopleForm({
           offLabel="Is NOT Administrator"
           customOnChange={onInputBooleanChange}
           initialValue={dataEntity.isAdministrator}
+          objectState={user}
+          setObjectState={setUser}
         />
       </div>
     </Dialog>

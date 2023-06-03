@@ -160,16 +160,27 @@ export default function DataTableWrapper({
 
       const responseMessage = await response.json();
 
+      console.log(responseMessage);
       if (!response.ok) {
         const toastErrors = [];
-        for (const error of responseMessage.message) {
+        if (Array.isArray(responseMessage)) {
+          for (const error of responseMessage.message) {
+            toastErrors.push({
+              severity: "error",
+              summary: "Error",
+              detail: error,
+              life: 3000,
+            });
+          }
+        } else {
           toastErrors.push({
             severity: "error",
             summary: "Error",
-            detail: error,
+            detail: responseMessage.message,
             life: 3000,
           });
         }
+
         toastRef.current.show(toastErrors);
       } else {
         let dataCopy = [...data];

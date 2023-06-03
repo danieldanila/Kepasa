@@ -6,15 +6,17 @@ export default function CalendarForm({
   label,
   customOnChange,
   initialValue,
+  objectState,
+  setObjectState,
 }) {
   const [date, setDate] = useState(
     initialValue ? new Date(initialValue) : null
   );
 
-  const handleInputCalendarChange = (e, id) => {
+  const handleInputCalendarChange = (e, id, objectState, setObjectState) => {
     setDate(e.target.value);
     e.target.value = e.target.value.toLocaleDateString("en-CA");
-    customOnChange(e, id);
+    customOnChange(e, id, objectState, setObjectState);
   };
 
   return (
@@ -24,7 +26,9 @@ export default function CalendarForm({
         dateFormat="yy-mm-dd"
         value={date}
         readOnlyInput
-        onChange={(e) => handleInputCalendarChange(e, id)}
+        onChange={(e) =>
+          handleInputCalendarChange(e, id, objectState, setObjectState)
+        }
       />
       <label htmlFor={id}>{label}</label>
     </span>
