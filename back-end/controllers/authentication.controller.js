@@ -31,6 +31,15 @@ const controller = {
     });
   }),
 
+  logout: catchAsync(async (req, res, next) => {
+    res.cookie("jwt", "loggedout", {
+      expires: new Date(Date.now()),
+      httpOnly: true,
+      sameSite: "lax",
+    });
+    res.status(200).json({ status: "success" });
+  }),
+
   forgotPassword: catchAsync(async (req, res, next) => {
     await authenticationService.forgotPassword(req.body.email);
     res.status(200).json({

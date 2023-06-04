@@ -11,7 +11,7 @@ const infoToast = (toastRef, messages) => {
     });
   }
 
-  toastRef.current.show(toastSuccess);
+  toastRef.current.show(toastInfo);
 };
 
 module.exports = infoToast;

@@ -12,6 +12,7 @@ import { Toast } from "primereact/toast";
 import { Dialog } from "primereact/dialog";
 import { catchAxios } from "@/axios";
 import infoToast from "@/toasts/infoToast";
+import { LoggedUserContext } from "@/pages/_app";
 
 export default function DataTableWrapper({
   dataContext,
@@ -20,6 +21,8 @@ export default function DataTableWrapper({
   dataName,
   DataForm,
 }) {
+  const { loggedUser } = useContext(LoggedUserContext);
+
   const contextValues = useContext(dataContext);
   const {
     [Object.keys(contextValues)[0]]: data,
@@ -272,7 +275,6 @@ export default function DataTableWrapper({
           onClick={confirmDeleteSelectedDataEntities}
           disabled={!selectedDataEntities || !selectedDataEntities.length}
         />
-        <Toast ref={toastRef} />
         {openFormDialog && (
           <DataForm
             visible={showFormDialog}
@@ -342,11 +344,13 @@ export default function DataTableWrapper({
 
   return (
     <>
-      <Toolbar
-        className={styles.container}
-        start={leftToolbarTemplate}
-        end={rightToolbarTemplate}
-      ></Toolbar>
+      {loggedUser?.isAdministrator ? (
+        <Toolbar
+          className={styles.container}
+          start={leftToolbarTemplate}
+          end={rightToolbarTemplate}
+        ></Toolbar>
+      ) : null}
       <DataTable
         ref={dataTableRef}
         showGridlines
@@ -363,7 +367,7 @@ export default function DataTableWrapper({
         filterDisplay="menu"
         emptyMessage={`No ${global.currentPage} found`}
         selectionMode="multiple"
-        dragSelection
+        dragSelection={loggedUser?.isAdministrator ? true : false}
         selection={selectedDataEntities}
         onSelectionChange={(e) => setSelectedDataEntities(e.value)}
         selectionPageOnly
@@ -372,7 +376,9 @@ export default function DataTableWrapper({
         scrollable
         scrollHeight="50rem"
       >
-        <Column selectionMode="multiple" />
+        {loggedUser?.isAdministrator ? (
+          <Column selectionMode="multiple" />
+        ) : null}
         {columns.map((column) => (
           <Column
             sortable
@@ -384,8 +390,11 @@ export default function DataTableWrapper({
             editor={(options) => textEditor(options)}
           />
         ))}
-        <Column body={actionBodyTemplate} exportable={false}></Column>
+        {loggedUser?.isAdministrator ? (
+          <Column body={actionBodyTemplate} exportable={false}></Column>
+        ) : null}
       </DataTable>
+
       <Dialog
         visible={deleteSelectedDataEntityDialog}
         onHide={hideDeleteSelectedDataEntityDialog}
@@ -419,6 +428,7 @@ export default function DataTableWrapper({
           </span>
         )}
       </Dialog>
+      <Toast ref={toastRef} />
     </>
   );
 }

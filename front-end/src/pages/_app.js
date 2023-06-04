@@ -5,7 +5,7 @@ import "primereact/resources/themes/lara-light-indigo/theme.css";
 import Navbar from "@/components/Navbar";
 import Sidebar from "@/components/Sidebar";
 import { useRouter } from "next/router";
-import { createContext, useEffect, useRef, useState } from "react";
+import { createContext, useEffect, useMemo, useRef, useState } from "react";
 import useCompareArrayOfObjects from "@/hooks/useCompare";
 import { catchAxios } from "@/axios";
 import { Toast } from "primereact/toast";
@@ -25,6 +25,22 @@ export default function App({ Component, pageProps }) {
   const showNavigation = global.pageRoute === "/login" ? false : true;
 
   const [loggedUser, setLoggedUser] = useState(null);
+
+  const memoizedLoggedUser = useMemo(() => loggedUser, [loggedUser]);
+
+  useEffect(() => {
+    async function getCurrentUser() {
+      const loggedUserData = await catchAxios(
+        "GET",
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/user/currentUser`,
+        toastRef
+      );
+
+      setLoggedUser(loggedUserData);
+    }
+
+    getCurrentUser();
+  }, []);
 
   const emptyUser = {
     id: null,
@@ -143,7 +159,9 @@ export default function App({ Component, pageProps }) {
               setDepartment,
             }}
           >
-            <LoggedUserContext.Provider value={{ loggedUser, setLoggedUser }}>
+            <LoggedUserContext.Provider
+              value={{ loggedUser: memoizedLoggedUser, setLoggedUser }}
+            >
               {showNavigation && (
                 <>
                   <Navbar />

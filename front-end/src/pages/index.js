@@ -1,102 +1,45 @@
 import Section from "@/components/Section";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { LoggedUserContext } from "./_app";
+import { catchAxios } from "@/axios";
+import { Toast } from "primereact/toast";
 
 export default function Home() {
+  const toastRef = useRef(null);
   const { loggedUser } = useContext(LoggedUserContext);
 
-  const sectionCardInformationsProjects = [
-    {
-      id: 1,
-      title: "Serile Teatrului Studentesc",
-      description: "IT Member",
-    },
-    {
-      id: 2,
-      title: "ITFest",
-      description: "Project Manager",
-    },
-    {
-      id: 3,
-      title: "Academia SpEranței",
-      description: "FR Team Leader",
-    },
-    {
-      id: 4,
-      title: "Promo",
-      description: "HR Assistant",
-    },
-    {
-      id: 4,
-      title: "Promo",
-      description: "HR Assistant",
-    },
-    {
-      id: 4,
-      title: "Promo",
-      description: "HR Assistant",
-    },
-    {
-      id: 4,
-      title: "Promo",
-      description: "HR Assistant",
-    },
-    {
-      id: 4,
-      title: "Promo",
-      description: "HR Assistant",
-    },
-    {
-      id: 4,
-      title: "Promo",
-      description: "HR Assistant",
-    },
-    {
-      id: 4,
-      title: "Promo",
-      description: "HR Assistant",
-    },
-    {
-      id: 4,
-      title: "Promo",
-      description: "HR Assistant",
-    },
-    {
-      id: 4,
-      title: "Promo",
-      description: "HR Assistant",
-    },
-    {
-      id: 4,
-      title: "Promo",
-      description: "HR Assistant",
-    },
-    {
-      id: 4,
-      title: "Promo",
-      description: "HR Assistant",
-    },
-    {
-      id: 4,
-      title: "Promo",
-      description: "HR Assistant",
-    },
-    {
-      id: 4,
-      title: "Promo",
-      description: "HR Assistant",
-    },
-    {
-      id: 4,
-      title: "Promo",
-      description: "HR Assistant",
-    },
-    {
-      id: 4,
-      title: "Promo",
-      description: "HR Assistant",
-    },
-  ];
+  const [userRolesOnProjects, setUsersRolesOnProjects] = useState(null);
+  useEffect(() => {
+    async function getUserRolesOnProjects() {
+      if (loggedUser) {
+        console.log(loggedUser.id);
+
+        const userRolesOnProjectsData = await catchAxios(
+          "GET",
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/usersProjectsRoles/user/${loggedUser.id}`,
+          toastRef
+        );
+
+        console.log(userRolesOnProjects);
+        setUsersRolesOnProjects(userRolesOnProjectsData);
+      }
+    }
+
+    getUserRolesOnProjects();
+  }, [loggedUser]);
+
+  let sectionCardInformationsProjects;
+  useEffect(() => {
+    if (userRolesOnProjects) {
+      sectionCardInformationsProjects = userRolesOnProjects.map((item) => {
+        return {
+          id: item.Project.id,
+          title: item.Project.name,
+          description: item.Role.name,
+        };
+      });
+    }
+  }, [userRolesOnProjects]);
 
   const sectionCardInformationsGoals = [
     {
@@ -164,18 +107,21 @@ export default function Home() {
   return (
     <main>
       <h2 className="pageTitle">
-        Hi {loggedUser.fullName}, glad you're here 👋
+        Hi {loggedUser?.fullName}, glad you're here 👋
       </h2>
       <Section
         title="Your Projects"
         page="projects"
-        sectionCardInformations={sectionCardInformationsProjects}
+        sectionCardInformations={
+          sectionCardInformationsProjects ? sectionCardInformationsProjects : []
+        }
       />
       <Section
         title="Your Goals"
         page="goals"
         sectionCardInformations={sectionCardInformationsGoals}
       />
+      <Toast ref={toastRef} />
     </main>
   );
 }
