@@ -17,6 +17,16 @@ router.post(
 );
 router.get("/", authenticationMiddleware.protect, userController.getAllUsers);
 router.get(
+  "/withDepartmentAndMentorNames",
+  authenticationMiddleware.protect,
+  userController.getAllUsersWithDepartmentAndMentorNames
+);
+router.get(
+  "/currentUser",
+  authenticationMiddleware.protect,
+  userController.getCurrentUser
+);
+router.get(
   "/:id",
   authenticationMiddleware.protect,
   userController.getUserById

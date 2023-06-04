@@ -10,7 +10,7 @@ export default function People() {
       header: "Full Name",
     },
     {
-      field: "departmentName",
+      field: "Department.name",
       header: "Department",
     },
     {
@@ -30,7 +30,7 @@ export default function People() {
       header: "Birthday",
     },
     {
-      field: "mentorName",
+      field: "mentor.fullName",
       header: "Mentor",
     },
     {

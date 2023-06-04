@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import InputTextForm from "./FormsInput/InputTextForm";
 import PasswordForm from "./FormsInput/PasswordForm";
 import onInputTextChange from "../../onInputChanges/onInputTextChange";
@@ -7,8 +7,11 @@ import { Button } from "primereact/button";
 import Link from "next/link";
 import { Toast } from "primereact/toast";
 import { catchAxios } from "@/axios";
+import { LoggedUserContext } from "@/pages/_app";
 
 export default function Login() {
+  const { push } = global.router;
+  const { loggedUser, setLoggedUser } = useContext(LoggedUserContext);
   const toastRef = useRef(null);
   const [userInput, setUserInput] = useState({ email: "", password: "" });
 
@@ -23,9 +26,19 @@ export default function Login() {
     );
 
     if (responseOk) {
+      const loggedUserData = await catchAxios(
+        "GET",
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/user/currentUser`
+      );
+
+      console.log(loggedUserData);
+
+      setLoggedUser(loggedUserData);
+
       window.setTimeout(() => {
-        location.assign("/");
+        push("/");
       }, 1500);
+      console.log(loggedUser);
     }
   };
 

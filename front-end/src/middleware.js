@@ -5,9 +5,13 @@ export async function middleware(req) {
 
   const { pathname } = req.nextUrl;
 
+  const url = req.nextUrl.clone();
+
   if (!jwtToken && pathname !== "/login") {
-    const url = req.nextUrl.clone();
     url.pathname = "/login";
+    return NextResponse.redirect(url);
+  } else if (jwtToken && pathname === "/login") {
+    url.pathname = "/";
     return NextResponse.redirect(url);
   }
 

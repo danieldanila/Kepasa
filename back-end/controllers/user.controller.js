@@ -23,6 +23,17 @@ const controller = {
     res.status(200).json(users);
   }),
 
+  getAllUsersWithDepartmentAndMentorNames: catchAsync(
+    async (req, res, next) => {
+      const users = await userService.getAllUsersWithDepartmentAndMentorNames();
+      res.status(200).json(users);
+    }
+  ),
+
+  getCurrentUser: catchAsync(async (req, res, next) => {
+    return res.status(200).json(res.locals.user);
+  }),
+
   getUserById: catchAsync(async (req, res, next) => {
     const user = await userService.getUserById(req.params.id);
     res.status(200).json(user);

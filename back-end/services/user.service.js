@@ -59,6 +59,21 @@ const service = {
     return users;
   },
 
+  getAllUsersWithDepartmentAndMentorNames: async () => {
+    const users = await User.findAll({
+      include: [
+        {
+          model: User,
+          as: "mentor",
+        },
+        {
+          model: Department,
+        },
+      ],
+    });
+    return users;
+  },
+
   getUserById: async (userId) => {
     const errors = [];
 

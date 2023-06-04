@@ -12,7 +12,6 @@ import { Toast } from "primereact/toast";
 import { Dialog } from "primereact/dialog";
 import { catchAxios } from "@/axios";
 import infoToast from "@/toasts/infoToast";
-import successToast from "@/toasts/successToast";
 
 export default function DataTableWrapper({
   dataContext,
@@ -180,16 +179,9 @@ export default function DataTableWrapper({
         let dataCopy = data.filter((item) => item.id !== dataEntity.id);
 
         setData(dataCopy);
-        setDeleteSelectedDataEntityDialog(false);
         setSelectedDataEntity(emptyDataEntity);
-
-        successToast(
-          toastRef,
-          `${
-            dataEntity.name ? dataEntity.name : dataEntity.fullName
-          } has been deleted.`
-        );
       }
+      setDeleteSelectedDataEntityDialog(false);
     }
     deleteRequest();
   };

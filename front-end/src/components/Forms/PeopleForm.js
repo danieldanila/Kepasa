@@ -6,7 +6,7 @@ import PasswordForm from "./FormsInput/PasswordForm";
 import ToggleButtonForm from "./FormsInput/ToggleButtonForm";
 import styles from "../../styles/PeopleForm.module.css";
 import { DepartmentsContext, UsersContext } from "@/pages/_app";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import onInputTextChange from "../../onInputChanges/onInputTextChange";
 import onInputDropdownChange from "../../onInputChanges/onInputDropdownChange";
 import onInputBooleanChange from "../../onInputChanges/onInputBooleanChange";
@@ -88,7 +88,7 @@ export default function PeopleForm({
           suggestions={departments}
           fieldNameToBeShown="name"
           customOnChange={onInputDropdownChange}
-          initialValue={dataEntity.departmentName}
+          initialValue={dataEntity.Department.name}
           objectState={user}
           setObjectState={setUser}
         />
@@ -98,7 +98,7 @@ export default function PeopleForm({
           suggestions={users}
           fieldNameToBeShown="fullName"
           customOnChange={onInputDropdownChange}
-          initialValue={dataEntity.mentorName}
+          initialValue={dataEntity.mentor ? dataEntity.mentor.fullName : ""}
           objectState={user}
           setObjectState={setUser}
         />
