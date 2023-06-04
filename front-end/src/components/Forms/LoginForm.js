@@ -6,9 +6,7 @@ import styles from "../../styles/LoginForm.module.css";
 import { Button } from "primereact/button";
 import Link from "next/link";
 import { Toast } from "primereact/toast";
-import axios from "axios";
-import successToast from "@/toasts/successToast";
-import errorToast from "@/toasts/errorToast";
+import { catchAxios } from "@/axios";
 
 export default function Login() {
   const toastRef = useRef(null);
@@ -17,24 +15,17 @@ export default function Login() {
   const verifyUserInput = async (e) => {
     e.preventDefault();
 
-    try {
-      const res = await axios({
-        method: "POST",
-        url: `${process.env.NEXT_PUBLIC_SERVER_URL}/api/authentication/login`,
-        withCredentials: true,
-        data: {
-          email: userInput.email,
-          password: userInput.password,
-        },
-      });
+    const responseOk = await catchAxios(
+      "POST",
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/authentication/login`,
+      toastRef,
+      { email: userInput.email, password: userInput.password }
+    );
 
-      successToast(toastRef, res.data.message);
-
+    if (responseOk) {
       window.setTimeout(() => {
-        location.assign("/home");
+        location.assign("/");
       }, 1500);
-    } catch (err) {
-      errorToast(toastRef, err.response.data.message);
     }
   };
 

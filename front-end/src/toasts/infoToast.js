@@ -1,11 +1,11 @@
-const successToast = (toastRef, messages) => {
+const infoToast = (toastRef, messages) => {
   const messagesArray = [].concat(messages);
-  const toastSuccess = [];
+  const toastInfo = [];
 
   for (const message of messagesArray) {
-    toastSuccess.push({
-      severity: "success",
-      sumary: "Success",
+    toastInfo.push({
+      severity: "info",
+      sumary: "Info",
       detail: message,
       life: 3000,
     });
@@ -14,4 +14,4 @@ const successToast = (toastRef, messages) => {
   toastRef.current.show(toastSuccess);
 };
 
-module.exports = successToast;
+module.exports = infoToast;

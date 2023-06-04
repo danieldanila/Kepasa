@@ -5,8 +5,8 @@ import DropdownForm from "./FormsInput/DropdownForm";
 import PasswordForm from "./FormsInput/PasswordForm";
 import ToggleButtonForm from "./FormsInput/ToggleButtonForm";
 import styles from "../../styles/PeopleForm.module.css";
-import { UsersContext } from "@/pages/_app";
-import { useContext, useEffect, useState } from "react";
+import { DepartmentsContext, UsersContext } from "@/pages/_app";
+import { useContext, useEffect } from "react";
 import onInputTextChange from "../../onInputChanges/onInputTextChange";
 import onInputDropdownChange from "../../onInputChanges/onInputDropdownChange";
 import onInputBooleanChange from "../../onInputChanges/onInputBooleanChange";
@@ -18,21 +18,8 @@ export default function PeopleForm({
   isUpdate,
   dataEntity,
 }) {
-  const [departments, setDepartments] = useState(null);
+  const { departments } = useContext(DepartmentsContext);
   const { users, user, setUser } = useContext(UsersContext);
-
-  useEffect(() => {
-    async function getDepartments() {
-      const departmentsResponse = await fetch(
-        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/department/`
-      );
-      const departments = await departmentsResponse.json();
-
-      setDepartments(departments);
-    }
-
-    getDepartments();
-  }, []);
 
   return (
     <Dialog

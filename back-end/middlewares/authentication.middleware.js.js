@@ -9,6 +9,8 @@ const User = require("../models").User;
 const middleware = {
   protect: catchAsync(async (req, res, next) => {
     let token;
+
+    console.log(req.cookies.jwt);
     if (
       req.headers.authorization &&
       req.headers.authorization.startsWith("Bearer")
@@ -19,10 +21,8 @@ const middleware = {
     }
 
     if (!token) {
-      next(
-        new UnauthorizedError(
-          "You are not logged in! Please log in to get access."
-        )
+      throw new UnauthorizedError(
+        "You are not logged in! Please log in to get access."
       );
     }
 
@@ -31,18 +31,14 @@ const middleware = {
     const currentUser = await User.findByPk(decoded.id);
 
     if (!currentUser) {
-      return next(
-        new UnauthorizedError(
-          "The user belonging to this token does no longer exist."
-        )
+      throw new UnauthorizedError(
+        "The user belonging to this token does no longer exist."
       );
     }
 
     if (changedPasswordAfter(currentUser.passwordChangedAt, decoded.iat)) {
-      return next(
-        new UnauthorizedError(
-          "User recently changed password! Please log in again."
-        )
+      throw new UnauthorizedError(
+        "User recently changed password! Please log in again."
       );
     }
 

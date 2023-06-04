@@ -10,7 +10,7 @@ export default function Sidebar() {
           <h2>Kepasa</h2>
         </div>
       </Link>
-      <Link href="/home">
+      <Link href="/">
         <SidebarElement name="Home" icon="pi pi-home" />
       </Link>
       <Link href="/time">

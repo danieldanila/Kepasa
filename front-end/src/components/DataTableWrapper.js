@@ -10,6 +10,9 @@ import { v4 as uuid } from "uuid";
 import SearchBar from "./SearchBar";
 import { Toast } from "primereact/toast";
 import { Dialog } from "primereact/dialog";
+import { catchAxios } from "@/axios";
+import infoToast from "@/toasts/infoToast";
+import successToast from "@/toasts/successToast";
 
 export default function DataTableWrapper({
   dataContext,
@@ -59,12 +62,7 @@ export default function DataTableWrapper({
   const clearFilters = () => {
     initialFilters();
     setSelectedDataEntities(null);
-    toastRef.current.show({
-      severity: "info",
-      summary: "Info",
-      detail: "The filters have been cleared",
-      time: 1000,
-    });
+    infoToast(toastRef, "The filters have been cleared");
   };
 
   const onGlobalFilterChange = (e) => {
@@ -150,38 +148,9 @@ export default function DataTableWrapper({
         dataBody = dataEntity;
       }
 
-      const response = await fetch(url, {
-        method: method,
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(dataBody),
-      });
+      const responseOk = await catchAxios(method, url, toastRef, dataBody);
 
-      const responseMessage = await response.json();
-
-      if (!response.ok) {
-        const toastErrors = [];
-        if (Array.isArray(responseMessage)) {
-          for (const error of responseMessage.message) {
-            toastErrors.push({
-              severity: "error",
-              summary: "Error",
-              detail: error,
-              life: 3000,
-            });
-          }
-        } else {
-          toastErrors.push({
-            severity: "error",
-            summary: "Error",
-            detail: responseMessage.message,
-            life: 3000,
-          });
-        }
-
-        toastRef.current.show(toastErrors);
-      } else {
+      if (responseOk) {
         let dataCopy = [...data];
 
         if (isUpdate) {
@@ -193,13 +162,6 @@ export default function DataTableWrapper({
         setData(dataCopy);
 
         closeFormDialog();
-
-        toastRef.current.show({
-          severity: "success",
-          summary: "Success",
-          detail: responseMessage.message,
-          life: 3000,
-        });
       }
     }
 
@@ -208,37 +170,25 @@ export default function DataTableWrapper({
 
   const deleteSelectedDataEntity = (dataEntity) => {
     async function deleteRequest() {
-      const response = await fetch(
+      const responseOk = await catchAxios(
+        "DELETE",
         `${process.env.NEXT_PUBLIC_SERVER_URL}/api/${dataName}/${dataEntity.id}`,
-        {
-          method: "DELETE",
-        }
+        toastRef
       );
 
-      const responseMessage = await response.json();
-
-      if (!response.ok) {
-        toastRef.current.show({
-          severity: "error",
-          summary: "Error",
-          detail: responseMessage.message,
-          life: 3000,
-        });
-      } else {
+      if (responseOk) {
         let dataCopy = data.filter((item) => item.id !== dataEntity.id);
 
         setData(dataCopy);
         setDeleteSelectedDataEntityDialog(false);
         setSelectedDataEntity(emptyDataEntity);
 
-        toastRef.current.show({
-          severity: "success",
-          summary: "Success",
-          detail: `${
+        successToast(
+          toastRef,
+          `${
             dataEntity.name ? dataEntity.name : dataEntity.fullName
-          } has been deleted.`,
-          life: 3000,
-        });
+          } has been deleted.`
+        );
       }
     }
     deleteRequest();
@@ -254,12 +204,7 @@ export default function DataTableWrapper({
 
   const exportCSV = (selectionOnly) => {
     dataTableRef.current.exportCSV({ selectionOnly });
-    toastRef.current.show({
-      severity: "info",
-      summary: "Info",
-      detail: "The data has been exported to a .csv file",
-      time: 1000,
-    });
+    infoToast(toastRef, "The data has been exported to a .csv file");
   };
 
   const textEditor = (options) => {
