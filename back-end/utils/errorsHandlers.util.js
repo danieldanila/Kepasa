@@ -30,7 +30,7 @@ const forbiddenErrorHandler = (res, err) => {
 const jwtTokenExpiredErrorHandler = (res) => {
   res
     .status(401)
-    .json({ message: "Your token has expired. Please log in again!" });
+    .json({ message: "Your session has expired. Please log in again!" });
 };
 
 const jwtErrorHandler = (res) => {

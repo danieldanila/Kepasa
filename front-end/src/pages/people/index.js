@@ -1,9 +1,13 @@
 import { FilterMatchMode, FilterOperator } from "primereact/api";
 import DataTableWrapper from "@/components/DataTableWrapper";
-import { UsersContext } from "../_app";
+import { LoggedUserContext, UsersContext } from "../_app";
 import PeopleForm from "@/components/Forms/PeopleForm";
+import Loading from "@/components/Loading";
+import { useContext } from "react";
 
 export default function People() {
+  const { loggedUser } = useContext(LoggedUserContext);
+
   const peopleColumns = [
     {
       field: "fullName",
@@ -83,15 +87,22 @@ export default function People() {
   };
 
   return (
-    <main>
-      <h2 className="pageTitle">People</h2>
-      <DataTableWrapper
-        dataContext={UsersContext}
-        columns={peopleColumns}
-        customInitialFilters={peopleInitialFilters}
-        dataName="user"
-        DataForm={PeopleForm}
-      />
-    </main>
+    <>
+      {loggedUser ? (
+        <main>
+          <h2 className="pageTitle">People</h2>
+          <DataTableWrapper
+            loggedUser={loggedUser}
+            dataContext={UsersContext}
+            columns={peopleColumns}
+            customInitialFilters={peopleInitialFilters}
+            dataName="user"
+            DataForm={PeopleForm}
+          />
+        </main>
+      ) : (
+        <Loading />
+      )}
+    </>
   );
 }

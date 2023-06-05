@@ -23,7 +23,7 @@ const limiter = rateLimit({
 
 app.use("/api", limiter);
 
-app.use(bodyParser.json({ limit: "10kb" }));
+app.use(bodyParser.json({ limit: "100kb" }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 

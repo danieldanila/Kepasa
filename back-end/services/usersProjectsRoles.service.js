@@ -227,11 +227,7 @@ const service = {
       })
     );
 
-    if (userRoles.length > 0) {
-      return userRoles;
-    } else {
-      throw new NotFoundError("User not found.");
-    }
+    return userRoles;
   },
 
   getRoleUsersOnProjects: async (roleId) => {

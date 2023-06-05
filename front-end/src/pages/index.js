@@ -3,24 +3,28 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { LoggedUserContext } from "./_app";
 import { catchAxios } from "@/axios";
 import { Toast } from "primereact/toast";
+import Loading from "@/components/Loading";
 
 export default function Home() {
   const toastRef = useRef(null);
   const { loggedUser } = useContext(LoggedUserContext);
 
   const [userRolesOnProjects, setUsersRolesOnProjects] = useState(null);
+  const [userObjectives, setUserObjectives] = useState(null);
+  const [sectionCardInformationsProjects, setSectionCardInformationsProjects] =
+    useState(null);
+  const [sectionCardInformationsGoals, setSectionCardInformationsGoals] =
+    useState(null);
+
   useEffect(() => {
     async function getUserRolesOnProjects() {
       if (loggedUser) {
-        console.log(loggedUser.id);
-
         const userRolesOnProjectsData = await catchAxios(
           "GET",
           `${process.env.NEXT_PUBLIC_SERVER_URL}/api/usersProjectsRoles/user/${loggedUser.id}`,
           toastRef
         );
 
-        console.log(userRolesOnProjects);
         setUsersRolesOnProjects(userRolesOnProjectsData);
       }
     }
@@ -28,100 +32,78 @@ export default function Home() {
     getUserRolesOnProjects();
   }, [loggedUser]);
 
-  let sectionCardInformationsProjects;
+  useEffect(() => {
+    async function getUserObjectives() {
+      if (loggedUser) {
+        const userObjectivesData = await catchAxios(
+          "GET",
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/user/${loggedUser.id}/objectives`,
+          toastRef
+        );
+
+        setUserObjectives(userObjectivesData);
+      }
+    }
+
+    getUserObjectives();
+  }, [loggedUser]);
+
   useEffect(() => {
     if (userRolesOnProjects) {
-      sectionCardInformationsProjects = userRolesOnProjects.map((item) => {
+      const filteredUserRolesOnProjects = userRolesOnProjects.map((item) => {
         return {
           id: item.Project.id,
           title: item.Project.name,
           description: item.Role.name,
         };
       });
+
+      setSectionCardInformationsProjects(filteredUserRolesOnProjects);
     }
   }, [userRolesOnProjects]);
 
-  const sectionCardInformationsGoals = [
-    {
-      id: 1,
-      title: "Master HTML and CSS",
-      description: "31.08.2023",
-    },
-    {
-      id: 2,
-      title: "Master Javascript",
-      description: "15.10.2023",
-    },
-    {
-      id: 3,
-      title: "Master React.js",
-      description: "20.12.2023",
-    },
-    {
-      id: 4,
-      title: "Master Next.js",
-      description: "10.02.2024",
-    },
-    {
-      id: 4,
-      title: "Master Next.js",
-      description: "10.02.2024",
-    },
-    {
-      id: 4,
-      title: "Master Next.js",
-      description: "10.02.2024",
-    },
-    {
-      id: 4,
-      title: "Master Next.js",
-      description: "10.02.2024",
-    },
-    {
-      id: 4,
-      title: "Master Next.js",
-      description: "10.02.2024",
-    },
-    {
-      id: 4,
-      title: "Master Next.js",
-      description: "10.02.2024",
-    },
-    {
-      id: 4,
-      title: "Master Next.js",
-      description: "10.02.2024",
-    },
-    {
-      id: 4,
-      title: "Master Next.js",
-      description: "10.02.2024",
-    },
-    {
-      id: 4,
-      title: "Master Next.js",
-      description: "10.02.2024",
-    },
-  ];
+  useEffect(() => {
+    if (userObjectives) {
+      const filteredUserObjectives = userObjectives.map((item) => {
+        if (!item.isFinished) {
+          return {
+            id: item.id,
+            title: item.name,
+            description: item.Period.endDate,
+          };
+        } else {
+          return null;
+        }
+      });
+
+      setSectionCardInformationsGoals(filteredUserObjectives.filter(Boolean));
+    }
+  }, [userObjectives]);
 
   return (
-    <main>
-      <h2 className="pageTitle">
-        Hi {loggedUser?.fullName}, glad you're here 👋
-      </h2>
-      <Section
-        title="Your Projects"
-        page="projects"
-        sectionCardInformations={
-          sectionCardInformationsProjects ? sectionCardInformationsProjects : []
-        }
-      />
-      <Section
-        title="Your Goals"
-        page="goals"
-        sectionCardInformations={sectionCardInformationsGoals}
-      />
+    <>
+      {loggedUser &&
+      sectionCardInformationsProjects &&
+      sectionCardInformationsGoals ? (
+        <main>
+          <h2 className="pageTitle">
+            Hi {loggedUser.fullName}, glad you're here 👋
+          </h2>
+          <Section
+            title="Your Projects"
+            page="projects"
+            sectionCardInformations={sectionCardInformationsProjects}
+          />
+          <Section
+            title="Your Current Goals"
+            page="goals"
+            sectionCardInformations={sectionCardInformationsGoals}
+          />
+        </main>
+      ) : (
+        <Loading />
+      )}
       <Toast ref={toastRef} />
-    </main>
+    </>
   );
 }

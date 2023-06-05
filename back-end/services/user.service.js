@@ -17,6 +17,7 @@ const getAllDepartments = require("./department.service").getAllDepartments;
 
 const { Op } = require("sequelize");
 const AppError = require("../utils/appError");
+const { Period } = require("../models");
 
 const filterObject = (object, ...allowedFields) => {
   const newObject = {};
@@ -219,6 +220,11 @@ const service = {
       include: [
         {
           model: Objective,
+          include: [
+            {
+              model: Period,
+            },
+          ],
         },
       ],
     });
