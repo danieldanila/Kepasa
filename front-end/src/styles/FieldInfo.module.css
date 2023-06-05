@@ -1,0 +1,24 @@
+.field {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+  margin: 0.5rem;
+  background-color: var(--gray);
+  border-radius: 0.5rem;
+  box-shadow: var(--boxShadow);
+}
+
+.fieldName {
+  font-weight: bold;
+}
+
+.fieldValue {
+  word-break: break-all;
+}
+
+@media only screen and (max-width: 480px) {
+  .field {
+    flex-direction: column;
+  }
+}

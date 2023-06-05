@@ -80,7 +80,21 @@ const service = {
 
     idParamaterValidation(userId, "User id", errors);
 
-    const user = await User.scope("withPassword").findByPk(userId);
+    const user = await User.scope("withPassword").findByPk(userId, {
+      include: [
+        {
+          model: User,
+          as: "mentor",
+        },
+        {
+          model: User,
+          as: "mentees",
+        },
+        {
+          model: Department,
+        },
+      ],
+    });
 
     if (user) {
       return user;
