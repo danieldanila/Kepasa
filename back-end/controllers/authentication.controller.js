@@ -40,6 +40,18 @@ const controller = {
     res.status(200).json({ status: "success" });
   }),
 
+  tokenExpirationTimestamp: async (req, res, next) => {
+    try {
+      const expired = await authenticationService.tokenExpirationTimestamp(
+        req.cookies.jwt
+      );
+
+      res.status(200).json({ message: expired.exp * 1000 });
+    } catch (err) {
+      res.status(401).json({ message: err.expiredAt * 1 });
+    }
+  },
+
   forgotPassword: catchAsync(async (req, res, next) => {
     await authenticationService.forgotPassword(req.body.email);
     res.status(200).json({

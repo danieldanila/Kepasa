@@ -6,6 +6,10 @@ const authenticationMiddleware =
 
 router.post("/login", authenticationController.login);
 router.get("/logout", authenticationController.logout);
+router.get(
+  "/tokenExpirationTimestamp",
+  authenticationController.tokenExpirationTimestamp
+);
 router.post("/forgotPassword", authenticationController.forgotPassword);
 router.patch("/resetPassword/:token", authenticationController.resetPassword);
 router.patch(

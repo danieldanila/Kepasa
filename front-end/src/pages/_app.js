@@ -107,7 +107,9 @@ export default function App({ Component, pageProps }) {
       setUsers(usersData);
     }
 
-    getUserData();
+    if (loggedUser) {
+      getUserData();
+    }
   }, [haveUsersChanged]);
 
   const haveProjectsChanged = useCompareArrayOfObjects(projects);
@@ -123,7 +125,9 @@ export default function App({ Component, pageProps }) {
       setProjects(projectsData);
     }
 
-    getProjectData();
+    if (loggedUser) {
+      getProjectData();
+    }
   }, [haveProjectsChanged]);
 
   const haveDepartmentsChanged = useCompareArrayOfObjects(departments);
@@ -139,28 +143,30 @@ export default function App({ Component, pageProps }) {
       setDepartments(departmentData);
     }
 
-    getDepartmentData();
+    if (loggedUser) {
+      getDepartmentData();
+    }
   }, [haveDepartmentsChanged]);
 
   return (
     <>
-      <UsersContext.Provider
-        value={{ users, setUsers, emptyUser, user, setUser }}
+      <LoggedUserContext.Provider
+        value={{ loggedUser: memoizedLoggedUser, setLoggedUser }}
       >
-        <ProjectsContext.Provider
-          value={{ projects, setProjects, emptyProject, project, setProject }}
+        <UsersContext.Provider
+          value={{ users, setUsers, emptyUser, user, setUser }}
         >
-          <DepartmentsContext.Provider
-            value={{
-              departments,
-              setDepartments,
-              emptyDepartment,
-              department,
-              setDepartment,
-            }}
+          <ProjectsContext.Provider
+            value={{ projects, setProjects, emptyProject, project, setProject }}
           >
-            <LoggedUserContext.Provider
-              value={{ loggedUser: memoizedLoggedUser, setLoggedUser }}
+            <DepartmentsContext.Provider
+              value={{
+                departments,
+                setDepartments,
+                emptyDepartment,
+                department,
+                setDepartment,
+              }}
             >
               {showNavigation && (
                 <>
@@ -169,10 +175,10 @@ export default function App({ Component, pageProps }) {
                 </>
               )}
               <Component {...pageProps} />
-            </LoggedUserContext.Provider>
-          </DepartmentsContext.Provider>
-        </ProjectsContext.Provider>
-      </UsersContext.Provider>
+            </DepartmentsContext.Provider>
+          </ProjectsContext.Provider>
+        </UsersContext.Provider>
+      </LoggedUserContext.Provider>
       <Toast ref={toastRef} />
     </>
   );

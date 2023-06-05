@@ -13,6 +13,8 @@ const { validateCompletedField } = require("../validations/general.validation");
 const {
   throwValidationErrorWithMessage,
 } = require("../utils/errorsWrappers.util");
+const { promisify } = require("util");
+const jwt = require("jsonwebtoken");
 
 const User = require("../models").User;
 
@@ -52,6 +54,15 @@ const service = {
     const token = signToken(user.id);
 
     return token;
+  },
+
+  tokenExpirationTimestamp: async (jwtToken) => {
+    const decoded = await promisify(jwt.verify)(
+      jwtToken,
+      process.env.JWT_SECRET
+    );
+
+    return decoded;
   },
 
   forgotPassword: async (userEmail) => {
