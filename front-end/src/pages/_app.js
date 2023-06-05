@@ -11,6 +11,7 @@ import { catchAxios } from "@/axios";
 import { Toast } from "primereact/toast";
 
 export const LoggedUserContext = createContext(null);
+export const NotificationContext = createContext(null);
 export const UsersContext = createContext(null);
 export const ProjectsContext = createContext(null);
 export const DepartmentsContext = createContext(null);
@@ -20,9 +21,8 @@ export default function App({ Component, pageProps }) {
   global.pageRoute = router.pathname;
   global.currentPage = pageRoute.slice(1, pageRoute.length).toLocaleLowerCase();
 
+  const [notifications, setNotifications] = useState([]);
   const toastRef = useRef(null);
-
-  const showNavigation = global.pageRoute === "/login" ? false : true;
 
   const [loggedUser, setLoggedUser] = useState(null);
 
@@ -76,7 +76,7 @@ export default function App({ Component, pageProps }) {
   };
 
   const [user, setUser] = useState(emptyUser);
-  const [users, setUsers] = useState(null);
+  const [users, setUsers] = useState([]);
 
   const emptyProject = {
     id: null,
@@ -84,7 +84,7 @@ export default function App({ Component, pageProps }) {
   };
 
   const [project, setProject] = useState(emptyProject);
-  const [projects, setProjects] = useState(null);
+  const [projects, setProjects] = useState([]);
 
   const emptyDepartment = {
     id: null,
@@ -92,7 +92,7 @@ export default function App({ Component, pageProps }) {
   };
 
   const [department, setDepartment] = useState(emptyDepartment);
-  const [departments, setDepartments] = useState(null);
+  const [departments, setDepartments] = useState([]);
 
   const haveUsersChanged = useCompareArrayOfObjects(users);
 
@@ -148,36 +148,48 @@ export default function App({ Component, pageProps }) {
     }
   }, [haveDepartmentsChanged]);
 
+  const showNavigation = global.pageRoute === "/login" ? false : true;
+
   return (
     <>
       <LoggedUserContext.Provider
         value={{ loggedUser: memoizedLoggedUser, setLoggedUser }}
       >
-        <UsersContext.Provider
-          value={{ users, setUsers, emptyUser, user, setUser }}
+        <NotificationContext.Provider
+          value={{ notifications, setNotifications }}
         >
-          <ProjectsContext.Provider
-            value={{ projects, setProjects, emptyProject, project, setProject }}
+          <UsersContext.Provider
+            value={{ users, setUsers, emptyUser, user, setUser }}
           >
-            <DepartmentsContext.Provider
+            <ProjectsContext.Provider
               value={{
-                departments,
-                setDepartments,
-                emptyDepartment,
-                department,
-                setDepartment,
+                projects,
+                setProjects,
+                emptyProject,
+                project,
+                setProject,
               }}
             >
-              {showNavigation && (
-                <>
-                  <Navbar />
-                  <Sidebar />
-                </>
-              )}
-              <Component {...pageProps} />
-            </DepartmentsContext.Provider>
-          </ProjectsContext.Provider>
-        </UsersContext.Provider>
+              <DepartmentsContext.Provider
+                value={{
+                  departments,
+                  setDepartments,
+                  emptyDepartment,
+                  department,
+                  setDepartment,
+                }}
+              >
+                {showNavigation && (
+                  <>
+                    <Navbar />
+                    <Sidebar />
+                  </>
+                )}
+                <Component {...pageProps} />
+              </DepartmentsContext.Provider>
+            </ProjectsContext.Provider>
+          </UsersContext.Provider>
+        </NotificationContext.Provider>
       </LoggedUserContext.Provider>
       <Toast ref={toastRef} />
     </>

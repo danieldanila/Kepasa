@@ -1,18 +1,11 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import { VirtualScroller } from "primereact/virtualscroller";
 import styles from "../styles/NotificationBar.module.css";
+import { NotificationContext } from "@/pages/_app";
 
 export default function NotificationBar() {
-  const [notifications, setNotifications] = useState([
-    "Welcome aboard, Dani!",
-    "Alex joined the company",
-    "Andrei joined the company",
-    "Cristi joined the company",
-    "Ana joined the company",
-    "Andreea joined the company",
-    "Mihai joined the company",
-    "Ionut joined the company",
-  ]);
+  //TODO: implement notifications mechanism
+  const { notifications } = useContext(NotificationContext);
   const [isFocused, setIsFocused] = useState(false);
   const notificationsContainerRef = useRef(null);
   const notificationsBellRef = useRef(null);
@@ -59,7 +52,11 @@ export default function NotificationBar() {
             <h3>Notifications</h3>
             <VirtualScroller
               className={styles.virtualScroller}
-              items={notifications}
+              items={
+                notifications.length > 0
+                  ? notifications
+                  : ["You've read all your notifications."]
+              }
               itemTemplate={notificationTemplate}
               itemSize={50}
             />

@@ -14,6 +14,7 @@ export default function SearchBar({
   function handleFocus() {
     if (losesFocus) {
       setIsFocused(!isFocused);
+      setSearchQuery("");
     }
   }
 
@@ -24,9 +25,11 @@ export default function SearchBar({
     setSearchQuery(e.target.value);
   };
 
-  const filteredData = items.filter((item) =>
-    item.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredData = items
+    .filter((item) =>
+      item.name.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+    .slice(0, 5);
 
   return (
     <span className="p-input-icon-left" onBlur={handleFocus}>
