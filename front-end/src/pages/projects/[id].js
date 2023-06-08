@@ -4,7 +4,6 @@ import { useRouter } from "next/router";
 import { Toast } from "primereact/toast";
 import { useEffect, useRef, useState } from "react";
 import styles from "../../styles/Person.module.css";
-import FieldInfoSection from "@/components/FieldInfoSection";
 import FieldInfo from "@/components/FieldInfo";
 
 export default function Project() {
@@ -25,7 +24,6 @@ export default function Project() {
 
       setProject(projectData);
 
-      
       const projectUsersRolesData = await catchAxios(
         "GET",
         `${process.env.NEXT_PUBLIC_SERVER_URL}/api/usersProjectsRoles/project/${projectId}`,

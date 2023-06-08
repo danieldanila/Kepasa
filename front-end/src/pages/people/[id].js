@@ -104,8 +104,11 @@ export default function Person() {
             <FieldInfoSection
               firstFieldName="Department"
               firstFieldValue={user.Department.name}
+              firstId={user.Department.id}
               secondFieldName="Role"
               secondFieldValue={userRoleOnDepartment.name}
+              firstPageName="departments"
+              secondPageName="roles"
             />
             <FieldInfoSection
               firstFieldName="First Manager"
@@ -116,7 +119,8 @@ export default function Person() {
                 user.mentor ? user.mentor.fullName : "No mentor"
               }
               secondId={user.mentor && user.mentor.id}
-              pageName="people"
+              firstPageName="people"
+              secondPageName="people"
             />
             {user.mentees.length > 0 && (
               <>

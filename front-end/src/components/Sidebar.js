@@ -25,6 +25,9 @@ export default function Sidebar() {
       <Link href="/projects">
         <SidebarElement name="Projects" icon="pi pi-book" />
       </Link>
+      <Link href="/departments">
+        <SidebarElement name="Departments" icon="pi pi-building" />
+      </Link>
     </navbar>
   );
 }

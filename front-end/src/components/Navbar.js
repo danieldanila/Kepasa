@@ -11,14 +11,7 @@ export default function Navbar() {
   const [items, setItems] = useState([]);
 
   useEffect(() => {
-    const filteredUsers = users.map((user) => {
-      return {
-        id: user.id,
-        name: user.fullName,
-      };
-    });
-
-    const uniqueUsers = filteredUsers.filter(
+    const uniqueUsers = users.filter(
       (user) => !items.some((item) => item.id === user.id)
     );
 

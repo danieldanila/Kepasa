@@ -47,5 +47,10 @@ router.get(
   authenticationMiddleware.protect,
   departmentController.getDeparmentRoles
 );
+router.get(
+  "/:id/usersRoles",
+  authenticationMiddleware.protect,
+  departmentController.getDepartmentUsersRoles
+);
 
 module.exports = router;

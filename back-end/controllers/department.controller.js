@@ -31,7 +31,10 @@ const controller = {
       req.params.id,
       req.body
     );
-    res.status(202).json(updatedDepartment);
+    res.status(202).json({
+      data: updatedDepartment,
+      message: `Department ${updatedDepartment.name} has been updated.`,
+    });
   }),
 
   deleteDepartment: catchAsync(async (req, res, next) => {
@@ -51,6 +54,12 @@ const controller = {
       req.params.id
     );
     res.status(200).json(departmentRoles);
+  }),
+
+  getDepartmentUsersRoles: catchAsync(async (req, res, next) => {
+    const departmentUsersRoles =
+      await departmentService.getDepartmentUsersRoles(req.params.id);
+    res.status(200).json(departmentUsersRoles);
   }),
 };
 

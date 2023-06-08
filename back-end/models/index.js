@@ -143,6 +143,25 @@ Role.hasMany(UsersProjectsRoles, {
   },
 });
 
+UsersProjectsRoles.belongsTo(User, {
+  foreignKey: {
+    name: "idUser",
+    type: DataTypes.UUID,
+    validate: {
+      isUUID: 4,
+    },
+  },
+});
+User.hasMany(UsersProjectsRoles, {
+  foreignKey: {
+    name: "idUser",
+    type: DataTypes.UUID,
+    validate: {
+      isUUID: 4,
+    },
+  },
+});
+
 Department.hasMany(Role, {
   foreignKey: {
     name: "idDepartment",

@@ -120,6 +120,7 @@ export default function PeopleForm({
                 id="password"
                 label="Initial password"
                 customOnChange={onInputTextChange}
+                initialValue=""
                 objectState={user}
                 setObjectState={setUser}
                 feedbackValue={true}

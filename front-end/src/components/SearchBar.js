@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { InputText } from "primereact/inputtext";
 import styles from "../styles/SearchBar.module.css";
 
@@ -10,13 +10,24 @@ export default function SearchBar({
 }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [isFocused, setIsFocused] = useState(!losesFocus);
+  const [filteredItems, setFilteredItems] = useState(null);
 
-  function handleFocus() {
+  useEffect(() => {
+    const filteredData = items
+      .filter((item) =>
+        item.fullName?.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+      .slice(0, 5);
+
+    setFilteredItems(filteredData);
+  }, [searchQuery]);
+
+  const handleFocus = () => {
     if (losesFocus) {
       setIsFocused(!isFocused);
       setSearchQuery("");
     }
-  }
+  };
 
   const handleSearchQuery = (e) => {
     if (customOnChange !== null && customOnChange !== undefined) {
@@ -24,12 +35,6 @@ export default function SearchBar({
     }
     setSearchQuery(e.target.value);
   };
-
-  const filteredData = items
-    .filter((item) =>
-      item.name.toLowerCase().includes(searchQuery.toLowerCase())
-    )
-    .slice(0, 5);
 
   const handleClick = (itemId) => {
     global.router.push("/people/" + itemId);
@@ -59,10 +64,11 @@ export default function SearchBar({
           <div className={styles.filteredDataContainer}>
             <ul className={styles.filteredData}>
               {searchQuery &&
-                filteredData.map((item) => {
+                filteredItems &&
+                filteredItems.map((item) => {
                   return (
                     <li key={item.id} onMouseDown={(e) => handleClick(item.id)}>
-                      {item.name}
+                      {item.fullName}
                     </li>
                   );
                 })}
