@@ -17,6 +17,7 @@ export default function PeopleForm({
   dialogFooter,
   isUpdate,
   dataEntity,
+  loggedUser,
 }) {
   const { departments } = useContext(DepartmentsContext);
   const { users, user, setUser } = useContext(UsersContext);
@@ -82,56 +83,60 @@ export default function PeopleForm({
           objectState={user}
           setObjectState={setUser}
         />
-        <DropdownForm
-          id="idDepartment"
-          label="Department"
-          suggestions={departments}
-          fieldNameToBeShown="name"
-          customOnChange={onInputDropdownChange}
-          initialValue={dataEntity.Department.name}
-          objectState={user}
-          setObjectState={setUser}
-        />
-        <DropdownForm
-          id="idMentor"
-          label="Mentor"
-          suggestions={users}
-          fieldNameToBeShown="fullName"
-          customOnChange={onInputDropdownChange}
-          initialValue={dataEntity.mentor ? dataEntity.mentor.fullName : ""}
-          objectState={user}
-          setObjectState={setUser}
-        />
-        {isUpdate ? (
-          <ToggleButtonForm
-            id="isActive"
-            onLabel="Is Active"
-            offLabel="Is NOT Active"
-            customOnChange={onInputBooleanChange}
-            initialValue={dataEntity.isActive}
-            objectState={user}
-            setObjectState={setUser}
-          />
-        ) : (
-          <PasswordForm
-            id="password"
-            label="Initial password"
-            customOnChange={onInputTextChange}
-            objectState={user}
-            setObjectState={setUser}
-            feedbackValue={true}
-          />
-        )}
+        {loggedUser.isAdministrator && (
+          <>
+            <DropdownForm
+              id="idDepartment"
+              label="Department"
+              suggestions={departments}
+              fieldNameToBeShown="name"
+              customOnChange={onInputDropdownChange}
+              initialValue={dataEntity.Department.name}
+              objectState={user}
+              setObjectState={setUser}
+            />
+            <DropdownForm
+              id="idMentor"
+              label="Mentor"
+              suggestions={users}
+              fieldNameToBeShown="fullName"
+              customOnChange={onInputDropdownChange}
+              initialValue={dataEntity.mentor ? dataEntity.mentor.fullName : ""}
+              objectState={user}
+              setObjectState={setUser}
+            />
+            {isUpdate ? (
+              <ToggleButtonForm
+                id="isActive"
+                onLabel="Is Active"
+                offLabel="Is NOT Active"
+                customOnChange={onInputBooleanChange}
+                initialValue={dataEntity.isActive}
+                objectState={user}
+                setObjectState={setUser}
+              />
+            ) : (
+              <PasswordForm
+                id="password"
+                label="Initial password"
+                customOnChange={onInputTextChange}
+                objectState={user}
+                setObjectState={setUser}
+                feedbackValue={true}
+              />
+            )}
 
-        <ToggleButtonForm
-          id="isAdministrator"
-          onLabel="Is Administrator"
-          offLabel="Is NOT Administrator"
-          customOnChange={onInputBooleanChange}
-          initialValue={dataEntity.isAdministrator}
-          objectState={user}
-          setObjectState={setUser}
-        />
+            <ToggleButtonForm
+              id="isAdministrator"
+              onLabel="Is Administrator"
+              offLabel="Is NOT Administrator"
+              customOnChange={onInputBooleanChange}
+              initialValue={dataEntity.isAdministrator}
+              objectState={user}
+              setObjectState={setUser}
+            />
+          </>
+        )}
       </div>
     </Dialog>
   );

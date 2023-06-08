@@ -20,6 +20,7 @@ export default function DataTableWrapper({
   customInitialFilters,
   dataName,
   DataForm,
+  pageName,
 }) {
   const contextValues = useContext(dataContext);
   const {
@@ -122,8 +123,13 @@ export default function DataTableWrapper({
       let index;
 
       if (isUpdate) {
-        url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/${dataName}/${dataEntity.id}`;
-        method = "PUT";
+        if (dataEntity.id === loggedUser.id) {
+          url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/${dataName}/updateMe`;
+          method = "PATCH";
+        } else {
+          url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/${dataName}/${dataEntity.id}`;
+          method = "PUT";
+        }
 
         index = data.findIndex((item) => item.id === selectedDataEntity.id);
 
@@ -200,6 +206,10 @@ export default function DataTableWrapper({
     infoToast(toastRef, "The data has been exported to a .csv file");
   };
 
+  const rowDoubleClickHandler = (rowData) => {
+    global.router.push(`/${pageName}/` + rowData.id);
+  };
+
   const textEditor = (options) => {
     return (
       <InputText
@@ -273,15 +283,6 @@ export default function DataTableWrapper({
           onClick={confirmDeleteSelectedDataEntities}
           disabled={!selectedDataEntities || !selectedDataEntities.length}
         />
-        {openFormDialog && (
-          <DataForm
-            visible={showFormDialog}
-            onHide={closeFormDialog}
-            dialogFooter={dialogFooter}
-            isUpdate={isUpdate}
-            dataEntity={dataEntity}
-          />
-        )}
       </div>
     );
   };
@@ -323,19 +324,23 @@ export default function DataTableWrapper({
   const actionBodyTemplate = (rowData) => {
     return (
       <div className={styles.actionBodyTemplaContainer}>
-        <Button
-          icon="pi pi-pencil"
-          rounded
-          outlined
-          onClick={() => openEditFormDialog(rowData)}
-        />
-        <Button
-          icon="pi pi-trash"
-          rounded
-          outlined
-          severity="danger"
-          onClick={() => confirmDeleteSelectedDataEntity(rowData)}
-        />
+        {(loggedUser.isAdministrator || loggedUser.id === rowData.id) && (
+          <Button
+            icon="pi pi-pencil"
+            rounded
+            outlined
+            onClick={() => openEditFormDialog(rowData)}
+          />
+        )}
+        {loggedUser.isAdministrator && (
+          <Button
+            icon="pi pi-trash"
+            rounded
+            outlined
+            severity="danger"
+            onClick={() => confirmDeleteSelectedDataEntity(rowData)}
+          />
+        )}
       </div>
     );
   };
@@ -373,6 +378,7 @@ export default function DataTableWrapper({
         onRowEditComplete={onRowEditComplete}
         scrollable
         scrollHeight="50rem"
+        onRowDoubleClick={(e) => rowDoubleClickHandler(e.data)}
       >
         {loggedUser.isAdministrator ? (
           <Column selectionMode="multiple" />
@@ -388,9 +394,7 @@ export default function DataTableWrapper({
             editor={(options) => textEditor(options)}
           />
         ))}
-        {loggedUser.isAdministrator ? (
-          <Column body={actionBodyTemplate} exportable={false}></Column>
-        ) : null}
+        <Column body={actionBodyTemplate} exportable={false}></Column>
       </DataTable>
 
       <Dialog
@@ -426,6 +430,16 @@ export default function DataTableWrapper({
           </span>
         )}
       </Dialog>
+      {openFormDialog && (
+        <DataForm
+          visible={showFormDialog}
+          onHide={closeFormDialog}
+          dialogFooter={dialogFooter}
+          isUpdate={isUpdate}
+          dataEntity={dataEntity}
+          loggedUser={loggedUser}
+        />
+      )}
       <Toast ref={toastRef} />
     </>
   );

@@ -8,3 +8,18 @@
   flex-direction: column;
   align-items: center;
 }
+
+.arraySection {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.arraySection > * {
+  flex-basis: calc(50% - 1rem);
+}
+
+.fieldCategory {
+  width: 100%;
+  margin: 0.5rem;
+}

@@ -31,6 +31,10 @@ export default function SearchBar({
     )
     .slice(0, 5);
 
+  const handleClick = (itemId) => {
+    global.router.push("/people/" + itemId);
+  };
+
   return (
     <span className="p-input-icon-left" onBlur={handleFocus}>
       <i
@@ -56,7 +60,11 @@ export default function SearchBar({
             <ul className={styles.filteredData}>
               {searchQuery &&
                 filteredData.map((item) => {
-                  return <li key={item.id}>{item.name}</li>;
+                  return (
+                    <li key={item.id} onMouseDown={(e) => handleClick(item.id)}>
+                      {item.name}
+                    </li>
+                  );
                 })}
             </ul>
           </div>

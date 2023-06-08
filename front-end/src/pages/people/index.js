@@ -98,6 +98,7 @@ export default function People() {
             customInitialFilters={peopleInitialFilters}
             dataName="user"
             DataForm={PeopleForm}
+            pageName="people"
           />
         </main>
       ) : (

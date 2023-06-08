@@ -3,11 +3,10 @@ import SearchBar from "./SearchBar";
 import styles from "../styles/Navbar.module.css";
 import UserMenu from "./UserMenu";
 import { useContext, useEffect, useState } from "react";
-import { ProjectsContext, UsersContext } from "@/pages/_app";
+import { UsersContext } from "@/pages/_app";
 
 export default function Navbar() {
   const { users } = useContext(UsersContext);
-  const { projects } = useContext(ProjectsContext);
 
   const [items, setItems] = useState([]);
 
@@ -24,27 +23,14 @@ export default function Navbar() {
     );
 
     setItems((prevItems) => prevItems.concat(uniqueUsers));
-
-    const filteredProjects = projects.map((project) => {
-      return {
-        id: project.id,
-        name: project.name,
-      };
-    });
-
-    const uniqueProjects = filteredProjects.filter(
-      (project) => !items.some((item) => item.id === project.id)
-    );
-
-    setItems((prevItems) => prevItems.concat(uniqueProjects));
-  }, [users, projects]);
+  }, [users]);
 
   return (
     <navbar className={styles.container}>
       <SearchBar
         items={items}
         losesFocus={true}
-        placeHolder="Search people, projects..."
+        placeHolder="Search people..."
       />
       <NotificationBar />
       <UserMenu />

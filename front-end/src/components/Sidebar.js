@@ -22,7 +22,7 @@ export default function Sidebar() {
       <Link href="/people">
         <SidebarElement name="People" icon="pi pi-users" />
       </Link>
-      <Link href="projects">
+      <Link href="/projects">
         <SidebarElement name="Projects" icon="pi pi-book" />
       </Link>
     </navbar>

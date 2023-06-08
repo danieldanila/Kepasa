@@ -1,9 +1,9 @@
 import styles from "../styles/FieldInfo.module.css";
 
-export default function FieldInfo({ fieldName, fieldValue, id }) {
+export default function FieldInfo({ fieldName, fieldValue, id, pageName }) {
   const handleClick = (id) => {
     if (id) {
-      global.router.push("/people/" + id);
+      global.router.push(`/${pageName}/` + id);
     }
   };
 

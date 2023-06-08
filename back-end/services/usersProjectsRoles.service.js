@@ -287,11 +287,7 @@ const service = {
       })
     );
 
-    if (projectRolesWithUsers.length > 0) {
-      return projectRolesWithUsers;
-    } else {
-      throw new NotFoundError("Project not found.");
-    }
+    return projectRolesWithUsers;
   },
 };
 

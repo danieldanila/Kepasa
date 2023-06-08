@@ -8,6 +8,7 @@ export default function FieldInfoSection({
   secondFieldValue,
   firstId,
   secondId,
+  pageName,
 }) {
   return (
     <section className={styles.fieldsSection}>
@@ -15,11 +16,13 @@ export default function FieldInfoSection({
         id={firstId}
         fieldName={firstFieldName}
         fieldValue={firstFieldValue}
+        pageName={pageName}
       />
       <FieldInfo
         id={secondId}
         fieldName={secondFieldName}
         fieldValue={secondFieldValue}
+        pageName={pageName}
       />
     </section>
   );

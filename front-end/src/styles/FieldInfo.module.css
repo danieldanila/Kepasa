@@ -17,6 +17,14 @@
   word-break: break-all;
 }
 
+.fieldValue[id] {
+  cursor: pointer;
+}
+
+.fieldValue[id]:hover {
+  color: var(--lightBlue);
+}
+
 @media only screen and (max-width: 480px) {
   .field {
     flex-direction: column;

@@ -1,8 +1,11 @@
-import React, { useRef } from "react";
+import React, { useContext, useRef } from "react";
 import { Menu } from "primereact/menu";
 import { catchAxios } from "@/axios";
+import { LoggedUserContext } from "@/pages/_app";
 
 export default function UserMenu() {
+  const { loggedUser } = useContext(LoggedUserContext);
+
   const logout = async () => {
     const response = await catchAxios(
       "GET",
@@ -19,6 +22,9 @@ export default function UserMenu() {
       items: [
         {
           label: "Go to my profile",
+          command: () => {
+            global.router.push("/people/" + loggedUser.id);
+          },
         },
         {
           label: "Log out",

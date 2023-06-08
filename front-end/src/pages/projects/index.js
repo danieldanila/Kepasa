@@ -34,6 +34,7 @@ export default function Projects() {
             customInitialFilters={projectInitialFilters}
             dataName="project"
             DataForm={ProjectForm}
+            pageName="projects"
           />
         </main>
       ) : (

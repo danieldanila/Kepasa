@@ -5,6 +5,7 @@ import { Toast } from "primereact/toast";
 import { useEffect, useRef, useState } from "react";
 import styles from "../../styles/Person.module.css";
 import FieldInfoSection from "@/components/FieldInfoSection";
+import FieldInfo from "@/components/FieldInfo";
 
 export default function Person() {
   const toastRef = useRef(null);
@@ -14,6 +15,7 @@ export default function Person() {
   const [user, setUser] = useState(null);
   const [userRoleOnDepartment, setUserRoleOnDepartment] = useState(null);
   const [userDepartmentSuperior, setUerDepartmentSuperior] = useState(null);
+  const [usersRolesProjects, setUsersRolesProjects] = useState(null);
 
   useEffect(() => {
     async function getUserData() {
@@ -51,6 +53,14 @@ export default function Person() {
           setUserRoleOnDepartment({ name: "No role" });
         }
       }
+
+      const usersRolesProjectsData = await catchAxios(
+        "GET",
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/usersProjectsRoles/user/${userId}`,
+        toastRef
+      );
+
+      setUsersRolesProjects(usersRolesProjectsData);
     }
 
     if (userId) {
@@ -60,14 +70,18 @@ export default function Person() {
 
   return (
     <>
-      {user && userRoleOnDepartment && userDepartmentSuperior ? (
+      {user &&
+      userRoleOnDepartment &&
+      userDepartmentSuperior &&
+      usersRolesProjects ? (
         <main>
-          {console.log(userDepartmentSuperior)}
           <header className={styles.personHeader}>
             <h2>{user.fullName}</h2>
             <p>{userRoleOnDepartment.name}</p>
           </header>
+
           <section className={styles.personSection}>
+            <h4 className={styles.fieldCategory}>Personal details</h4>
             <FieldInfoSection
               firstFieldName="First Name"
               firstFieldValue={user.firstName}
@@ -86,6 +100,7 @@ export default function Person() {
               secondFieldName="Social Media Link"
               secondFieldValue={user.socialMediaLink}
             />
+            <h4 className={styles.fieldCategory}>Department</h4>
             <FieldInfoSection
               firstFieldName="Department"
               firstFieldValue={user.Department.name}
@@ -101,7 +116,38 @@ export default function Person() {
                 user.mentor ? user.mentor.fullName : "No mentor"
               }
               secondId={user.mentor && user.mentor.id}
+              pageName="people"
             />
+            {user.mentees.length > 0 && (
+              <>
+                <h4 className={styles.fieldCategory}>Mentees</h4>
+                <div className={styles.arraySection}>
+                  {user.mentees.map((mentee, index) => (
+                    <FieldInfo
+                      id={mentee.id}
+                      fieldName={`Mentee #${index + 1}`}
+                      fieldValue={mentee.fullName}
+                      pageName="people"
+                    />
+                  ))}
+                </div>
+              </>
+            )}
+            {usersRolesProjects.length > 0 && (
+              <>
+                <h4 className={styles.fieldCategory}>Roles and projects</h4>
+                <div className={styles.arraySection}>
+                  {usersRolesProjects.map((userRoleProject) => (
+                    <FieldInfo
+                      id={userRoleProject.Project.id}
+                      fieldName={userRoleProject.Role.name}
+                      fieldValue={userRoleProject.Project.name}
+                      pageName="projects"
+                    />
+                  ))}
+                </div>
+              </>
+            )}
           </section>
         </main>
       ) : (
