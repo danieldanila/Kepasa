@@ -52,7 +52,7 @@ export default function People() {
       operator: FilterOperator.OR,
       constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
     },
-    departmentName: {
+    "Department.name": {
       operator: FilterOperator.OR,
       constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
     },
@@ -72,7 +72,7 @@ export default function People() {
       operator: FilterOperator.AND,
       constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
     },
-    mentorName: {
+    "mentor.fullName": {
       operator: FilterOperator.AND,
       constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
     },
@@ -99,6 +99,7 @@ export default function People() {
             dataName="user"
             DataForm={PeopleForm}
             pageName="people"
+            hasPersonalPage={true}
           />
         </main>
       ) : (

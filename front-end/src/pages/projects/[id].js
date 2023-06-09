@@ -56,6 +56,9 @@ export default function Project() {
                 {projectUsersRoles.map((projectUserRole) => (
                   <FieldInfo
                     id={projectUserRole.User.id}
+                    key={
+                      projectUserRole.User.id + ":" + projectUserRole.Role.id
+                    }
                     fieldName={projectUserRole.Role.name}
                     fieldValue={projectUserRole.User.fullName}
                     pageName="people"

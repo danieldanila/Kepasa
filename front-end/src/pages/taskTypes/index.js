@@ -1,21 +1,21 @@
 import { FilterMatchMode, FilterOperator } from "primereact/api";
 import DataTableWrapper from "@/components/DataTableWrapper";
-import { LoggedUserContext, DepartmentsContext } from "../_app";
-import DepartmentForm from "@/components/Forms/DepartmentForm";
+import { LoggedUserContext, TaskTypesContext } from "../_app";
 import { useContext } from "react";
 import Loading from "@/components/Loading";
+import TaskTypeForm from "@/components/Forms/TaskTypeForm";
 
-export default function Departments() {
+export default function TaskTypes() {
   const { loggedUser } = useContext(LoggedUserContext);
 
-  const departmentsColumn = [
+  const taskTypesColumn = [
     {
       field: "name",
       header: "Name",
     },
   ];
 
-  const departmentInitialFilters = {
+  const taskTypesInitialFilters = {
     name: {
       operator: FilterOperator.OR,
       constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
@@ -26,16 +26,16 @@ export default function Departments() {
     <>
       {loggedUser ? (
         <main>
-          <h2 className="pageTitle">Departments</h2>
+          <h2 className="pageTitle">Task Types</h2>
           <DataTableWrapper
             loggedUser={loggedUser}
-            dataContext={DepartmentsContext}
-            columns={departmentsColumn}
-            customInitialFilters={departmentInitialFilters}
-            dataName="department"
-            DataForm={DepartmentForm}
-            pageName="departments"
-            hasPersonalPage={true}
+            dataContext={TaskTypesContext}
+            columns={taskTypesColumn}
+            customInitialFilters={taskTypesInitialFilters}
+            dataName="taskType"
+            DataForm={TaskTypeForm}
+            pageName="taskTypes"
+            hasPersonalPage={false}
           />
         </main>
       ) : (

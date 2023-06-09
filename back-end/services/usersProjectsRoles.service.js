@@ -47,7 +47,19 @@ const service = {
   },
 
   getAllUsersProjectsRoles: async () => {
-    const usersProjectsRoles = await UsersProjectsRoles.findAll();
+    const usersProjectsRoles = await UsersProjectsRoles.findAll({
+      include: [
+        {
+          model: User,
+        },
+        {
+          model: Project,
+        },
+        {
+          model: Role,
+        },
+      ],
+    });
     return usersProjectsRoles;
   },
 
@@ -255,11 +267,7 @@ const service = {
       })
     );
 
-    if (roleUsers.length > 0) {
-      return roleUsers;
-    } else {
-      throw new NotFoundError("Role not found.");
-    }
+    return roleUsers;
   },
 
   getProjectRolesWithUsers: async (projectId) => {

@@ -10,6 +10,7 @@ export default function DropdownForm({
   initialValue,
   objectState,
   setObjectState,
+  readOnly,
 }) {
   const [selectedOption, setSelectedOption] = useState(initialValue);
   const [filteredOptions, setFilteredOptions] = useState(null);
@@ -52,6 +53,7 @@ export default function DropdownForm({
         forceSelection
         completeMethod={searchOption}
         value={selectedOption}
+        readOnly={readOnly}
         onChange={(e) =>
           handleInputDropdownChange(e, id, objectState, setObjectState)
         }

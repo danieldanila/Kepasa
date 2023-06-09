@@ -21,6 +21,10 @@ export default function DataTableWrapper({
   dataName,
   DataForm,
   pageName,
+  isCompositeKey,
+  firstKeyName,
+  secondKeyName,
+  hasPersonalPage,
 }) {
   const contextValues = useContext(dataContext);
   const {
@@ -127,7 +131,12 @@ export default function DataTableWrapper({
           url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/${dataName}/updateMe`;
           method = "PATCH";
         } else {
-          url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/${dataName}/${dataEntity.id}`;
+          if (isCompositeKey) {
+            const idParts = dataEntity.id.split(":");
+            url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/${dataName}/${firstKeyName}/${idParts[0]}/${secondKeyName}/${idParts[1]}`;
+          } else {
+            url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/${dataName}/${dataEntity.id}`;
+          }
           method = "PUT";
         }
 
@@ -176,11 +185,15 @@ export default function DataTableWrapper({
 
   const deleteSelectedDataEntity = (dataEntity) => {
     async function deleteRequest() {
-      const responseOk = await catchAxios(
-        "DELETE",
-        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/${dataName}/${dataEntity.id}`,
-        toastRef
-      );
+      let url;
+      if (isCompositeKey) {
+        const idParts = dataEntity.id.split(":");
+        url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/${dataName}/${firstKeyName}/${idParts[0]}/${secondKeyName}/${idParts[1]}`;
+      } else {
+        url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/${dataName}/${dataEntity.id}`;
+      }
+
+      const responseOk = await catchAxios("DELETE", url, toastRef);
 
       if (responseOk) {
         let dataCopy = data.filter((item) => item.id !== dataEntity.id);
@@ -378,7 +391,9 @@ export default function DataTableWrapper({
         onRowEditComplete={onRowEditComplete}
         scrollable
         scrollHeight="50rem"
-        onRowDoubleClick={(e) => rowDoubleClickHandler(e.data)}
+        onRowDoubleClick={(e) =>
+          hasPersonalPage && rowDoubleClickHandler(e.data)
+        }
       >
         {loggedUser.isAdministrator ? (
           <Column selectionMode="multiple" />

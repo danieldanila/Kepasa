@@ -161,6 +161,24 @@ User.hasMany(UsersProjectsRoles, {
     },
   },
 });
+UsersProjectsRoles.belongsTo(Project, {
+  foreignKey: {
+    name: "idProject",
+    type: DataTypes.UUID,
+    validate: {
+      isUUID: 4,
+    },
+  },
+});
+Project.hasMany(UsersProjectsRoles, {
+  foreignKey: {
+    name: "idProject",
+    type: DataTypes.UUID,
+    validate: {
+      isUUID: 4,
+    },
+  },
+});
 
 Department.hasMany(Role, {
   foreignKey: {
@@ -210,6 +228,42 @@ Project.belongsToMany(Role, {
   },
   otherKey: {
     name: "idRole",
+    type: DataTypes.UUID,
+    validate: {
+      isUUID: 4,
+    },
+  },
+});
+Role.hasMany(RolesProjects, {
+  foreignKey: {
+    name: "idRole",
+    type: DataTypes.UUID,
+    validate: {
+      isUUID: 4,
+    },
+  },
+});
+RolesProjects.belongsTo(Role, {
+  foreignKey: {
+    name: "idRole",
+    type: DataTypes.UUID,
+    validate: {
+      isUUID: 4,
+    },
+  },
+});
+Project.hasMany(RolesProjects, {
+  foreignKey: {
+    name: "idProject",
+    type: DataTypes.UUID,
+    validate: {
+      isUUID: 4,
+    },
+  },
+});
+RolesProjects.belongsTo(Project, {
+  foreignKey: {
+    name: "idProject",
     type: DataTypes.UUID,
     validate: {
       isUUID: 4,

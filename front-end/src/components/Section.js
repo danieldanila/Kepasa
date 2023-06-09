@@ -6,7 +6,10 @@ export default function Section({ title, page, sectionCardInformations }) {
     <section>
       <SectionHeader title={title} page={page} />
       {sectionCardInformations.length > 0 ? (
-        <SectionCard sectionCardInformations={sectionCardInformations} />
+        <SectionCard
+          page={page}
+          sectionCardInformations={sectionCardInformations}
+        />
       ) : (
         <p>You do not have any {page}.</p>
       )}

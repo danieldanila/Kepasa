@@ -58,6 +58,7 @@ export default function Department() {
                     (userProjectRole) => (
                       <FieldInfo
                         id={userProjectRole.User.id}
+                        key={userProjectRole.User.id}
                         fieldName={departmentUserRole.name}
                         fieldValue={userProjectRole.User.fullName}
                         pageName="people"

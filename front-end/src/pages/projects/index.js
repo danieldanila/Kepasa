@@ -35,6 +35,7 @@ export default function Projects() {
             dataName="project"
             DataForm={ProjectForm}
             pageName="projects"
+            hasPersonalPage={true}
           />
         </main>
       ) : (

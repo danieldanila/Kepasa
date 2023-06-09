@@ -30,7 +30,12 @@ const controller = {
       req.params.id,
       req.body
     );
-    res.status(202).json(updatedTaskType);
+    res
+      .status(202)
+      .json({
+        data: updatedTaskType,
+        message: `Task Type ${updatedTaskType.name} has been updated.`,
+      });
   }),
 
   deleteTaskType: catchAsync(async (req, res, next) => {

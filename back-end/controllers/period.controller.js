@@ -27,7 +27,12 @@ const controller = {
       req.params.id,
       req.body
     );
-    res.status(202).json(updatedPeriod);
+    res
+      .status(202)
+      .json({
+        data: updatedPeriod,
+        message: `${updatedPeriod.name} updated successfully.`,
+      });
   }),
 
   deletePeriod: catchAsync(async (req, res, next) => {

@@ -203,7 +203,7 @@ const validation = {
           secondId.toString().toLowerCase()
       ) {
         errorsArray.push(
-          `The combination of ${firstIdName} with ${secondIdName} already exists.`
+          `The combination of ${firstIdName}: ${firstId} with ${secondIdName}: ${secondId} already exists.`
         );
       }
     });

@@ -7,7 +7,7 @@ const controller = {
   createUsersProjectRoles: catchAsync(async (req, res, next) => {
     await usersProjectsRolesService.createUsersProjectsRoles(req.body);
     res.status(201).json({
-      message: `User ${req.body.idUser} on the ${req.body.idProject} project with the following role: ${req.body.idRole} was created.`,
+      message: `The user on the the specified project with the specified role was created.`,
     });
   }),
 
@@ -40,7 +40,10 @@ const controller = {
         req.params.idProject,
         req.body
       );
-    res.status(202).json(updatedUsersProjectsRoles);
+    res.status(202).json({
+      data: updatedUsersProjectsRoles,
+      message: `The user on the the specified project with the specified role was updated.`,
+    });
   }),
 
   deleteUsersProjectsRoles: catchAsync(async (req, res, next) => {

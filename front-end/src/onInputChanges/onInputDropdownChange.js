@@ -3,6 +3,7 @@ const onInputDropdownChange = (e, idName, objectState, setObjectState) => {
   let objectStateCopy = { ...objectState };
 
   objectStateCopy[`${idName}`] = inputValue.id;
+
   setObjectState(objectStateCopy);
 };
 

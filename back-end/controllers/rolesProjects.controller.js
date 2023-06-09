@@ -6,7 +6,7 @@ const controller = {
   createRolesProjects: catchAsync(async (req, res, next) => {
     await rolesProjectsService.createRolesProjects(req.body);
     res.status(201).json({
-      message: `Role ${req.body.idRole} on the ${req.body.idProject} with ${req.body.hourlyPay} hourly pay was created.`,
+      message: `The Role on the specified project was created with ${req.body.hourlyPay} hourly pay.`,
     });
   }),
 
@@ -37,7 +37,10 @@ const controller = {
       req.params.idProject,
       req.body
     );
-    res.status(202).json(updatedRolesProjects);
+    res.status(202).json({
+      data: updatedRolesProjects,
+      message: `The Role on the specified project was updated with ${updatedRolesProjects.hourlyPay} hourly pay.`,
+    });
   }),
 
   deleteRolesProjects: catchAsync(async (req, res, next) => {

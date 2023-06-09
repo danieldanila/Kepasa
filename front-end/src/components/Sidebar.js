@@ -1,8 +1,12 @@
 import SidebarElement from "./SidebarElement";
 import styles from "../styles/Sidebar.module.css";
 import Link from "next/link";
+import { useContext } from "react";
+import { LoggedUserContext } from "@/pages/_app";
 
 export default function Sidebar() {
+  const { loggedUser } = useContext(LoggedUserContext);
+
   return (
     <navbar className={styles.container}>
       <Link href="/">
@@ -28,6 +32,26 @@ export default function Sidebar() {
       <Link href="/departments">
         <SidebarElement name="Departments" icon="pi pi-building" />
       </Link>
+      <Link href="/roles">
+        <SidebarElement name="Roles" icon="pi pi-id-card" />
+      </Link>
+      <Link href="/periods">
+        <SidebarElement name="Periods" icon="pi pi-calendar" />
+      </Link>
+      <Link href="/taskTypes">
+        <SidebarElement name="TaskTypes" icon="pi pi-list" />
+      </Link>
+
+      {loggedUser && loggedUser.isAdministrator && (
+        <>
+          <Link href="/rolesProjects">
+            <SidebarElement name="RolesProjects" icon="pi pi-dollar" />
+          </Link>
+          <Link href="/usersProjectsRoles">
+            <SidebarElement name="UsersProjectsRoles" icon="pi pi-briefcase" />
+          </Link>
+        </>
+      )}
     </navbar>
   );
 }

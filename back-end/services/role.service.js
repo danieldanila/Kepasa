@@ -36,7 +36,17 @@ const service = {
   },
 
   getAllRoles: async () => {
-    const roles = await Role.findAll();
+    const roles = await Role.findAll({
+      include: [
+        {
+          model: Department,
+        },
+        {
+          model: Role,
+          as: "superiorRole",
+        },
+      ],
+    });
     return roles;
   },
 
@@ -45,7 +55,17 @@ const service = {
 
     idParamaterValidation(roleId, "Role id", errors);
 
-    const role = await Role.findByPk(roleId);
+    const role = await Role.findByPk(roleId, {
+      include: [
+        {
+          model: Department,
+        },
+        {
+          model: Role,
+          as: "superiorRole",
+        },
+      ],
+    });
 
     if (role) {
       return role;

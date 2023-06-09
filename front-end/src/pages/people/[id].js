@@ -107,6 +107,7 @@ export default function Person() {
               firstId={user.Department.id}
               secondFieldName="Role"
               secondFieldValue={userRoleOnDepartment.name}
+              secondId={userRoleOnDepartment.id}
               firstPageName="departments"
               secondPageName="roles"
             />
@@ -129,6 +130,7 @@ export default function Person() {
                   {user.mentees.map((mentee, index) => (
                     <FieldInfo
                       id={mentee.id}
+                      key={mentee.id}
                       fieldName={`Mentee #${index + 1}`}
                       fieldValue={mentee.fullName}
                       pageName="people"
@@ -144,6 +146,7 @@ export default function Person() {
                   {usersRolesProjects.map((userRoleProject) => (
                     <FieldInfo
                       id={userRoleProject.Project.id}
+                      key={userRoleProject.Project.id}
                       fieldName={userRoleProject.Role.name}
                       fieldValue={userRoleProject.Project.name}
                       pageName="projects"

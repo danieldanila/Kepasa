@@ -42,7 +42,16 @@ const service = {
   },
 
   getAllRolesProjects: async () => {
-    const rolesProjects = await RolesProjects.findAll();
+    const rolesProjects = await RolesProjects.findAll({
+      include: [
+        {
+          model: Role,
+        },
+        {
+          model: Project,
+        },
+      ],
+    });
     return rolesProjects;
   },
 

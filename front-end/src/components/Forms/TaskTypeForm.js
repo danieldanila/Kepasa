@@ -1,18 +1,18 @@
 import { Dialog } from "primereact/dialog";
 import InputTextForm from "./FormsInput/InputTextForm";
 import styles from "../../styles/PeopleForm.module.css";
-import { DepartmentsContext } from "@/pages/_app";
+import { TaskTypesContext } from "@/pages/_app";
 import { useContext } from "react";
 import onInputTextChange from "../../onInputChanges/onInputTextChange";
 
-export default function DepartmentForm({
+export default function TaskTypeForm({
   visible,
   onHide,
   dialogFooter,
   isUpdate,
   dataEntity,
 }) {
-  const { department, setDepartment } = useContext(DepartmentsContext);
+  const { taskType, setTaskType } = useContext(TaskTypesContext);
 
   return (
     <Dialog
@@ -20,7 +20,7 @@ export default function DepartmentForm({
       visible={visible}
       onHide={onHide}
       dismissableMask
-      header="Department details"
+      header="Task Type details"
       footer={dialogFooter}
       blockScroll
     >
@@ -30,8 +30,8 @@ export default function DepartmentForm({
           label="Name"
           customOnChange={onInputTextChange}
           initialValue={dataEntity.name}
-          objectState={department}
-          setObjectState={setDepartment}
+          objectState={taskType}
+          setObjectState={setTaskType}
         />
       </div>
     </Dialog>

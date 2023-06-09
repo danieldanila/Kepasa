@@ -15,6 +15,11 @@ export const NotificationContext = createContext(null);
 export const UsersContext = createContext(null);
 export const ProjectsContext = createContext(null);
 export const DepartmentsContext = createContext(null);
+export const RolesContext = createContext(null);
+export const RolesProjectsContext = createContext(null);
+export const UsersProjectsRolesContext = createContext(null);
+export const PeriodsContext = createContext(null);
+export const TaskTypesContext = createContext(null);
 
 export default function App({ Component, pageProps }) {
   global.router = useRouter();
@@ -94,6 +99,88 @@ export default function App({ Component, pageProps }) {
   const [department, setDepartment] = useState(emptyDepartment);
   const [departments, setDepartments] = useState([]);
 
+  const emptyRole = {
+    id: null,
+    name: "",
+    idDepartment: null,
+    idSuperiorRole: null,
+    Department: {
+      id: null,
+      name: "",
+    },
+    superiorRole: {
+      id: null,
+      name: "",
+      idDepartment: null,
+      idSuperiorRole: null,
+    },
+  };
+
+  const [role, setRole] = useState(emptyRole);
+  const [roles, setRoles] = useState([]);
+
+  const emptyRoleProject = {
+    id: null,
+    idRole: null,
+    idProject: null,
+    hourlyPay: 0,
+    Role: {
+      id: null,
+      name: "",
+      idDepartment: null,
+      idSuperiorRole: null,
+    },
+    Project: {
+      id: null,
+      name: "",
+    },
+  };
+
+  const [roleProject, setRoleProject] = useState(emptyRoleProject);
+  const [rolesProjects, setRolesProjects] = useState([]);
+
+  const emptyUsersProjectsRoles = {
+    id: null,
+    idUser: null,
+    idProject: null,
+    idRole: null,
+    User: {
+      id: null,
+      fullName: "",
+    },
+    Project: {
+      id: null,
+      name: "",
+    },
+    Role: {
+      id: null,
+      name: "",
+    },
+  };
+
+  const [userProjectRole, setUserProjectRole] = useState(
+    emptyUsersProjectsRoles
+  );
+  const [usersProjectsRoles, setUsersProjectsRoles] = useState([]);
+
+  const emptyPeriod = {
+    id: null,
+    name: "",
+    startDate: "",
+    endDate: "",
+  };
+
+  const [period, setPeriod] = useState(emptyPeriod);
+  const [periods, setPeriods] = useState([]);
+
+  const emptyTaskType = {
+    id: null,
+    name: "",
+  };
+
+  const [taskType, setTaskType] = useState(emptyTaskType);
+  const [taskTypes, setTaskTypes] = useState([]);
+
   const haveUsersChanged = useCompareArrayOfObjects(users);
 
   useEffect(() => {
@@ -148,6 +235,107 @@ export default function App({ Component, pageProps }) {
     }
   }, [haveDepartmentsChanged]);
 
+  const haveRolesChanged = useCompareArrayOfObjects(roles);
+
+  useEffect(() => {
+    async function getRoleData() {
+      const roleData = await catchAxios(
+        "GET",
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/role`,
+        toastRef
+      );
+
+      setRoles(roleData);
+    }
+
+    if (loggedUser) {
+      getRoleData();
+    }
+  }, [haveRolesChanged]);
+
+  const haveRolesProjectsChanged = useCompareArrayOfObjects(rolesProjects);
+
+  useEffect(() => {
+    async function getRoleProjectData() {
+      const roleProjectData = await catchAxios(
+        "GET",
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/rolesProjects`,
+        toastRef
+      );
+
+      const roleProjectDataWithId = roleProjectData.map((item) => {
+        const id = `${item.idRole}:${item.idProject}`;
+        return { ...item, id };
+      });
+
+      setRolesProjects(roleProjectDataWithId);
+    }
+
+    if (loggedUser) {
+      getRoleProjectData();
+    }
+  }, [haveRolesProjectsChanged]);
+
+  const haveUsersProjectsRolesChanged =
+    useCompareArrayOfObjects(usersProjectsRoles);
+
+  useEffect(() => {
+    async function getUsersProjectsRolesData() {
+      const usersProjectsRolesData = await catchAxios(
+        "GET",
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/usersProjectsRoles`,
+        toastRef
+      );
+
+      const usersProjectsRolesWithId = usersProjectsRolesData.map((item) => {
+        const id = `${item.idUser}:${item.idProject}`;
+        return { ...item, id };
+      });
+
+      setUsersProjectsRoles(usersProjectsRolesWithId);
+    }
+
+    if (loggedUser) {
+      getUsersProjectsRolesData();
+    }
+  }, [haveUsersProjectsRolesChanged]);
+
+  const havePeriodsChanged = useCompareArrayOfObjects(periods);
+
+  useEffect(() => {
+    async function getPeriodData() {
+      const periodData = await catchAxios(
+        "GET",
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/period`,
+        toastRef
+      );
+
+      setPeriods(periodData);
+    }
+
+    if (loggedUser) {
+      getPeriodData();
+    }
+  }, [havePeriodsChanged]);
+
+  const haveTaskTypesChanged = useCompareArrayOfObjects(taskTypes);
+
+  useEffect(() => {
+    async function getTaskTypeData() {
+      const taskTypeData = await catchAxios(
+        "GET",
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/taskType`,
+        toastRef
+      );
+
+      setTaskTypes(taskTypeData);
+    }
+
+    if (loggedUser) {
+      getTaskTypeData();
+    }
+  }, [haveTaskTypesChanged]);
+
   const showNavigation = global.pageRoute === "/login" ? false : true;
 
   return (
@@ -179,13 +367,57 @@ export default function App({ Component, pageProps }) {
                   setDepartment,
                 }}
               >
-                {showNavigation && (
-                  <>
-                    <Navbar />
-                    <Sidebar />
-                  </>
-                )}
-                <Component {...pageProps} />
+                <RolesContext.Provider
+                  value={{ roles, setRoles, emptyRole, role, setRole }}
+                >
+                  <RolesProjectsContext.Provider
+                    value={{
+                      rolesProjects,
+                      setRolesProjects,
+                      emptyRoleProject,
+                      roleProject,
+                      setRoleProject,
+                    }}
+                  >
+                    <UsersProjectsRolesContext.Provider
+                      value={{
+                        usersProjectsRoles,
+                        setUsersProjectsRoles,
+                        emptyUsersProjectsRoles,
+                        userProjectRole,
+                        setUserProjectRole,
+                      }}
+                    >
+                      <PeriodsContext.Provider
+                        value={{
+                          periods,
+                          setPeriods,
+                          emptyPeriod,
+                          period,
+                          setPeriod,
+                        }}
+                      >
+                        <TaskTypesContext.Provider
+                          value={{
+                            taskTypes,
+                            setTaskTypes,
+                            emptyTaskType,
+                            taskType,
+                            setTaskType,
+                          }}
+                        >
+                          {showNavigation && (
+                            <>
+                              <Navbar />
+                              <Sidebar />
+                            </>
+                          )}
+                          <Component {...pageProps} />
+                        </TaskTypesContext.Provider>
+                      </PeriodsContext.Provider>
+                    </UsersProjectsRolesContext.Provider>
+                  </RolesProjectsContext.Provider>
+                </RolesContext.Provider>
               </DepartmentsContext.Provider>
             </ProjectsContext.Provider>
           </UsersContext.Provider>
