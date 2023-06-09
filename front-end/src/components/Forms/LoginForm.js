@@ -13,6 +13,7 @@ export default function Login() {
   const navigationRouter = useRouter();
   const toastRef = useRef(null);
   const [userInput, setUserInput] = useState({ email: "", password: "" });
+  const [forgotPassword, setForgotPassword] = useState(false);
 
   const verifyUserInput = async (e) => {
     e.preventDefault();
@@ -31,10 +32,24 @@ export default function Login() {
     }
   };
 
+  const handleForgotPassword = () => {
+    setForgotPassword(!forgotPassword);
+  };
+
+  const sendRecoveryEmail = async (e) => {
+    e.preventDefault();
+
+    await catchAxios(
+      "POST",
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/authentication/forgotPassword`,
+      toastRef,
+      { email: userInput.email }
+    );
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.background}></div>
-
       <div className={styles.loginContainer}>
         <h1 className={styles.applicationName}>Kepasa</h1>
         <form className={styles.fieldsContainer}>
@@ -47,26 +62,40 @@ export default function Login() {
             objectState={userInput}
             setObjectState={setUserInput}
           />
-
-          <PasswordForm
-            id="password"
-            label="Password"
-            customOnChange={onInputTextChange}
-            initialValue={userInput.password}
-            objectState={userInput}
-            setObjectState={setUserInput}
-            feedbackValue={false}
-          />
-          <Button
-            label="Verify"
-            className={styles.button}
-            onClick={verifyUserInput}
-          ></Button>
+          {forgotPassword ? (
+            <>
+              <Button
+                label="Send recovery email"
+                className={styles.button}
+                onClick={sendRecoveryEmail}
+              ></Button>
+            </>
+          ) : (
+            <>
+              <PasswordForm
+                id="password"
+                label="Password"
+                customOnChange={onInputTextChange}
+                initialValue={userInput.password}
+                objectState={userInput}
+                setObjectState={setUserInput}
+                feedbackValue={false}
+              />
+              <Button
+                label="Verify"
+                className={styles.button}
+                onClick={verifyUserInput}
+              ></Button>
+            </>
+          )}
         </form>
         <div className={styles.forgotPassword}>
-          <Link href="/">Forgot password?</Link>
+          <Link href="/" onClick={handleForgotPassword}>
+            {forgotPassword ? "Back to login" : " Forgot password?"}
+          </Link>
         </div>
       </div>
+
       <Toast ref={toastRef} />
     </div>
   );

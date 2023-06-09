@@ -55,7 +55,7 @@ const controller = {
   forgotPassword: catchAsync(async (req, res, next) => {
     await authenticationService.forgotPassword(req.body.email);
     res.status(200).json({
-      message: "Token sent to email.",
+      message: "Account recovery email sent.",
     });
   }),
 
