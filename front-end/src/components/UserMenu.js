@@ -27,6 +27,12 @@ export default function UserMenu() {
           },
         },
         {
+          label: "Update my password",
+          command: () => {
+            global.router.push("/updatePassword/" + loggedUser.id);
+          },
+        },
+        {
           label: "Log out",
           command: () => {
             logout();

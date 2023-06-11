@@ -336,7 +336,11 @@ export default function App({ Component, pageProps }) {
     }
   }, [haveTaskTypesChanged]);
 
-  const showNavigation = global.pageRoute === "/login" ? false : true;
+  const showNavigation =
+    global.pageRoute === "/login" ||
+    global.pageRoute.startsWith("/resetPassword/")
+      ? false
+      : true;
 
   return (
     <>

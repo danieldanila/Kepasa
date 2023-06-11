@@ -24,7 +24,8 @@ export async function middleware(req) {
       (tokenExpirationTimestamp &&
         tokenExpirationTimestamp.message !== null &&
         tokenExpirationTimestamp.message < Date.now())) &&
-    pathname !== "/login"
+    pathname !== "/login" &&
+    !pathname.startsWith("/resetPassword/")
   ) {
     url.pathname = "/login";
     return NextResponse.redirect(url);

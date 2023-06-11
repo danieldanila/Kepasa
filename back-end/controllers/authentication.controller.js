@@ -60,14 +60,14 @@ const controller = {
   }),
 
   resetPassword: catchAsync(async (req, res, next) => {
-    const token = await authenticationService.resetPassword(
+    const userUpdated = await authenticationService.resetPassword(
       req.params.token,
       req.body.password
     );
 
-    createSendToken(token, res);
-
-    res.status(200).json({ nessage: "Sucessful password reset.", token });
+    res
+      .status(200)
+      .json({ message: `Sucessful password reset for ${userUpdated.email}.` });
   }),
 
   updatePassword: catchAsync(async (req, res, next) => {
@@ -78,7 +78,9 @@ const controller = {
 
     createSendToken(token, res);
 
-    res.status(200).json({ message: "Succesful password update.", token });
+    res
+      .status(200)
+      .json({ message: "You successfully updatec your password.", token });
   }),
 };
 

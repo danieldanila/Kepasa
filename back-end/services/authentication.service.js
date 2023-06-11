@@ -80,7 +80,7 @@ const service = {
 
     await user.save();
 
-    const resetURL = `${process.env.HOST}:${process.env.FRONT_END_PORT}/resetPassword/${resetToken}`;
+    const resetURL = `${process.env.PROTOCOL}://${process.env.HOST}:${process.env.FRONT_END_PORT}/resetPassword/${resetToken}`;
 
     const message = `
     <!DOCTYPE html>
@@ -178,7 +178,7 @@ const service = {
       password,
       "Password",
       errors,
-      true
+      false
     );
 
     if (errors.length > 0) {
@@ -191,9 +191,7 @@ const service = {
 
     await user.save();
 
-    const token = signToken(user.id);
-
-    return token;
+    return user;
   },
 
   updatePassword: async (loggedUser, userBody) => {
@@ -206,12 +204,13 @@ const service = {
     }
 
     const errors = [];
+
     validateCompletedField(
       passwordValidation,
       userBody.password,
       "Password",
       errors,
-      true
+      false
     );
 
     if (errors.length > 0) {

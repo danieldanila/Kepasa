@@ -1,9 +1,9 @@
-import LoginForm from "@/components/Forms/LoginForm";
+import AuthenticateForm from "@/components/Forms/AuthenticateForm";
 
 export default function Login() {
   return (
     <>
-      <LoginForm />
+      <AuthenticateForm />
     </>
   );
 }
