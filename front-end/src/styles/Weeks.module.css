@@ -1,0 +1,10 @@
+.container {
+  display: flex;
+  background-color: var(--lightGray);
+  padding: 1rem;
+  box-shadow: var(--boxShadow);
+}
+
+.container > * {
+  flex: 1 0 0;
+}

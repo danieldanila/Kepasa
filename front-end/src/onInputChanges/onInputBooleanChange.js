@@ -4,4 +4,4 @@ const onInputBooleanChange = (e, idName, objectState, setObjectState) => {
   setObjectState(objectStateCopy);
 };
 
-module.exports = onInputBooleanChange;
+export default onInputBooleanChange;

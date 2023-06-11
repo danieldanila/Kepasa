@@ -31,7 +31,12 @@ const controller = {
   updateActivityReport: catchAsync(async (req, res, next) => {
     const updatedActivityReport =
       await activityReportService.updateActivityReport(req.params.id, req.body);
-    res.status(202).json(updatedActivityReport);
+    res
+      .status(202)
+      .json({
+        data: updatedActivityReport,
+        message: "Activity report updated successfully.",
+      });
   }),
 
   deleteActivityReport: catchAsync(async (req, res, next) => {

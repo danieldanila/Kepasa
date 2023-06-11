@@ -5,4 +5,4 @@ const onInputTextChange = (e, idName, objectState, setObjectState) => {
   setObjectState(objectStateCopy);
 };
 
-module.exports = onInputTextChange;
+export default onInputTextChange;

@@ -20,6 +20,7 @@ export const RolesProjectsContext = createContext(null);
 export const UsersProjectsRolesContext = createContext(null);
 export const PeriodsContext = createContext(null);
 export const TaskTypesContext = createContext(null);
+export const ActivityReportsContext = createContext(null);
 
 export default function App({ Component, pageProps }) {
   global.router = useRouter();
@@ -181,6 +182,40 @@ export default function App({ Component, pageProps }) {
   const [taskType, setTaskType] = useState(emptyTaskType);
   const [taskTypes, setTaskTypes] = useState([]);
 
+  const emptyActivityReport = {
+    id: null,
+    description: "",
+    investedTime: 0,
+    isApproved: false,
+    date: "",
+    rejectJustification: "",
+    idUser: null,
+    idPeriod: null,
+    idProject: null,
+    idTaskType: null,
+    User: {
+      id: null,
+      fullName: "",
+    },
+    Period: {
+      id: null,
+      name: "",
+      startDate: "",
+      endDate: "",
+    },
+    Project: {
+      id: null,
+      name: "",
+    },
+    TaskType: {
+      id: null,
+      name: "",
+    },
+  };
+
+  const [activityReport, setActivityReport] = useState(emptyActivityReport);
+  const [activityReports, setActivityReports] = useState([]);
+
   const haveUsersChanged = useCompareArrayOfObjects(users);
 
   useEffect(() => {
@@ -336,6 +371,24 @@ export default function App({ Component, pageProps }) {
     }
   }, [haveTaskTypesChanged]);
 
+  const haveActivityReportsChanged = useCompareArrayOfObjects(activityReports);
+
+  useEffect(() => {
+    async function getActivityReports() {
+      const activityReportsData = await catchAxios(
+        "GET",
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/activityReport`,
+        toastRef
+      );
+
+      setActivityReports(activityReportsData);
+    }
+
+    if (loggedUser) {
+      getActivityReports();
+    }
+  }, [haveActivityReportsChanged]);
+
   const showNavigation =
     global.pageRoute === "/login" ||
     global.pageRoute.startsWith("/resetPassword/")
@@ -410,13 +463,23 @@ export default function App({ Component, pageProps }) {
                             setTaskType,
                           }}
                         >
-                          {showNavigation && (
-                            <>
-                              <Navbar />
-                              <Sidebar />
-                            </>
-                          )}
-                          <Component {...pageProps} />
+                          <ActivityReportsContext.Provider
+                            value={{
+                              activityReports,
+                              setActivityReports,
+                              emptyActivityReport,
+                              activityReport,
+                              setActivityReport,
+                            }}
+                          >
+                            {showNavigation && (
+                              <>
+                                <Navbar />
+                                <Sidebar />
+                              </>
+                            )}
+                            <Component {...pageProps} />
+                          </ActivityReportsContext.Provider>
                         </TaskTypesContext.Provider>
                       </PeriodsContext.Provider>
                     </UsersProjectsRolesContext.Provider>

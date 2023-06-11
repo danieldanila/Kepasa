@@ -7,4 +7,4 @@ const onInputDropdownChange = (e, idName, objectState, setObjectState) => {
   setObjectState(objectStateCopy);
 };
 
-module.exports = onInputDropdownChange;
+export default onInputDropdownChange;

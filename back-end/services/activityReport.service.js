@@ -49,7 +49,22 @@ const service = {
   },
 
   getAllActivityReports: async () => {
-    const activityReport = await ActivityReport.findAll();
+    const activityReport = await ActivityReport.findAll({
+      include: [
+        {
+          model: User,
+        },
+        {
+          model: Period,
+        },
+        {
+          model: Project,
+        },
+        {
+          model: TaskType,
+        },
+      ],
+    });
     return activityReport;
   },
 
