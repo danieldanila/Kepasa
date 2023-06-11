@@ -7,7 +7,7 @@ const getWeekNumber = (date) => {
     firstMonday.setUTCDate(firstMonday.getUTCDate() + 1);
   }
 
-  const daysDifferenceBetweenDateAndFirstMonday = Math.ceil(
+  const daysDifferenceBetweenDateAndFirstMonday = Math.floor(
     (date - firstMonday) / (24 * 60 * 60 * 1000)
   );
 
@@ -18,6 +18,7 @@ const getWeekNumber = (date) => {
   } else if (dayOfWeek === 0) {
     weekNumber += 1;
   }
+
   return weekNumber;
 };
 
