@@ -13,7 +13,7 @@ const generateWeekDaysData = (
   const mondayDate = new Date(mondayDateString);
   const sundayDate = new Date(sundayDateString);
 
-  const weekDays = [];
+  const weekDaysData = [];
   const currentDate = new Date(mondayDate);
 
   while (currentDate <= sundayDate) {
@@ -27,16 +27,17 @@ const generateWeekDaysData = (
       0
     );
 
-    weekDays.push({
+    weekDaysData.push({
       date: currentDateString,
       name: getDayName(currentDate),
       investedTime: investedTime,
+      activityReports: reportsOnDate,
     });
 
     currentDate.setDate(currentDate.getDate() + 1);
   }
 
-  return weekDays;
+  return weekDaysData;
 };
 
 export default generateWeekDaysData;

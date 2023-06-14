@@ -1,0 +1,64 @@
+.containers {
+  display: flex;
+  justify-content: space-between;
+  box-shadow: var(--boxShadow);
+  padding: 2rem;
+  margin: 1rem;
+}
+
+.leftContainer {
+  width: 90%;
+}
+
+.rightContainer {
+  width: 10%;
+}
+
+.activityMetadataContainer,
+.activityProjectDataContainer {
+  display: flex;
+}
+
+.activityMetadataContainer p,
+.activityProjectDataContainer p {
+  margin-right: 0.5rem;
+}
+
+.activityDescriptionContainer {
+  margin-top: 1rem;
+}
+
+.rejectJustificationText {
+  color: var(--red);
+}
+
+.actionContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  height: 100%;
+  justify-content: space-around;
+}
+
+.editButton {
+  border: none;
+  background-color: var(--white);
+  border: var(--gray) 1px solid;
+  box-shadow: var(--boxShadow);
+  color: var(--lightBlue);
+  padding: 1rem;
+}
+
+.editButton:hover {
+  cursor: pointer;
+  background-color: var(--gray);
+}
+
+.editButtonDisabled:disabled {
+  cursor: not-allowed;
+}
+
+.editButtonDisabled:hover:disabled {
+  background-color: var(--white);
+}

@@ -6,39 +6,44 @@ import getWeekNumber from "@/dateFunctions/getWeekNumber";
 import generateWeekDaysData from "@/dateFunctions/generateWeekDaysData";
 import formatDateToString from "@/dateFunctions/formatDateToString";
 import WeeksHeader from "./WeeksHeader";
+import WeekDayReports from "./WeekDayReports";
 
 export default function Weeks() {
   const { activityReports } = useContext(ActivityReportsContext);
 
   const [selectedWeekNumber, setSelectedWeekNumber] = useState(0);
 
-  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+  const [selectedYear, setSelectedYear] = useState(new Date().getUTCFullYear());
 
-  const [weekDays, setWeekDays] = useState([]);
+  const [weekDaysData, setWeekDaysData] = useState([]);
 
   useEffect(() => {
-    const weekDays = generateWeekDaysData(
+    const weekDaysData = generateWeekDaysData(
       activityReports,
       selectedWeekNumber,
       selectedYear
     );
 
-    setWeekDays(weekDays);
+    setWeekDaysData(weekDaysData);
   }, [activityReports, selectedWeekNumber, selectedYear]);
 
   const [totalInvestedTime, setTotalInvestedTime] = useState(0);
 
   useEffect(() => {
     setTotalInvestedTime(
-      weekDays.reduce((sum, day) => sum + day.investedTime, 0)
+      weekDaysData.reduce((sum, day) => sum + day.investedTime, 0)
     );
-  }, [weekDays]);
+  }, [weekDaysData]);
 
   const [selectedDate, setSelectedDate] = useState(new Date());
 
   useEffect(() => {
     setSelectedWeekNumber(getWeekNumber(selectedDate));
   }, [selectedDate]);
+
+  useEffect(() => {
+    setSelectedYear(selectedDate.getUTCFullYear());
+  }, [selectedDate.getUTCFullYear()]);
 
   const handleDayClick = (dateString) => {
     setSelectedDate(new Date(dateString));
@@ -51,7 +56,7 @@ export default function Weeks() {
         setSelectedDate={setSelectedDate}
       />
       <div className={styles.container}>
-        {weekDays.map((day) => (
+        {weekDaysData.map((day) => (
           <WeekDay
             dateString={day.date}
             key={day.date}
@@ -66,6 +71,13 @@ export default function Weeks() {
           minutesLogged={totalInvestedTime}
           onClick={() => {}}
         />
+      </div>
+      <div>
+        {weekDaysData
+          .filter((day) => formatDateToString(selectedDate) === day.date)
+          .map((day) => (
+            <WeekDayReports activityReports={day.activityReports} />
+          ))}
       </div>
     </>
   );

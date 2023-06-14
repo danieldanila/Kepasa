@@ -1,3 +1,4 @@
+import minutesToFormattedTime from "@/dateFunctions/minutesToFormattedTime";
 import styles from "../../styles/WeekDay.module.css";
 
 export default function WeekDay({
@@ -7,13 +8,6 @@ export default function WeekDay({
   isSelected,
   onClick,
 }) {
-  const hours = Math.floor(minutesLogged / 60);
-  const remainingMinutes = minutesLogged % 60;
-
-  const formattedTime = `${hours.toString().padStart(2, "0")}:${remainingMinutes
-    .toString()
-    .padStart(2, "0")}`;
-
   const handleDayClick = () => {
     onClick(dateString);
   };
@@ -26,7 +20,7 @@ export default function WeekDay({
       onClick={handleDayClick}
     >
       <p>{dayName}</p>
-      <p>{formattedTime}</p>
+      <p>{minutesToFormattedTime(minutesLogged)}</p>
     </div>
   );
 }

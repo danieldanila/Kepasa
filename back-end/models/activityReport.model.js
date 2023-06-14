@@ -37,17 +37,22 @@ module.exports = (sequelize, DataTypes) => {
           notEmpty: true,
         },
       },
-      isApproved: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
-        allowNull: false,
-      },
       date: {
         type: DataTypes.DATEONLY,
         allowNull: false,
         validate: {
           isDate: true,
         },
+      },
+      isSent: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+        allowNull: false,
+      },
+      isApproved: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+        allowNull: false,
       },
       rejectJustification: {
         type: DataTypes.TEXT,
