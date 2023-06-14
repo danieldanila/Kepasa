@@ -42,7 +42,11 @@ export default function Person() {
           toastRef
         );
 
-        if (userDepartmentSuperior && userDepartmentSuperior[0].User) {
+        console.log(userDepartmentSuperior);
+        if (
+          userDepartmentSuperior.length > 0 &&
+          userDepartmentSuperior[0].User
+        ) {
           setUerDepartmentSuperior(userDepartmentSuperior[0].User);
         } else {
           setUerDepartmentSuperior({ fullName: "No superior" });

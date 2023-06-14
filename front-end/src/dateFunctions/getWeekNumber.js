@@ -1,6 +1,7 @@
 const getWeekNumber = (date) => {
   const dayOfWeek = date.getUTCDay();
-  const firstDayOfYear = new Date(date.getUTCFullYear(), 0, 1);
+  const firstDayOfYear = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
+
   const firstMonday = new Date(firstDayOfYear);
 
   while (firstMonday.getUTCDay() !== 1) {
@@ -15,8 +16,6 @@ const getWeekNumber = (date) => {
 
   if (dayOfWeek === 1 && daysDifferenceBetweenDateAndFirstMonday % 7 !== 0) {
     weekNumber -= 1;
-  } else if (dayOfWeek === 0) {
-    weekNumber += 1;
   }
 
   return weekNumber;
