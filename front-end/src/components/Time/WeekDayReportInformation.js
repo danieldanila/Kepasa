@@ -2,49 +2,57 @@ import { catchAxios } from "@/axios";
 import { useEffect, useRef, useState } from "react";
 import styles from "../../styles/WeekDayReportInformation.module.css";
 import minutesToFormattedTime from "@/dateFunctions/minutesToFormattedTime";
+import ClassicButton from "./ClassicButton";
 import { Toast } from "primereact/toast";
 
-export default function WeekDayReportInformation({ activityReport }) {
-  const [userRoleOnProject, setUserRoleOnProject] = useState("No role");
+export default function WeekDayReportInformation({
+  activityReportData,
+  openEditFormDialog,
+  confirmDeleteSelectedDataEntity,
+}) {
   const toastRef = useRef(null);
+
+  const [userRoleOnProject, setUserRoleOnProject] = useState("No role");
 
   useEffect(() => {
     async function getUseRoleOnProject() {
       const userRoleOnProject = await catchAxios(
         "GET",
-        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/usersProjectsRoles/user/${activityReport.idUser}/project/${activityReport.idProject}/role`,
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/usersProjectsRoles/user/${activityReportData.idUser}/project/${activityReportData.idProject}/role`,
         toastRef
       );
 
-      setUserRoleOnProject(userRoleOnProject);
+      if (userRoleOnProject) {
+        setUserRoleOnProject(userRoleOnProject);
+      }
     }
 
     getUseRoleOnProject();
-  }, [activityReport]);
+  }, [activityReportData]);
 
   return (
     <div className={styles.containers}>
       <div className={styles.leftContainer}>
-        {activityReport.rejectJustification && (
+        {activityReportData.rejectJustification && (
           <p className={styles.rejectJustificationText}>REJECTED</p>
         )}
         <section className={styles.activityMetadataContainer}>
           <p>
             <strong>Task Type: </strong>
-            {activityReport.TaskType.name}
+            {activityReportData.TaskType.name}
           </p>
           <p>-</p>
-          <p>{activityReport.User.fullName}</p>
+          <p>{activityReportData.User.fullName}</p>
           <p>
-            {activityReport.isApproved
-              ? activityReport.isSent && "\u2713"
-              : activityReport.isSent && "\u23F3"}
+            {activityReportData.isApproved
+              ? activityReportData.isSent && "\u2713"
+              : activityReportData.isSent && "\u23F3"}
           </p>
         </section>
         <section className={styles.activityProjectDataContainer}>
           <p>
             <strong>Project: </strong>
-            {activityReport.Project.name}
+            {activityReportData.Project.name}
           </p>
           <p>
             <strong>Role: </strong>
@@ -52,28 +60,34 @@ export default function WeekDayReportInformation({ activityReport }) {
           </p>
         </section>
         <section className={styles.activityDescriptionContainer}>
-          <p>{activityReport.description}</p>
-          {activityReport.rejectJustification && (
+          <p>{activityReportData.description}</p>
+          {activityReportData.rejectJustification && (
             <p>
               <span className={styles.rejectJustificationText}>
                 Reject justification:{" "}
               </span>
-              {activityReport.rejectJustification}
+              {activityReportData.rejectJustification}
             </p>
           )}
         </section>
       </div>
       <div className={styles.rightContainer}>
         <section className={styles.actionContainer}>
-          <button onClick={open}
-            disabled={activityReport.isSent}
-            className={`${styles.editButton} ${
-              activityReport.isSent && styles.editButtonDisabled
-            }`}
-          >
-            {"\u270E"}
-          </button>
-          <p>{minutesToFormattedTime(activityReport.investedTime)}</p>
+          <section className={styles.buttons}>
+            <ClassicButton
+              actionFunction={openEditFormDialog}
+              functionData={activityReportData}
+              disabledCondition={activityReportData.isSent}
+              icon={"\u270E"}
+            />
+            <ClassicButton
+              actionFunction={confirmDeleteSelectedDataEntity}
+              functionData={activityReportData}
+              disabledCondition={activityReportData.isSent}
+              icon={"\uD83D\uDDD1"}
+            />
+          </section>
+          <p>{minutesToFormattedTime(activityReportData.investedTime)}</p>
         </section>
       </div>
       <Toast ref={toastRef} />

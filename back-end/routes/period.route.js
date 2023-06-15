@@ -25,6 +25,11 @@ router.get(
   authenticationMiddleware.protect,
   periodController.getPeriodById
 );
+router.get(
+  "/date/:date",
+  authenticationMiddleware.protect,
+  periodController.getPeriodByDate
+);
 router.put(
   "/:id",
   authenticationMiddleware.protect,

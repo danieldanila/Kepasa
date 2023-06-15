@@ -111,7 +111,7 @@ export default function DeleteEntityDialog({
             <strong>
               {selectedDataEntity.name
                 ? selectedDataEntity.name
-                : selectedDataEntity.fullName}
+                : selectedDataEntity.fullName || "the data"}
             </strong>
             ?
           </span>

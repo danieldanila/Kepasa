@@ -1,13 +1,19 @@
 import WeekDayReportInformation from "./WeekDayReportInformation";
 import styles from "../../styles/WeekDayReports.module.css";
 
-export default function WeekDayReports({ activityReports }) {
+export default function WeekDayReports({
+  activityReports,
+  openEditFormDialog,
+  confirmDeleteSelectedDataEntity,
+}) {
   return (
     <div className={styles.container}>
       {activityReports.map((activityReport) => (
         <WeekDayReportInformation
           key={activityReport.id}
-          activityReport={activityReport}
+          activityReportData={activityReport}
+          openEditFormDialog={openEditFormDialog}
+          confirmDeleteSelectedDataEntity={confirmDeleteSelectedDataEntity}
         />
       ))}
     </div>

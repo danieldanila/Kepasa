@@ -2,7 +2,7 @@ import { catchAxios } from "@/axios";
 import { Button } from "primereact/button";
 import { Toast } from "primereact/toast";
 import { useEffect, useRef } from "react";
-import { uuid } from "uuidv4";
+import { v4 as uuid } from "uuid";
 
 export default function FormDialog({
   DataForm,
@@ -13,6 +13,7 @@ export default function FormDialog({
   selectedDataEntity,
   openFormDialog,
   isUpdate,
+  setIsUpdate,
   showFormDialog,
   setShowformDialog,
   data,
@@ -26,6 +27,7 @@ export default function FormDialog({
 
   const closeFormDialog = () => {
     setShowformDialog(false);
+    setIsUpdate(false);
     setDataEntity(emptyDataEntity);
   };
 
@@ -37,7 +39,7 @@ export default function FormDialog({
       let index;
 
       if (isUpdate) {
-        if (dataEntity.id === loggedUser.id) {
+        if (loggedUser && dataEntity.id === loggedUser.id) {
           url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/${dataName}/updateMe`;
           method = "PATCH";
         } else {

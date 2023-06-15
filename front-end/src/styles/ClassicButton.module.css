@@ -1,0 +1,21 @@
+.editButton {
+  border: none;
+  background-color: var(--white);
+  border: var(--gray) 1px solid;
+  box-shadow: var(--boxShadow);
+  color: var(--lightBlue);
+  padding: 1rem;
+}
+
+.editButton:hover {
+  cursor: pointer;
+  background-color: var(--gray);
+}
+
+.editButtonDisabled:disabled {
+  cursor: not-allowed;
+}
+
+.editButtonDisabled:hover:disabled {
+  background-color: var(--white);
+}

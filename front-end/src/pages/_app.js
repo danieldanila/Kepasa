@@ -188,7 +188,7 @@ export default function App({ Component, pageProps }) {
     investedTime: 0,
     isApproved: false,
     date: "",
-    rejectJustification: "",
+    rejectJustification: null,
     idUser: null,
     idPeriod: null,
     idProject: null,

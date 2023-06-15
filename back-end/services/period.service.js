@@ -1,3 +1,4 @@
+const { Op } = require("sequelize");
 const { NotFoundError } = require("../errors");
 const {
   throwValidationErrorWithMessage,
@@ -48,6 +49,25 @@ const service = {
       return period;
     } else {
       throw new NotFoundError("Period not found.");
+    }
+  },
+
+  getPeriodByDate: async (date) => {
+    const period = await Period.findOne({
+      where: {
+        startDate: {
+          [Op.lte]: date,
+        },
+        endDate: {
+          [Op.gte]: date,
+        },
+      },
+    });
+
+    if (period) {
+      return period;
+    } else {
+      throw new NotFoundError("Date is not in an existing period.");
     }
   },
 

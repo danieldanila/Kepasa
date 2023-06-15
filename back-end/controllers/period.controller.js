@@ -22,17 +22,20 @@ const controller = {
     res.status(200).json(period);
   }),
 
+  getPeriodByDate: catchAsync(async (req, res, next) => {
+    const period = await periodService.getPeriodByDate(req.params.date);
+    res.status(200).json(period);
+  }),
+
   updatePeriod: catchAsync(async (req, res, next) => {
     const updatedPeriod = await periodService.updatePeriod(
       req.params.id,
       req.body
     );
-    res
-      .status(202)
-      .json({
-        data: updatedPeriod,
-        message: `${updatedPeriod.name} updated successfully.`,
-      });
+    res.status(202).json({
+      data: updatedPeriod,
+      message: `${updatedPeriod.name} updated successfully.`,
+    });
   }),
 
   deletePeriod: catchAsync(async (req, res, next) => {

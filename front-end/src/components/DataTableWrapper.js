@@ -6,10 +6,8 @@ import { InputText } from "primereact/inputtext";
 import { Toolbar } from "primereact/toolbar";
 import { Button } from "primereact/button";
 import styles from "../styles/DataTableWrapper.module.css";
-import { v4 as uuid } from "uuid";
 import SearchBar from "./SearchBar";
 import { Toast } from "primereact/toast";
-import { catchAxios } from "@/axios";
 import infoToast from "@/toasts/infoToast";
 import DeleteEntityDialog from "./Forms/FormsComponents/DeleteEntityDialog";
 import FormDialog from "./Forms/FormsComponents/FormDialog";
@@ -286,6 +284,8 @@ export default function DataTableWrapper({
         emptyDataEntity={emptyDataEntity}
         selectedDataEntity={selectedDataEntity}
         openFormDialog={openFormDialog}
+        isUpdate={isUpdate}
+        setIsUpdate={setIsUpdate}
         showFormDialog={showFormDialog}
         setShowformDialog={setShowFormDialog}
         data={data}
