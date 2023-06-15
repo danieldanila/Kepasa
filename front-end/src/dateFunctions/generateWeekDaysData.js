@@ -4,7 +4,8 @@ import getWeekDatesByWeekNumber from "./getWeekDatesByWeekNumber";
 const generateWeekDaysData = (
   activityReports,
   selectedWeekNumber,
-  selectedYear
+  selectedYear,
+  loggedUser
 ) => {
   const { mondayDateString, sundayDateString } = getWeekDatesByWeekNumber(
     selectedWeekNumber,
@@ -19,7 +20,9 @@ const generateWeekDaysData = (
   while (currentDate <= sundayDate) {
     const currentDateString = currentDate.toISOString().split("T")[0];
     const reportsOnDate = activityReports.filter(
-      (activityReport) => activityReport.date === currentDateString
+      (activityReport) =>
+        activityReport.date === currentDateString &&
+        loggedUser.id === activityReport.idUser
     );
 
     const investedTime = reportsOnDate.reduce(

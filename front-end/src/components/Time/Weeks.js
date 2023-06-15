@@ -1,7 +1,7 @@
 import WeekDay from "./WeekDay";
 import styles from "../../styles/Weeks.module.css";
 import { useContext, useEffect, useState } from "react";
-import { ActivityReportsContext } from "@/pages/_app";
+import { ActivityReportsContext, LoggedUserContext } from "@/pages/_app";
 import getWeekNumber from "@/dateFunctions/getWeekNumber";
 import generateWeekDaysData from "@/dateFunctions/generateWeekDaysData";
 import formatDateToString from "@/dateFunctions/formatDateToString";
@@ -10,6 +10,7 @@ import WeekDayReports from "./WeekDayReports";
 
 export default function Weeks() {
   const { activityReports } = useContext(ActivityReportsContext);
+  const { loggedUser } = useContext(LoggedUserContext);
 
   const [selectedWeekNumber, setSelectedWeekNumber] = useState(0);
 
@@ -21,7 +22,8 @@ export default function Weeks() {
     const weekDaysData = generateWeekDaysData(
       activityReports,
       selectedWeekNumber,
-      selectedYear
+      selectedYear,
+      loggedUser
     );
 
     setWeekDaysData(weekDaysData);

@@ -9,9 +9,9 @@ import styles from "../styles/DataTableWrapper.module.css";
 import { v4 as uuid } from "uuid";
 import SearchBar from "./SearchBar";
 import { Toast } from "primereact/toast";
-import { Dialog } from "primereact/dialog";
 import { catchAxios } from "@/axios";
 import infoToast from "@/toasts/infoToast";
+import DeleteEntityDialog from "./Forms/FormsComponents/DeleteEntityDialog";
 
 export default function DataTableWrapper({
   loggedUser,
@@ -38,10 +38,10 @@ export default function DataTableWrapper({
   const [filters, setFilters] = useState(null);
   const [showFormDialog, setShowformDialog] = useState(false);
   const [isUpdate, setIsUpdate] = useState(false);
-  const [selectedDataEntities, setSelectedDataEntities] = useState(null);
-  const [selectedDataEntity, setSelectedDataEntity] = useState(null);
   const [deleteSelectedDataEntityDialog, setDeleteSelectedDataEntityDialog] =
     useState(false);
+  const [selectedDataEntities, setSelectedDataEntities] = useState(null);
+  const [selectedDataEntity, setSelectedDataEntity] = useState(null);
   const [
     deleteSelectedDataEntitiesDialog,
     setDeleteSelectedDataEntitiesDialog,
@@ -111,14 +111,6 @@ export default function DataTableWrapper({
     setDataEntity(emptyDataEntity);
   };
 
-  const hideDeleteSelectedDataEntityDialog = () => {
-    setDeleteSelectedDataEntityDialog(false);
-  };
-
-  const hideDeleteSelectedDataEntitiesDialog = () => {
-    setDeleteSelectedDataEntitiesDialog(false);
-  };
-
   const saveFormDialog = () => {
     async function postData() {
       let url;
@@ -183,37 +175,6 @@ export default function DataTableWrapper({
     postData();
   };
 
-  const deleteSelectedDataEntity = (dataEntity) => {
-    async function deleteRequest() {
-      let url;
-      if (isCompositeKey) {
-        const idParts = dataEntity.id.split(":");
-        url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/${dataName}/${firstKeyName}/${idParts[0]}/${secondKeyName}/${idParts[1]}`;
-      } else {
-        url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/${dataName}/${dataEntity.id}`;
-      }
-
-      const responseOk = await catchAxios("DELETE", url, toastRef);
-
-      if (responseOk) {
-        let dataCopy = data.filter((item) => item.id !== dataEntity.id);
-
-        setData(dataCopy);
-        setSelectedDataEntity(emptyDataEntity);
-      }
-      setDeleteSelectedDataEntityDialog(false);
-    }
-    deleteRequest();
-  };
-
-  const deleteSelectedDataEntities = () => {
-    for (const dataEntity of selectedDataEntities) {
-      deleteSelectedDataEntity(dataEntity);
-    }
-    setDeleteSelectedDataEntitiesDialog(false);
-    setSelectedDataEntities(null);
-  };
-
   const exportCSV = (selectionOnly) => {
     dataTableRef.current.exportCSV({ selectionOnly });
     infoToast(toastRef, "The data has been exported to a .csv file");
@@ -242,40 +203,6 @@ export default function DataTableWrapper({
         onClick={closeFormDialog}
       ></Button>
       <Button label="Save" icon="pi pi-check" onClick={saveFormDialog}></Button>
-    </>
-  );
-
-  const deleteSelectedDataEntitytDialogFooter = (
-    <>
-      <Button
-        label="No"
-        icon="pi pi-times"
-        outlined
-        onClick={hideDeleteSelectedDataEntityDialog}
-      />
-      <Button
-        label="Yes"
-        icon="pi pi-check"
-        severity="danger"
-        onClick={() => deleteSelectedDataEntity(selectedDataEntity)}
-      />
-    </>
-  );
-
-  const deleteSelectedDataEntitiesDialogFooter = (
-    <>
-      <Button
-        label="No"
-        icon="pi pi-times"
-        outlined
-        onClick={hideDeleteSelectedDataEntitiesDialog}
-      />
-      <Button
-        label="Yes"
-        icon="pi pi-check"
-        severity="danger"
-        onClick={deleteSelectedDataEntities}
-      />
     </>
   );
 
@@ -412,39 +339,24 @@ export default function DataTableWrapper({
         <Column body={actionBodyTemplate} exportable={false}></Column>
       </DataTable>
 
-      <Dialog
-        visible={deleteSelectedDataEntityDialog}
-        onHide={hideDeleteSelectedDataEntityDialog}
-        header="Confirm"
-        modal
-        footer={deleteSelectedDataEntitytDialogFooter}
-      >
-        {selectedDataEntity && (
-          <span>
-            Are you sure you want to delete{" "}
-            <strong>
-              {selectedDataEntity.name
-                ? selectedDataEntity.name
-                : selectedDataEntity.fullName}
-            </strong>
-            ?
-          </span>
-        )}
-      </Dialog>
-      <Dialog
-        visible={deleteSelectedDataEntitiesDialog}
-        header="Confirm"
-        modal
-        footer={deleteSelectedDataEntitiesDialogFooter}
-        onHide={hideDeleteSelectedDataEntitiesDialog}
-      >
-        {selectedDataEntities && (
-          <span>
-            Are you sure you want to delete the {selectedDataEntities.length}{" "}
-            selected data?
-          </span>
-        )}
-      </Dialog>
+      <DeleteEntityDialog
+        selectedDataEntity={selectedDataEntity}
+        setSelectedDataEntity={setSelectedDataEntity}
+        emptyDataEntity={emptyDataEntity}
+        setData={setData}
+        deleteSelectedDataEntityDialog={deleteSelectedDataEntityDialog}
+        setDeleteSelectedDataEntityDialog={setDeleteSelectedDataEntityDialog}
+        isCompositeKey={isCompositeKey}
+        data={data}
+        dataName={dataName}
+        selectedDataEntities={selectedDataEntities}
+        setSelectedDataEntities={setSelectedDataEntities}
+        deleteSelectedDataEntitiesDialog={deleteSelectedDataEntitiesDialog}
+        setDeleteSelectedDataEntitiesDialog={
+          setDeleteSelectedDataEntitiesDialog
+        }
+      />
+
       {openFormDialog && (
         <DataForm
           visible={showFormDialog}

@@ -65,7 +65,7 @@ export default function WeekDayReportInformation({ activityReport }) {
       </div>
       <div className={styles.rightContainer}>
         <section className={styles.actionContainer}>
-          <button
+          <button onClick={open}
             disabled={activityReport.isSent}
             className={`${styles.editButton} ${
               activityReport.isSent && styles.editButtonDisabled
