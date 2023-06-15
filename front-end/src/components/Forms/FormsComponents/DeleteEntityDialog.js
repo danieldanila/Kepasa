@@ -12,6 +12,8 @@ export default function DeleteEntityDialog({
   deleteSelectedDataEntityDialog,
   setDeleteSelectedDataEntityDialog,
   isCompositeKey,
+  firstKeyName,
+  secondKeyName,
   data,
   dataName,
   selectedDataEntities,

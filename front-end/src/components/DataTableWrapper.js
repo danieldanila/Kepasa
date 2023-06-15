@@ -12,6 +12,7 @@ import { Toast } from "primereact/toast";
 import { catchAxios } from "@/axios";
 import infoToast from "@/toasts/infoToast";
 import DeleteEntityDialog from "./Forms/FormsComponents/DeleteEntityDialog";
+import FormDialog from "./Forms/FormsComponents/FormDialog";
 
 export default function DataTableWrapper({
   loggedUser,
@@ -36,8 +37,6 @@ export default function DataTableWrapper({
   } = contextValues;
 
   const [filters, setFilters] = useState(null);
-  const [showFormDialog, setShowformDialog] = useState(false);
-  const [isUpdate, setIsUpdate] = useState(false);
   const [deleteSelectedDataEntityDialog, setDeleteSelectedDataEntityDialog] =
     useState(false);
   const [selectedDataEntities, setSelectedDataEntities] = useState(null);
@@ -46,6 +45,8 @@ export default function DataTableWrapper({
     deleteSelectedDataEntitiesDialog,
     setDeleteSelectedDataEntitiesDialog,
   ] = useState(false);
+  const [isUpdate, setIsUpdate] = useState(false);
+  const [showFormDialog, setShowFormDialog] = useState(false);
   const dataTableRef = useRef(null);
   const toastRef = useRef(null);
 
@@ -85,18 +86,6 @@ export default function DataTableWrapper({
     setData(dataCopy);
   };
 
-  const openFormDialog = () => {
-    setIsUpdate(false);
-    setShowformDialog(true);
-  };
-
-  const openEditFormDialog = (rowData) => {
-    setSelectedDataEntity(rowData);
-    setDataEntity(rowData);
-    setIsUpdate(true);
-    setShowformDialog(true);
-  };
-
   const confirmDeleteSelectedDataEntity = (rowData) => {
     setSelectedDataEntity(rowData);
     setDeleteSelectedDataEntityDialog(true);
@@ -106,73 +95,16 @@ export default function DataTableWrapper({
     setDeleteSelectedDataEntitiesDialog(true);
   };
 
-  const closeFormDialog = () => {
-    setShowformDialog(false);
-    setDataEntity(emptyDataEntity);
+  const openFormDialog = () => {
+    setIsUpdate(false);
+    setShowFormDialog(true);
   };
 
-  const saveFormDialog = () => {
-    async function postData() {
-      let url;
-      let method;
-      let dataBody;
-      let index;
-
-      if (isUpdate) {
-        if (dataEntity.id === loggedUser.id) {
-          url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/${dataName}/updateMe`;
-          method = "PATCH";
-        } else {
-          if (isCompositeKey) {
-            const idParts = dataEntity.id.split(":");
-            url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/${dataName}/${firstKeyName}/${idParts[0]}/${secondKeyName}/${idParts[1]}`;
-          } else {
-            url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/${dataName}/${dataEntity.id}`;
-          }
-          method = "PUT";
-        }
-
-        index = data.findIndex((item) => item.id === selectedDataEntity.id);
-
-        const modifiedFields = Object.keys(dataEntity).filter((key) => {
-          return dataEntity[key] !== selectedDataEntity[key];
-        });
-
-        const modifiedData = {};
-
-        modifiedFields.forEach((field) => {
-          modifiedData[field] = dataEntity[field];
-        });
-
-        dataBody = modifiedData;
-      } else {
-        url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/${dataName}/create`;
-        method = "POST";
-
-        const id = uuid();
-        dataEntity.id = id;
-
-        dataBody = dataEntity;
-      }
-
-      const responseOk = await catchAxios(method, url, toastRef, dataBody);
-
-      if (responseOk) {
-        let dataCopy = [...data];
-
-        if (isUpdate) {
-          dataCopy[index] = { ...dataCopy[index], ...dataBody };
-        } else {
-          dataCopy.push(dataBody);
-        }
-
-        setData(dataCopy);
-
-        closeFormDialog();
-      }
-    }
-
-    postData();
+  const openEditFormDialog = (rowData) => {
+    setSelectedDataEntity(rowData);
+    setDataEntity(rowData);
+    setIsUpdate(true);
+    setShowFormDialog(true);
   };
 
   const exportCSV = (selectionOnly) => {
@@ -193,18 +125,6 @@ export default function DataTableWrapper({
       />
     );
   };
-
-  const dialogFooter = (
-    <>
-      <Button
-        label="Cancel"
-        icon="pi pi-times"
-        outlined
-        onClick={closeFormDialog}
-      ></Button>
-      <Button label="Save" icon="pi pi-check" onClick={saveFormDialog}></Button>
-    </>
-  );
 
   const leftToolbarTemplate = () => {
     return (
@@ -347,6 +267,8 @@ export default function DataTableWrapper({
         deleteSelectedDataEntityDialog={deleteSelectedDataEntityDialog}
         setDeleteSelectedDataEntityDialog={setDeleteSelectedDataEntityDialog}
         isCompositeKey={isCompositeKey}
+        firstKeyName={firstKeyName}
+        secondKeyName={secondKeyName}
         data={data}
         dataName={dataName}
         selectedDataEntities={selectedDataEntities}
@@ -356,17 +278,24 @@ export default function DataTableWrapper({
           setDeleteSelectedDataEntitiesDialog
         }
       />
+      <FormDialog
+        DataForm={DataForm}
+        loggedUser={loggedUser}
+        dataEntity={dataEntity}
+        setDataEntity={setDataEntity}
+        emptyDataEntity={emptyDataEntity}
+        selectedDataEntity={selectedDataEntity}
+        openFormDialog={openFormDialog}
+        showFormDialog={showFormDialog}
+        setShowformDialog={setShowFormDialog}
+        data={data}
+        setData={setData}
+        dataName={dataName}
+        isCompositeKey={isCompositeKey}
+        firstKeyName={firstKeyName}
+        secondKeyName={secondKeyName}
+      />
 
-      {openFormDialog && (
-        <DataForm
-          visible={showFormDialog}
-          onHide={closeFormDialog}
-          dialogFooter={dialogFooter}
-          isUpdate={isUpdate}
-          dataEntity={dataEntity}
-          loggedUser={loggedUser}
-        />
-      )}
       <Toast ref={toastRef} />
     </>
   );
