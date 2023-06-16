@@ -1,5 +1,5 @@
 import WeekDay from "./WeekDay";
-import styles from "../../styles/Weeks.module.css";
+import styles from "../../styles/MyActivityReports.module.css";
 import { useContext, useEffect, useRef, useState } from "react";
 import { ActivityReportsContext, LoggedUserContext } from "@/pages/_app";
 import getWeekNumber from "@/dateFunctions/getWeekNumber";
@@ -13,7 +13,7 @@ import { Toast } from "primereact/toast";
 import { catchAxios } from "@/axios";
 import DeleteEntityDialog from "../Forms/FormsComponents/DeleteEntityDialog";
 
-export default function Weeks() {
+export default function MyActivityReports() {
   const { loggedUser } = useContext(LoggedUserContext);
   const {
     activityReports,

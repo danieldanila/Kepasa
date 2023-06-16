@@ -7,7 +7,6 @@ const authenticationMiddleware =
 router.post(
   "/create",
   authenticationMiddleware.protect,
-  authenticationMiddleware.restrictToAdministrator,
   activityReportController.createActivityReport
 );
 router.post(
@@ -29,13 +28,11 @@ router.get(
 router.put(
   "/:id",
   authenticationMiddleware.protect,
-  authenticationMiddleware.restrictToAdministrator,
   activityReportController.updateActivityReport
 );
 router.delete(
   "/:id",
   authenticationMiddleware.protect,
-  authenticationMiddleware.restrictToAdministrator,
   activityReportController.deleteActivityReport
 );
 router.get(

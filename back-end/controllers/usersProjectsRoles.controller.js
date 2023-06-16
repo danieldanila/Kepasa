@@ -106,6 +106,15 @@ const controller = {
       );
     res.status(200).json(projectRoles);
   }),
+
+  getUserWithRoleOnProject: catchAsync(async (req, res, next) => {
+    const userWithRoleOnProject =
+      await usersProjectsRolesService.getUserWithRoleOnProject(
+        req.params.idRole,
+        req.params.idProject
+      );
+    res.status(200).json(userWithRoleOnProject);
+  }),
 };
 
 module.exports = controller;

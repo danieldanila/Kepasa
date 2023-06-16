@@ -1,4 +1,4 @@
-.button {
+.editButton {
   border: none;
   background-color: var(--white);
   border: var(--gray) 1px solid;
@@ -7,7 +7,15 @@
   padding: 1rem;
 }
 
-.button:hover {
+.editButton:hover {
   cursor: pointer;
   background-color: var(--gray);
+}
+
+.editButtonDisabled:disabled {
+  cursor: not-allowed;
+}
+
+.editButtonDisabled:hover:disabled {
+  background-color: var(--white);
 }

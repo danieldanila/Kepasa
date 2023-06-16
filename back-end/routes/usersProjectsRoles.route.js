@@ -73,5 +73,10 @@ router.get(
   authenticationMiddleware.protect,
   usersProjectsRolesController.getProjectRolesWithUsers
 );
+router.get(
+  "/role/:idRole/project/:idProject",
+  authenticationMiddleware.protect,
+  usersProjectsRolesController.getUserWithRoleOnProject
+);
 
 module.exports = router;

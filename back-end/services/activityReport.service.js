@@ -18,6 +18,9 @@ const getAllPeriods = require("./period.service").getAllPeriods;
 const getAllProjects = require("./project.service").getAllProjects;
 const getAllTaskTypes = require("./taskType.service").getAllTaskTypes;
 
+const usersProjectsRolesService = require("./usersProjectsRoles.service");
+const roleService = require("./role.service");
+
 const service = {
   createActivityReport: async (activityReportBody) => {
     const existingActivityReports = await service.getAllActivityReports();
@@ -36,6 +39,25 @@ const service = {
     );
 
     if (errors.length === 0) {
+      const userRoleOnProject =
+        await usersProjectsRolesService.getUserRoleOnProject(
+          activityReportBody.idUser,
+          activityReportBody.idProject
+        );
+
+      const superiorRole = await roleService.getRoleSuperiorRole(
+        userRoleOnProject.id
+      );
+
+      if (superiorRole) {
+        const superiorUser =
+          await usersProjectsRolesService.getUserWithRoleOnProject(
+            superiorRole.id,
+            activityReportBody.idProject
+          );
+        activityReportBody.idApprover = superiorUser ? superiorUser.id : null;
+      }
+
       await ActivityReport.create(activityReportBody);
     } else {
       throwValidationErrorWithMessage(errors);
@@ -53,6 +75,11 @@ const service = {
       include: [
         {
           model: User,
+          as: "User",
+        },
+        {
+          model: User,
+          as: "Approver",
         },
         {
           model: Period,
@@ -132,6 +159,7 @@ const service = {
       include: [
         {
           model: User,
+          as: "User",
         },
       ],
     });

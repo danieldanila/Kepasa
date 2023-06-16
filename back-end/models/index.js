@@ -316,6 +316,8 @@ Objective.belongsTo(Period, {
 });
 
 User.hasMany(ActivityReport, {
+  as: "User",
+
   foreignKey: {
     name: "idUser",
     type: DataTypes.UUID,
@@ -327,8 +329,33 @@ User.hasMany(ActivityReport, {
 });
 
 ActivityReport.belongsTo(User, {
+  as: "User",
   foreignKey: {
     name: "idUser",
+    type: DataTypes.UUID,
+    allowNull: false,
+    validate: {
+      isUUID: 4,
+    },
+  },
+});
+
+User.hasMany(ActivityReport, {
+  as: "Approver",
+  foreignKey: {
+    name: "idApprover",
+    type: DataTypes.UUID,
+    allowNull: false,
+    validate: {
+      isUUID: 4,
+    },
+  },
+});
+
+ActivityReport.belongsTo(User, {
+  as: "Approver",
+  foreignKey: {
+    name: "idApprover",
     type: DataTypes.UUID,
     allowNull: false,
     validate: {

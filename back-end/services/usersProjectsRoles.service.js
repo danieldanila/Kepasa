@@ -297,6 +297,29 @@ const service = {
 
     return projectRolesWithUsers;
   },
+
+  getUserWithRoleOnProject: async (roleId, projectId) => {
+    const errors = [];
+
+    idParamaterValidation(roleId, "Role id", errors);
+    idParamaterValidation(projectId, "Project id", errors);
+
+    const userWithRoleOnProject = await UsersProjectsRoles.findAll({
+      where: {
+        idRole: roleId,
+        idProject: projectId,
+      },
+      include: [
+        {
+          model: User,
+        },
+      ],
+    });
+
+    if (userWithRoleOnProject.length > 0) {
+      return userWithRoleOnProject[0].User;
+    }
+  },
 };
 
 module.exports = service;

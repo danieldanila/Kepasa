@@ -2,7 +2,7 @@ import { catchAxios } from "@/axios";
 import { useEffect, useRef, useState } from "react";
 import styles from "../../styles/WeekDayReportInformation.module.css";
 import minutesToFormattedTime from "@/dateFunctions/minutesToFormattedTime";
-import ClassicButton from "./ClassicButton";
+import ClassicActionableButton from "./ClassicActionableButton";
 import { Toast } from "primereact/toast";
 
 export default function WeekDayReportInformation({
@@ -74,13 +74,13 @@ export default function WeekDayReportInformation({
       <div className={styles.rightContainer}>
         <section className={styles.actionContainer}>
           <section className={styles.buttons}>
-            <ClassicButton
+            <ClassicActionableButton
               actionFunction={openEditFormDialog}
               functionData={activityReportData}
               disabledCondition={activityReportData.isSent}
               icon={"\u270E"}
             />
-            <ClassicButton
+            <ClassicActionableButton
               actionFunction={confirmDeleteSelectedDataEntity}
               functionData={activityReportData}
               disabledCondition={activityReportData.isSent}

@@ -71,6 +71,18 @@ module.exports = (sequelize, DataTypes) => {
           key: "id",
         },
       },
+      idApprover: {
+        type: DataTypes.UUID,
+        allowNull: true,
+        defaultValue: null,
+        validate: {
+          isUUID: 4,
+        },
+        references: {
+          model: User,
+          key: "id",
+        },
+      },
       idPeriod: {
         type: DataTypes.UUID,
         validate: {

@@ -37,8 +37,6 @@ const validation = {
       isUpdateRequest
     );
 
-    booleanFieldValidation(activityReport.isApproved, "Is Approved", errors);
-
     validateCompletedField(
       dateValidation,
       activityReport.date,
@@ -46,6 +44,9 @@ const validation = {
       errors,
       isUpdateRequest
     );
+
+    booleanFieldValidation(activityReport.isApproved, "Is Approved", errors);
+    booleanFieldValidation(activityReport.isSent, "Is Approved", errors);
 
     validateCompletedField(
       lengthGreaterThanThreeValidation,

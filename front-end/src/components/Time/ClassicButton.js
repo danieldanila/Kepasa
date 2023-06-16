@@ -1,20 +1,9 @@
 import styles from "../../styles/ClassicButton.module.css";
 
-export default function ClassicButton({
-  actionFunction,
-  functionData,
-  disabledCondition,
-  icon,
-}) {
+export default function ClassicButton({ onClick, text }) {
   return (
-    <button
-      onClick={() => actionFunction(functionData)}
-      disabled={disabledCondition}
-      className={`${styles.editButton} ${
-        disabledCondition && styles.editButtonDisabled
-      }`}
-    >
-      {`${icon}`}
+    <button className={styles.button} onClick={onClick}>
+      {text}
     </button>
   );
 }
