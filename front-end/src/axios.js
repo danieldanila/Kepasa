@@ -11,7 +11,7 @@ export async function catchAxios(method, url, toastRef, data) {
       data: data,
     });
 
-    if (method === "GET") {
+    if (method === "GET" || method === "PUT") {
       return response.data;
     }
 

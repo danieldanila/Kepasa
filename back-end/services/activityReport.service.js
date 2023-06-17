@@ -100,7 +100,27 @@ const service = {
 
     idParamaterValidation(activityReportId, "Activity Report id", errors);
 
-    const activityReport = await ActivityReport.findByPk(activityReportId);
+    const activityReport = await ActivityReport.findByPk(activityReportId, {
+      include: [
+        {
+          model: User,
+          as: "User",
+        },
+        {
+          model: User,
+          as: "Approver",
+        },
+        {
+          model: Period,
+        },
+        {
+          model: Project,
+        },
+        {
+          model: TaskType,
+        },
+      ],
+    });
 
     if (activityReport) {
       return activityReport;

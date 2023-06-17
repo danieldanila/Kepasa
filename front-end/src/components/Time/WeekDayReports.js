@@ -6,6 +6,7 @@ export default function WeekDayReports({
   openEditFormDialog,
   confirmDeleteSelectedDataEntity,
   isApprovePage,
+  updateActivityReports,
 }) {
   return (
     <div className={styles.container}>
@@ -16,6 +17,7 @@ export default function WeekDayReports({
           openEditFormDialog={openEditFormDialog}
           confirmDeleteSelectedDataEntity={confirmDeleteSelectedDataEntity}
           isApprovePage={isApprovePage}
+          updateActivityReports={updateActivityReports}
         />
       ))}
     </div>

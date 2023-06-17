@@ -1,5 +1,7 @@
+import onInputTextChange from "@/onInputChanges/onInputTextChange";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
+import InputTextForm from "../FormsInput/InputTextForm";
 
 export default function WarningDialog({
   visible,
@@ -8,6 +10,7 @@ export default function WarningDialog({
   exitDialog,
   dialogFunction,
   dialogFunctionData,
+  setDialogFunctionData,
 }) {
   const warningDialogFooter = () => {
     return (
@@ -37,6 +40,16 @@ export default function WarningDialog({
         footer={warningDialogFooter}
       >
         <span>{warningMessage}</span>
+        {setDialogFunctionData && (
+          <InputTextForm
+            id="rejectJustification"
+            label="Reject Justification"
+            customOnChange={onInputTextChange}
+            initialValue={""}
+            objectState={dialogFunctionData}
+            setObjectState={setDialogFunctionData}
+          />
+        )}
       </Dialog>
     </>
   );
