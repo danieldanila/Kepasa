@@ -2,3 +2,9 @@
   box-shadow: var(--boxShadow);
   padding: 1rem;
 }
+
+@media only screen and (max-width: 480px) {
+  .container {
+    padding: 0.1rem;
+  }
+}

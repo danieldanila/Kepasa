@@ -1,7 +1,7 @@
 import { catchAxios } from "@/axios";
 import { Button } from "primereact/button";
 import { Toast } from "primereact/toast";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { v4 as uuid } from "uuid";
 
 export default function FormDialog({

@@ -164,12 +164,16 @@ const service = {
   },
 
   getRoleProjectHourlyPay: async (roleId, projectId) => {
-    const rolesProject = await service.getRolesProjectsByCompositeId(
-      roleId,
-      projectId
-    );
+    try {
+      const rolesProject = await service.getRolesProjectsByCompositeId(
+        roleId,
+        projectId
+      );
 
-    return rolesProject.hourlyPay;
+      return rolesProject.hourlyPay;
+    } catch (err) {
+      return 0;
+    }
   },
 };
 

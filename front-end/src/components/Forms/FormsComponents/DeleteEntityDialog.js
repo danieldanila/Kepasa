@@ -1,8 +1,7 @@
 import { catchAxios } from "@/axios";
-import { Button } from "primereact/button";
-import { Dialog } from "primereact/dialog";
 import { Toast } from "primereact/toast";
 import { useRef } from "react";
+import WarningDialog from "./WarningDialog";
 
 export default function DeleteEntityDialog({
   selectedDataEntity,
@@ -58,79 +57,35 @@ export default function DeleteEntityDialog({
     setDeleteSelectedDataEntityDialog(false);
   };
 
-  const deleteSelectedDataEntitytDialogFooter = (
-    <>
-      <Button
-        label="No"
-        icon="pi pi-times"
-        outlined
-        onClick={hideDeleteSelectedDataEntityDialog}
-      />
-      <Button
-        label="Yes"
-        icon="pi pi-check"
-        severity="danger"
-        onClick={() => deleteSelectedDataEntity(selectedDataEntity)}
-      />
-    </>
-  );
-
   const hideDeleteSelectedDataEntitiesDialog = () => {
     setDeleteSelectedDataEntitiesDialog(false);
   };
 
-  const deleteSelectedDataEntitiesDialogFooter = (
-    <>
-      <Button
-        label="No"
-        icon="pi pi-times"
-        outlined
-        onClick={hideDeleteSelectedDataEntitiesDialog}
-      />
-      <Button
-        label="Yes"
-        icon="pi pi-check"
-        severity="danger"
-        onClick={deleteSelectedDataEntities}
-      />
-    </>
-  );
-
   return (
     <>
-      <Dialog
+      <WarningDialog
         visible={deleteSelectedDataEntityDialog}
         onHide={hideDeleteSelectedDataEntityDialog}
-        header="Confirm"
-        modal
-        footer={deleteSelectedDataEntitytDialogFooter}
-      >
-        {selectedDataEntity && (
-          <span>
-            Are you sure you want to delete{" "}
-            <strong>
-              {selectedDataEntity.name
-                ? selectedDataEntity.name
-                : selectedDataEntity.fullName || "the data"}
-            </strong>
-            ?
-          </span>
-        )}
-      </Dialog>
-      <Dialog
+        warningMessage={`Are you sure you want to delete  
+        ${
+          selectedDataEntity &&
+          (selectedDataEntity.name
+            ? selectedDataEntity.name
+            : selectedDataEntity.fullName || "the data")
+        }?`}
+        exitDialog={hideDeleteSelectedDataEntityDialog}
+        dialogFunction={deleteSelectedDataEntity}
+        dialogFunctionData={selectedDataEntity}
+      />
+      <WarningDialog
         visible={deleteSelectedDataEntitiesDialog}
-        header="Confirm"
-        modal
-        footer={deleteSelectedDataEntitiesDialogFooter}
         onHide={hideDeleteSelectedDataEntitiesDialog}
-      >
-        {selectedDataEntities && (
-          <span>
-            Are you sure you want to delete the {selectedDataEntities.length}{" "}
-            selected data?
-          </span>
-        )}
-      </Dialog>
+        warningMessage={`Are you sure you want to delete the ${
+          selectedDataEntities && selectedDataEntities.length
+        } selected data?`}
+        exitDialog={hideDeleteSelectedDataEntitiesDialog}
+        dialogFunction={deleteSelectedDataEntities}
+      />
       <Toast ref={toastRef} />
     </>
   );

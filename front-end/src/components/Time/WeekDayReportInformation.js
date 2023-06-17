@@ -4,15 +4,23 @@ import styles from "../../styles/WeekDayReportInformation.module.css";
 import minutesToFormattedTime from "@/dateFunctions/minutesToFormattedTime";
 import ClassicActionableButton from "./ClassicActionableButton";
 import { Toast } from "primereact/toast";
+import getPaidFromMinutes from "@/dateFunctions/getPaidFromMinutes";
+import WarningDialog from "../Forms/FormsComponents/WarningDialog";
+import ClassicButton from "./ClassicButton";
 
 export default function WeekDayReportInformation({
   activityReportData,
   openEditFormDialog,
   confirmDeleteSelectedDataEntity,
+  isApprovePage,
 }) {
   const toastRef = useRef(null);
 
   const [userRoleOnProject, setUserRoleOnProject] = useState("No role");
+  const [roleProjectHourlyPay, setRoleProjectHourlyPay] = useState(0);
+
+  const [approveActivityReportDialog, setApproveActivityReportDialog] =
+    useState(false);
 
   useEffect(() => {
     async function getUseRoleOnProject() {
@@ -30,12 +38,59 @@ export default function WeekDayReportInformation({
     getUseRoleOnProject();
   }, [activityReportData]);
 
+  useEffect(() => {
+    async function getRoleProjectHourlyPay() {
+      const roleProjectHourlyPayData = await catchAxios(
+        "GET",
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/rolesProjects/role/${userRoleOnProject.id}/project/${activityReportData.idProject}/hourlyPay`,
+        toastRef
+      );
+
+      if (roleProjectHourlyPayData) {
+        setRoleProjectHourlyPay(roleProjectHourlyPayData);
+      }
+    }
+
+    if (userRoleOnProject.id) {
+      getRoleProjectHourlyPay();
+    }
+  }, [userRoleOnProject.id]);
+
+  const approveActivityReport = async () => {
+    await catchAxios(
+      "PUT",
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/activityReport/${activityReportData.id}`,
+      toastRef,
+      {
+        isApproved: true,
+      }
+    );
+
+    setApproveActivityReportDialog(false);
+  };
+
+  const hideApproveActivityReportDialog = () => {
+    setApproveActivityReportDialog(false);
+  };
+
   return (
     <div className={styles.containers}>
       <div className={styles.leftContainer}>
         {activityReportData.rejectJustification && (
           <p className={styles.rejectJustificationText}>REJECTED</p>
         )}
+        {isApprovePage && (
+          <>
+            <p>
+              <strong>Period:</strong> {activityReportData.Period.name}
+            </p>
+
+            <p>
+              <strong>Date:</strong> {activityReportData.date}
+            </p>
+          </>
+        )}
+
         <section className={styles.activityMetadataContainer}>
           <p>
             <strong>Task Type: </strong>
@@ -74,22 +129,51 @@ export default function WeekDayReportInformation({
       <div className={styles.rightContainer}>
         <section className={styles.actionContainer}>
           <section className={styles.buttons}>
-            <ClassicActionableButton
-              actionFunction={openEditFormDialog}
-              functionData={activityReportData}
-              disabledCondition={activityReportData.isSent}
-              icon={"\u270E"}
-            />
-            <ClassicActionableButton
-              actionFunction={confirmDeleteSelectedDataEntity}
-              functionData={activityReportData}
-              disabledCondition={activityReportData.isSent}
-              icon={"\uD83D\uDDD1"}
-            />
+            {isApprovePage ? (
+              <>
+                <ClassicButton
+                  onClick={() => setApproveActivityReportDialog(true)}
+                  text={"\u2713"}
+                />
+                <ClassicButton text={"X"} />
+              </>
+            ) : (
+              <>
+                <ClassicActionableButton
+                  actionFunction={openEditFormDialog}
+                  functionData={activityReportData}
+                  disabledCondition={activityReportData.isSent}
+                  icon={"\u270E"}
+                />
+                <ClassicActionableButton
+                  actionFunction={confirmDeleteSelectedDataEntity}
+                  functionData={activityReportData}
+                  disabledCondition={activityReportData.isSent}
+                  icon={"\uD83D\uDDD1"}
+                />
+              </>
+            )}
           </section>
           <p>{minutesToFormattedTime(activityReportData.investedTime)}</p>
+          {isApprovePage && (
+            <p className={styles.money}>
+              $
+              {getPaidFromMinutes(
+                activityReportData.investedTime,
+                roleProjectHourlyPay
+              )}
+            </p>
+          )}
         </section>
       </div>
+      <WarningDialog
+        visible={approveActivityReportDialog}
+        onHide={hideApproveActivityReportDialog}
+        warningMessage={`Are you sure you want to approve this activity report?`}
+        exitDialog={hideApproveActivityReportDialog}
+        dialogFunction={approveActivityReport}
+        dialogFunctionData={activityReportData}
+      />
       <Toast ref={toastRef} />
     </div>
   );

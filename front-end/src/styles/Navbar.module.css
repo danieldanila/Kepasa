@@ -6,3 +6,9 @@
   height: var(--navbarHeigth);
   background-color: var(--lightBlue);
 }
+
+@media only screen and (max-width: 480px) {
+  .container {
+    width: 100vw;
+  }
+}

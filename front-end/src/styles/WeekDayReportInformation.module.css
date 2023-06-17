@@ -44,3 +44,19 @@
 .buttons button:first-child {
   margin-right: 1rem;
 }
+
+.money {
+  color: var(--lightBlue);
+}
+
+@media only screen and (max-width: 480px) {
+  .containers {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .activityMetadataContainer,
+  .activityProjectDataContainer {
+    flex-direction: column;
+  }
+}

@@ -20,3 +20,9 @@
   cursor: pointer;
   color: var(--white);
 }
+
+@media only screen and (max-width: 480px) {
+  .container {
+    display: none;
+  }
+}

@@ -12,6 +12,8 @@ import ActivityReportForm from "../Forms/ActivityReportForm";
 import { Toast } from "primereact/toast";
 import { catchAxios } from "@/axios";
 import DeleteEntityDialog from "../Forms/FormsComponents/DeleteEntityDialog";
+import WarningDialog from "../Forms/FormsComponents/WarningDialog";
+import successToast from "@/toasts/successToast";
 
 export default function MyActivityReports() {
   const { loggedUser } = useContext(LoggedUserContext);
@@ -38,6 +40,8 @@ export default function MyActivityReports() {
   const [selectedDate, setSelectedDate] = useState(new Date());
 
   const [datePeriod, setDatePeriod] = useState(null);
+
+  const [sendReportsDialog, setSendReportsDialog] = useState(false);
 
   const toastRef = useRef(null);
 
@@ -128,6 +132,7 @@ export default function MyActivityReports() {
               const updatedReport = {
                 ...activityReport,
                 isSent: true,
+                isApproved: false,
                 rejectJustification: null,
               };
 
@@ -145,7 +150,13 @@ export default function MyActivityReports() {
         return activityReport;
       })
     );
+    successToast(toastRef, "This week's reports have been sent successfully.");
+    setSendReportsDialog(false);
     setActivityReports(updatedActivityReports);
+  };
+
+  const hideSendReportsDialog = () => {
+    setSendReportsDialog(false);
   };
 
   return (
@@ -154,7 +165,7 @@ export default function MyActivityReports() {
         selectedDate={selectedDate}
         setSelectedDate={setSelectedDate}
         openFormDialog={openFormDialog}
-        sendReports={sendReports}
+        setSendReportsDialog={setSendReportsDialog}
       />
       <div className={styles.container}>
         {weekDaysData.map((day) => (
@@ -182,6 +193,7 @@ export default function MyActivityReports() {
               activityReports={day.activityReports}
               openEditFormDialog={openEditFormDialog}
               confirmDeleteSelectedDataEntity={confirmDeleteSelectedDataEntity}
+              isApprovePage={false}
             />
           ))}
       </div>
@@ -211,6 +223,13 @@ export default function MyActivityReports() {
         setDeleteSelectedDataEntityDialog={setDeleteSelectedDataEntityDialog}
         data={activityReports}
         dataName={"activityReport"}
+      />
+      <WarningDialog
+        visible={sendReportsDialog}
+        onHide={hideSendReportsDialog}
+        warningMessage={`Are you sure you want to send this week reports?`}
+        exitDialog={hideSendReportsDialog}
+        dialogFunction={sendReports}
       />
       <Toast ref={toastRef} />
     </>

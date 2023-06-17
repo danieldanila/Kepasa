@@ -210,7 +210,15 @@ const validation = {
   },
 
   booleanFieldValidation: (field, fieldName, errorsArray) => {
-    if (field && !(field === "true" || field === "false")) {
+    if (
+      field &&
+      !(
+        field === "true" ||
+        field === "false" ||
+        field === true ||
+        field === false
+      )
+    ) {
       errorsArray.push(`${fieldName} must be a boolean value.`);
     }
   },

@@ -5,6 +5,7 @@ const {
   throwValidationErrorWithMessage,
 } = require("../utils/errorsWrappers.util");
 const { NotFoundError } = require("../errors");
+const { Op } = require("sequelize");
 
 const User = require("../models").User;
 const Department = require("../models").Department;
@@ -12,12 +13,11 @@ const Objective = require("../models").Objective;
 const ActivityReport = require("../models").ActivityReport;
 const UsersProjectsRoles = require("../models").UsersProjectsRoles;
 const Role = require("../models").Role;
+const Period = require("../models").Period;
+const Project = require("../models").Project;
+const TaskType = require("../models").TaskType;
 
 const getAllDepartments = require("./department.service").getAllDepartments;
-
-const { Op } = require("sequelize");
-const AppError = require("../utils/appError");
-const { Period } = require("../models");
 
 const filterObject = (object, ...allowedFields) => {
   const newObject = {};
@@ -476,7 +476,28 @@ const service = {
             where: {
               idUser: subUserProjectRole.idUser,
               idProject: subUserProjectRole.idProject,
+              isSent: true,
+              isApproved: false,
             },
+            include: [
+              {
+                model: User,
+                as: "User",
+              },
+              {
+                model: User,
+                as: "Approver",
+              },
+              {
+                model: Period,
+              },
+              {
+                model: Project,
+              },
+              {
+                model: TaskType,
+              },
+            ],
           });
 
           if (subUsersActivityReports.length > 0) {
@@ -487,7 +508,7 @@ const service = {
     }
 
     if (usersSubUsersActivityReports) {
-      return usersSubUsersActivityReports;
+      return usersSubUsersActivityReports.flat();
     } else {
       throw new NotFoundError("User has no sub users with activity reports.");
     }

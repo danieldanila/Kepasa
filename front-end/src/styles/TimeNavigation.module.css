@@ -6,3 +6,13 @@
 .navigationContainer button {
   margin-right: 1rem;
 }
+
+@media only screen and (max-width: 480px) {
+  .navigationContainer {
+    flex-direction: column;
+  }
+
+  .navigationContainer button {
+    margin-bottom: 1rem;
+  }
+}

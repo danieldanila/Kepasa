@@ -25,17 +25,3 @@
   display: flex;
   justify-content: space-around;
 }
-
-.actionButtons button {
-  background-color: var(--white);
-  box-shadow: var(--boxShadow);
-  color: var(--lightBlue);
-  border: none;
-  border: var(--gray) 1px solid;
-  padding: 1rem;
-}
-
-.actionButtons button:hover {
-  cursor: pointer;
-  background-color: var(--gray);
-}

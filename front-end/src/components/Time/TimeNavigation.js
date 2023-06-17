@@ -19,7 +19,7 @@ export default function TimeNavigation({ setComponentToShow }) {
         />
         <ClassicButton
           onClick={changeVisibleComponent}
-          text={"Activity Reports to approve"}
+          text={"Activity Reports To Approve"}
         />
         <ClassicButton
           onClick={changeVisibleComponent}
