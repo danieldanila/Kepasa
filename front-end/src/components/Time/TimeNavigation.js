@@ -25,6 +25,10 @@ export default function TimeNavigation({ setComponentToShow }) {
           onClick={changeVisibleComponent}
           text={"Activity Reports"}
         />
+        <ClassicButton
+          onClick={changeVisibleComponent}
+          text={"Analyzes and statistics"}
+        />
       </section>
 
       <h2 className="pageTitle">{pageTitle}</h2>
