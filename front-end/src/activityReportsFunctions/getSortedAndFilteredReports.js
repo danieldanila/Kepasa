@@ -1,5 +1,6 @@
 import getRoleProjectHourlyPay from "@/api/getRoleProjectHourlyPay";
 import getUseRoleOnProject from "@/api/getUserRoleOnProject";
+import getPaidFromMinutes from "@/dateFunctions/getPaidFromMinutes";
 
 const getSortedAndFilteredReports = async (activityReports, toastRef) => {
   const sortedReports = activityReports.sort((a, b) =>
@@ -32,9 +33,12 @@ const getSortedAndFilteredReports = async (activityReports, toastRef) => {
         existingReport.approvedInvestedTime += currentReport.isApproved
           ? currentReport.investedTime
           : 0;
-        existingReport.pay += roleProjectHourlyPay;
+        existingReport.pay += getPaidFromMinutes(
+          currentReport.investedTime,
+          roleProjectHourlyPay
+        );
         existingReport.approvedPay += currentReport.isApproved
-          ? roleProjectHourlyPay
+          ? getPaidFromMinutes(currentReport.investedTime, roleProjectHourlyPay)
           : 0;
       } else {
         const report = {
@@ -43,8 +47,16 @@ const getSortedAndFilteredReports = async (activityReports, toastRef) => {
           approvedInvestedTime: currentReport.isApproved
             ? currentReport.investedTime
             : 0,
-          pay: roleProjectHourlyPay,
-          approvedPay: currentReport.isApproved ? roleProjectHourlyPay : 0,
+          pay: getPaidFromMinutes(
+            currentReport.investedTime,
+            roleProjectHourlyPay
+          ),
+          approvedPay: currentReport.isApproved
+            ? getPaidFromMinutes(
+                currentReport.investedTime,
+                roleProjectHourlyPay
+              )
+            : 0,
         };
         accumulator.push(report);
       }

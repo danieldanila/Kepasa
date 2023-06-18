@@ -197,6 +197,8 @@ const service = {
     if (userRoleOnProject) {
       return userRoleOnProject.Role;
     } else {
+      console.error(`User ${userId} on given project ${projectId} not found.`);
+
       throw new NotFoundError("User on given project not found.");
     }
   },

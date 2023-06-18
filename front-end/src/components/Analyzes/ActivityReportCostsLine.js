@@ -47,7 +47,7 @@ export default function ActivityReportCostsLine({}) {
 
     getChartData();
 
-    const csv = sortedAndFilteredReportsToCsv(sortedAndFilteredReports);
+    // const csv = sortedAndFilteredReportsToCsv(sortedAndFilteredReports);
   }, [activityReports]);
 
   const dailyWorkedTimeData = {
