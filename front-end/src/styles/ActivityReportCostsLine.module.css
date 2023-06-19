@@ -10,3 +10,11 @@
 
   margin: 1rem;
 }
+
+.buttonContainer {
+  display: flex;
+}
+
+.buttonContainer button {
+  margin-right: 1rem;
+}

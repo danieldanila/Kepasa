@@ -11,3 +11,7 @@
   cursor: pointer;
   background-color: var(--gray);
 }
+
+.input {
+  display: none;
+}

@@ -13,16 +13,19 @@ import {
   Legend,
 } from "chart.js";
 import { Toast } from "primereact/toast";
-import getUseRoleOnProject from "@/api/getUserRoleOnProject";
-import getRoleProjectHourlyPay from "@/api/getRoleProjectHourlyPay";
 import styles from "../../styles/ActivityReportCostsLine.module.css";
 import getSortedAndFilteredReports from "@/activityReportsFunctions/getSortedAndFilteredReports";
 import sortedAndFilteredReportsToCsv from "@/activityReportsFunctions/sortedAndFilteredReportsToCsv";
+import Loading from "../Loading";
+
+import readCSVFile from "@/activityReportsFunctions/readCSVFile";
+import ClassicButton from "../Time/ClassicButton";
 
 export default function ActivityReportCostsLine({}) {
   const toastRef = useRef(null);
   const { activityReports } = useContext(ActivityReportsContext);
   const [sortedAndFilteredReports, setSortedAndFilteredReports] = useState([]);
+  const [predictionData, setPredictionData] = useState([]);
 
   ChartJS.register(
     LineController,
@@ -46,8 +49,6 @@ export default function ActivityReportCostsLine({}) {
     }
 
     getChartData();
-
-    // const csv = sortedAndFilteredReportsToCsv(sortedAndFilteredReports);
   }, [activityReports]);
 
   const dailyWorkedTimeData = {
@@ -57,8 +58,10 @@ export default function ActivityReportCostsLine({}) {
     datasets: [
       {
         label: "Approved Activity Reports",
-        data: sortedAndFilteredReports.map(
-          (activityReport) => activityReport.approvedInvestedTime
+        data: sortedAndFilteredReports.map((activityReport) =>
+          activityReport.approvedInvestedTime > 0
+            ? activityReport.approvedInvestedTime
+            : null
         ),
         borderColor: "rgb(46, 108, 181)",
       },
@@ -79,8 +82,8 @@ export default function ActivityReportCostsLine({}) {
     datasets: [
       {
         label: "Approved Activity Reports",
-        data: sortedAndFilteredReports.map(
-          (activityReport) => activityReport.approvedPay
+        data: sortedAndFilteredReports.map((activityReport) =>
+          activityReport.approvedPay > 0 ? activityReport.approvedPay : null
         ),
         borderColor: "rgb(46, 108, 181)",
       },
@@ -90,6 +93,33 @@ export default function ActivityReportCostsLine({}) {
           (activityReport) => activityReport.pay
         ),
         borderColor: "rgb(29, 23, 75)",
+      },
+      {
+        label: "ARMA prediction",
+        data: predictionData.map((prediction) =>
+          prediction.ARMA_Predictions !== ""
+            ? prediction.ARMA_Predictions
+            : null
+        ),
+        borderColor: "rgb(78, 72, 124)",
+      },
+      {
+        label: "ARIMA prediction",
+        data: predictionData.map((prediction) =>
+          prediction.ARIMA_Predictions !== ""
+            ? prediction.ARIMA_Predictions
+            : null
+        ),
+        borderColor: "rgb(195, 110, 18)",
+      },
+      {
+        label: "SARIMA prediction",
+        data: predictionData.map((prediction) =>
+          prediction.SARIMA_Predictions !== ""
+            ? prediction.SARIMA_Predictions
+            : null
+        ),
+        borderColor: "rgb(249, 129, 37)",
       },
     ],
   };
@@ -120,16 +150,52 @@ export default function ActivityReportCostsLine({}) {
     },
   };
 
-  return (
-    <div className={styles.container}>
-      <div>
-        <Line options={dailyWorkedTimeOptions} data={dailyWorkedTimeData} />
-      </div>
-      <div>
-        <Line options={dailyCostsOptions} data={dailyCostsData} />
-      </div>
+  const handleFileUpload = async (event) => {
+    const file = event.target.files[0];
 
+    try {
+      const csvData = await readCSVFile(file);
+      setPredictionData(csvData);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleDownloadCSV = () => {
+    sortedAndFilteredReportsToCsv(sortedAndFilteredReports);
+  };
+
+  return (
+    <>
+      {sortedAndFilteredReports.length > 0 ? (
+        <>
+          <div className={styles.buttonContainer}>
+            <ClassicButton
+              text={"Download CSV data"}
+              onClick={handleDownloadCSV}
+            />
+            <ClassicButton
+              text={"Upload CSV"}
+              hasInput={true}
+              onChange={handleFileUpload}
+            />
+          </div>
+          <div className={styles.container}>
+            <div>
+              <Line
+                options={dailyWorkedTimeOptions}
+                data={dailyWorkedTimeData}
+              />
+            </div>
+            <div>
+              <Line options={dailyCostsOptions} data={dailyCostsData} />
+            </div>
+          </div>
+        </>
+      ) : (
+        <Loading />
+      )}
       <Toast ref={toastRef} />
-    </div>
+    </>
   );
 }
